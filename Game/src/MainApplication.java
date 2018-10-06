@@ -11,10 +11,10 @@ public class MainApplication extends Application {
     private static boolean right = false;
     private static boolean left = false;
 
-    public static int winX = 600;
-    public static int winY = 400;
+    public static double windowSizeX = 600.0;
+    public static double windowSizeY = 400.0;
 
-    Player player = new Player(0, winY-100, 100, 100);
+    Player player = new Player(0, windowSizeY - 100, 100, 100);
 
     public static void main ( String[] args ) {
         launch(args);
@@ -24,7 +24,7 @@ public class MainApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         Pane root = new Pane();
-        Scene scene = new Scene(root, winX, winY);
+        Scene scene = new Scene(root, windowSizeX, windowSizeY);
 
         scene.setOnKeyPressed(e ->{
             KeyCode key = e.getCode();
@@ -65,6 +65,7 @@ public class MainApplication extends Application {
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
+
         primaryStage.setTitle("Title");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -72,17 +73,28 @@ public class MainApplication extends Application {
     }
 
     void update(){
+
+        // Player Controls
         if(right){
             if(!player.isCollidingRight()){
                 player.moveRight();
             }
-        }else if (left){
+        }
+        if (left){
             if(!player.isCollidingLeft()) {
                 player.moveLeft();
             }
-        }else if(up){
+        }
+        if(up){
+            if(!player.isCollidingTop()) {
                 player.jump();
+            }
         }
 
+        player.enforceGravity(true);
+
+        System.out.println(player.g + " " + player.getVelocityY());
+
     }
+
 }
