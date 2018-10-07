@@ -6,7 +6,7 @@ public class BoundingBox {
 
     double minX, minY, maxX, maxY;
 
-    public BoundingBox(double minX, double maxX, double minY, double maxY){
+    public BoundingBox(double minX, double minY, double maxX, double maxY){
 
         this.minX = minX;
         this.minY = minY;
@@ -41,12 +41,12 @@ public class BoundingBox {
         return this.minX;
     }
 
-    public double getMaxX(){
-        return this.maxX;
-    }
-
     public double getMinY(){
         return this.minY;
+    }
+
+    public double getMaxX(){
+        return this.maxX;
     }
 
     public double getMaxY(){
@@ -70,6 +70,16 @@ public class BoundingBox {
     public void setMaxY(double newMaxY){
         this.maxY = newMaxY;
     }
+
+    public void setBounds(double newMinX, double newMinY, double newMaxX, double newMaxY){
+        System.out.println("setbounds");
+        this.minX = newMinX;
+        this.minY = newMinY;
+        this.maxX = newMaxX;
+        this.maxY = newMaxY;
+
+    }
+
 
 }
 

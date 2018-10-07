@@ -29,6 +29,10 @@ public class MainApplication extends Application {
     Image playerSprite = new Image("/assets/playerSprite.png");
     ImageView playerSpriteView = new ImageView(playerSprite);
 
+    // TEMP !t
+    Image mapBg = new Image("/assets/bg.png");
+    ImageView mapBgView = new ImageView(mapBg);
+
     // !f
     Label fpsCounter = new Label();
 
@@ -45,8 +49,11 @@ public class MainApplication extends Application {
         playerSpriteView.setX(10);
         playerSpriteView.setY(10);
 
+        fpsCounter.setTextFill(Color.GREEN);
+
         // Get key(s) pressed for player movements.
         // (Move to player class?)
+
         scene.setOnKeyPressed(e -> {
             KeyCode key = e.getCode();
 
@@ -100,8 +107,8 @@ public class MainApplication extends Application {
 
         timer.start();
 
-        // !f
-        root.getChildren().addAll(player, fpsCounter, playerSpriteView);
+        // !f !t
+        root.getChildren().addAll(mapBgView, player, fpsCounter, playerSpriteView);
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
