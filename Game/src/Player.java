@@ -108,4 +108,26 @@ public class Player extends Rectangle {
         return vX;
     }
 
+    public void onUpdate(boolean up, boolean left, boolean right) {
+        // Player Controls
+        if (right) {
+            if (!this.isCollidingRight()) {
+                this.moveRight();
+            }
+        }
+        if (left) {
+            if (!this.isCollidingLeft()) {
+                this.moveLeft();
+            }
+        }
+        if (up) {
+            if (!this.isCollidingTop()) {
+                this.jump();
+            }
+        }
+
+        // I couldn't figure out how to get jumping to work so I made this.
+        this.enforceGravity(true);
+    }
+
 }
