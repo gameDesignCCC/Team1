@@ -25,7 +25,7 @@ public class MainApplication extends Application {
     public static double windowSizeY = 400.0;
 
     Player player = new Player(0, windowSizeY - 100, 100, 100);
-    
+
     Image playerSprite = new Image("/assets/playerSprite.png");
     ImageView playerSpriteView = new ImageView(playerSprite);
 
