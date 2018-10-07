@@ -35,6 +35,8 @@ public class BoundingBox {
         return(maxY >= windowSizeY);
     }
 
+    //Getters
+
     public double getMinX(){
         return this.minX;
     }
@@ -51,6 +53,8 @@ public class BoundingBox {
         return this.maxY;
     }
 
+    //Setters
+
     public void setMinX(double newMinX){
         this.minX = newMinX;
     }
@@ -66,16 +70,6 @@ public class BoundingBox {
     public void setMaxY(double newMaxY){
         this.maxY = newMaxY;
     }
-
-    public void setBounds(double newMinX, double newMaxX, double newMinY, double newMaxY){
-
-        this.minX = newMinX;
-        this.minY = newMinY;
-        this.maxX = newMaxX;
-        this.maxY = newMaxY;
-
-    }
-
 
 }
 

@@ -8,10 +8,10 @@ public class Player extends Rectangle {
     private static double vX = 4.0;
     private static double vY = 2.0;
 
+    // Player "HitBox"
     BoundingBox bbox = new BoundingBox(this.getX(), this.getX() + this.getWidth(), this.getY(), this.getY() + this.getHeight());
 
     // Gravity
-
     static double g = 2;
 
     Player(double x, double y, double width, double height){
@@ -34,23 +34,12 @@ public class Player extends Rectangle {
     }
 
     public boolean isCollidingStageBottom(){
-
-        if(this.getY() + this.getHeight() >= windowSizeY){
-            return true;
-        }else {
-            return false;
-        }
+        return bbox.checkStageCollisionB();
     }
 
     public boolean isCollidingStageTop(){
-
-        if(this.getY() <= 0){
-            return true;
-        }else {
-            return false;
-        }
+        return bbox.checkStageCollisionT();
     }
-
 
     // Player Movement
 
@@ -79,8 +68,6 @@ public class Player extends Rectangle {
 
         if(enabled) {
 
-            //this.setY(this.getY() + g);
-
             if (isCollidingStageBottom()) {
                 vY = 0;
                 this.setY(windowSizeY - this.getHeight());
@@ -96,6 +83,7 @@ public class Player extends Rectangle {
         bbox.setBounds(this.getX(), this.getX() + this.getWidth(), this.getY(), this.getY() + this.getHeight());
 
         // Player Controls
+
         if (right) {
             if (!isCollidingStageRight()) {
                 this.moveRight();
