@@ -3,6 +3,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -24,11 +25,14 @@ public class MainApplication extends Application {
     public static double windowSizeY = 400.0;
 
     Player player = new Player(0, windowSizeY - 100, 100, 100);
+    
+    Image playerSprite = new Image("/assets/playerSprite.png");
+    ImageView playerSpriteView = new ImageView(playerSprite);
 
     // !f
     Label fpsCounter = new Label();
 
-    public static void main ( String[] args ) {
+    public static void main(String[] args) {
         launch(args);
     }
 
@@ -38,29 +42,32 @@ public class MainApplication extends Application {
         Pane root = new Pane();
         Scene scene = new Scene(root, windowSizeX, windowSizeY);
 
+        playerSpriteView.setX(10);
+        playerSpriteView.setY(10);
+
         // Get key(s) pressed for player movements.
         // (Move to player class?)
-        scene.setOnKeyPressed(e ->{
+        scene.setOnKeyPressed(e -> {
             KeyCode key = e.getCode();
 
-            if(key == KeyCode.RIGHT){
+            if (key == KeyCode.RIGHT) {
                 right = true;
-            }else if(key == KeyCode.LEFT){
+            } else if (key == KeyCode.LEFT) {
                 left = true;
-            }else if(key == KeyCode.UP){
+            } else if (key == KeyCode.UP) {
                 up = true;
             }
 
         });
 
-        scene.setOnKeyReleased(e ->{
+        scene.setOnKeyReleased(e -> {
             KeyCode key = e.getCode();
 
-            if(key == KeyCode.RIGHT){
+            if (key == KeyCode.RIGHT) {
                 right = false;
-            }else if(key == KeyCode.LEFT){
+            } else if (key == KeyCode.LEFT) {
                 left = false;
-            }else if(key == KeyCode.UP){
+            } else if (key == KeyCode.UP) {
                 up = false;
             }
 
@@ -76,11 +83,11 @@ public class MainApplication extends Application {
                 long oldFrameTime = frameTimes[frameTimeIndex];
                 frameTimes[frameTimeIndex] = now;
                 frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
-                if(frameTimeIndex == 0){
+                if (frameTimeIndex == 0) {
                     arrayFilled = true;
                 }
 
-                if(arrayFilled){
+                if (arrayFilled) {
                     long elapsedNanos = now - oldFrameTime;
                     long elapsedNanosPerFrame = elapsedNanos / frameTimes.length;
                     double frameRate = 1000000000.0 / elapsedNanosPerFrame;
@@ -94,7 +101,7 @@ public class MainApplication extends Application {
         timer.start();
 
         // !f
-        root.getChildren().addAll(player, fpsCounter);
+        root.getChildren().addAll(player, fpsCounter, playerSpriteView);
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
@@ -107,8 +114,10 @@ public class MainApplication extends Application {
     }
 
     // Game Loop
-    void update(){
+    void update() {
         player.onUpdate(up, left, right);
+        playerSpriteView.setX(player.getX());
+        playerSpriteView.setY(player.getY());
     }
 
 }
