@@ -73,8 +73,6 @@ public class Player extends Rectangle {
 
     public void jump(){
 
-        System.out.println("jump called ");
-
         if( vY > -20 ) {
             vY -= g ;
             this.setY(this.getY() + vY);

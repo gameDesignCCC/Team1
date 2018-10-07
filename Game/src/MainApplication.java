@@ -91,9 +91,8 @@ public class MainApplication extends Application {
             }
         }
 
+        // I couldn't figure out how to make jumping work so I made this.
         player.enforceGravity(true);
-
-        System.out.println(player.g + " " + player.getVelocityY());
 
     }
 
