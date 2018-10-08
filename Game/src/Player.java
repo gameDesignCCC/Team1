@@ -20,13 +20,15 @@ public class Player extends Rectangle {
     private static double vY = 0.0;
 
     // Gravity
-    static double g = 0.5;
+    static double g = 0.5; /* This is really sensitive, no touchy touchy. */
 
     Player(double x, double y, double width, double height) {
         this.setX(x);
         this.setY(y);
         this.setWidth(width);
         this.setHeight(height);
+
+        this.setOpacity(0);
 
     }
 
@@ -109,7 +111,7 @@ public class Player extends Rectangle {
 
         if (up && !inJumpAnimaion){
 
-            vY += -10.0;
+            vY += -10.0; /* This is also really sensitive, no touchy touchy. */
             inJumpAnimaion = true;
 
         }
@@ -126,8 +128,7 @@ public class Player extends Rectangle {
 
         // I couldn't figure out how to get jumping to work so I made this.
         //enforceGravity();
-
-        System.out.println(vX + " " + vY);
+        
     }
 
 }

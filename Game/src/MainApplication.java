@@ -24,10 +24,10 @@ public class MainApplication extends Application {
     public static double windowSizeX = 600.0;
     public static double windowSizeY = 400.0;
 
-    Player player = new Player(0, windowSizeY - 100, 100, 100);
+    Player player = new Player(0, windowSizeY - 93, 40, 93);
 
     //Temporary Player Sprite !t
-    Image playerSprite = new Image("/assets/playerSprite.png");
+    Image playerSprite = new Image("/assets/PlayerSprite.png");
     ImageView playerSpriteView = new ImageView(playerSprite);
 
     // Temporary Map Background !t
