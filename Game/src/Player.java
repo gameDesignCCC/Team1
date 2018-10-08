@@ -2,17 +2,24 @@ import javafx.scene.shape.Rectangle;
 
 public class Player extends Rectangle {
 
+    // Get Window Size
     private double windowSizeX = MainApplication.windowSizeX;
     private double windowSizeY = MainApplication.windowSizeY;
 
-    private static double vX = 4.0;
-    private static double vY = 2.0;
+    // Player "HitBox"
+    private BoundingBox bbox = new BoundingBox(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight());
+
+    // Player Speed When Moved
+    private static double playerSpeed = 10.0;
+
+    // Player Velocity
+    private static double vX = 0.0;
+    private static double vY = 0.0;
 
     // Gravity
+    static double g = 4;
 
-    static double g = 2;
-
-    Player(double x, double y, double width, double height){
+    Player(double x, double y, double width, double height) {
         this.setX(x);
         this.setY(y);
         this.setWidth(width);
@@ -22,112 +29,81 @@ public class Player extends Rectangle {
 
     // Check Collisions
 
-    public boolean isCollidingLeft(){
-
-        if(this.getX() <= 0){
-            return true;
-        }else {
-            return false;
-        }
+    public boolean isCollidingLeft() {
+        return bbox.checkStageCollisionL();
     }
 
-    public boolean isCollidingRight(){
-
-        if(this.getX() + this.getWidth() >= windowSizeX){
-            return true;
-        }else {
-            return false;
-        }
+    public boolean isCollidingRight() {
+        return bbox.checkStageCollisionR();
     }
 
-    public boolean isCollidingBottom(){
-
-        if(this.getY() + this.getHeight() >= windowSizeY){
-            return true;
-        }else {
-            return false;
-        }
+    public boolean isCollidingBottom() {
+        return bbox.checkStageCollisionB();
     }
 
-    public boolean isCollidingTop(){
-
-        if(this.getY() <= 0){
-            return true;
-        }else {
-            return false;
-        }
+    public boolean isCollidingTop() {
+        return bbox.checkStageCollisionT();
     }
 
 
     // Player Movement
 
-    public void moveRight(){
-        this.setX( this.getX() + vX);
-    }
-
-    public void moveLeft(){
-        this.setX( this.getX() - vX);
+    public void move(){
+        this.setX(this.getX() + vX);
+        this.setY(this.getY() + vY);
     }
 
     // Player Jump
-
-    public void jump(){
-
-        if( vY > -20 ) {
-            vY -= g ;
-            this.setY(this.getY() + vY);
-        }
-
+    public void jump() {
+        //TODO : Add jump
     }
 
     // Player Gravity
+    public void enforceGravity() {
 
-    public void enforceGravity(boolean enabled){
-
-        if(enabled) {
-
-            //this.setY(this.getY() + g);
-
-            if (this.getY() + this.getHeight() >= windowSizeY) {
-                vY = 0;
-                this.setY(windowSizeY - this.getHeight());
-            }else{
-                this.setY(this.getY() + g);
-            }
-
+        if (this.getY() + this.getHeight() >= windowSizeY) {
+            vY = 0;
+            this.setY(windowSizeY - this.getHeight());
+        } else {
+            this.setY(this.getY() + g);
         }
+
     }
 
-    // Getters
+    // Velocity Getters
+    // Position and size can be called fromm Rectangle.
 
-    public double getVelocityY(){
+    public double getVelocityY() {
         return vY;
     }
 
-    public double getVelocityX(){
+    public double getVelocityX() {
         return vX;
     }
 
+    // Player Update
     public void onUpdate(boolean up, boolean left, boolean right) {
+
+        vX = 0;
+        vY = 0;
+
         // Player Controls
-        if (right) {
-            if (!this.isCollidingRight()) {
-                this.moveRight();
-            }
-        }
-        if (left) {
-            if (!this.isCollidingLeft()) {
-                this.moveLeft();
-            }
-        }
-        if (up) {
-            if (!this.isCollidingTop()) {
-                this.jump();
-            }
+
+        if (right && !isCollidingRight()) {
+            vX = playerSpeed;
+            move();
         }
 
+        if (left && !isCollidingLeft()) {
+            vX = playerSpeed * -1;
+            move();
+        }
+
+        bbox.setBounds(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight());
+
         // I couldn't figure out how to get jumping to work so I made this.
-        this.enforceGravity(true);
+        enforceGravity();
+
     }
 
 }

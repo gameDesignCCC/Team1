@@ -1,6 +1,8 @@
+// I don't know if this is what we're going to end up using.
 
 public class BoundingBox {
 
+    // Get Window Size
     double windowSizeX = MainApplication.windowSizeX;
     double windowSizeY = MainApplication.windowSizeY;
 
@@ -15,8 +17,20 @@ public class BoundingBox {
 
     }
 
+    // Check Other BoundingBox Collision
+
     public boolean checkCollision(BoundingBox other){
         return(maxX >= other.minX && minX <= other.maxX && maxY >= other.minY && minY <= other.maxX);
+    }
+
+    //Check Stage Collision
+
+    public boolean checkStageCollisionT(){
+        return(minY <= 0);
+    }
+
+    public boolean checkStageCollisionB(){
+        return(maxY >= windowSizeY);
     }
 
     public boolean checkStageCollisionL(){
@@ -25,14 +39,6 @@ public class BoundingBox {
 
     public boolean checkStageCollisionR(){
         return(maxX >= windowSizeX);
-    }
-
-    public boolean checkStageCollisionT(){
-        return(minY <= 0);
-    }
-
-    public boolean checkStageCollisionB(){
-        return(maxY >= windowSizeY);
     }
 
     //Getters
@@ -59,12 +65,12 @@ public class BoundingBox {
         this.minX = newMinX;
     }
 
-    public void setMaxX(double newMaxX){
-        this.maxX = newMaxX;
-    }
-
     public void setMinY(double newMinY){
         this.minY = newMinY;
+    }
+
+    public void setMaxX(double newMaxX){
+        this.maxX = newMaxX;
     }
 
     public void setMaxY(double newMaxY){
@@ -72,7 +78,6 @@ public class BoundingBox {
     }
 
     public void setBounds(double newMinX, double newMinY, double newMaxX, double newMaxY){
-        System.out.println("setbounds");
         this.minX = newMinX;
         this.minY = newMinY;
         this.maxX = newMaxX;

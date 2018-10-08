@@ -26,15 +26,20 @@ public class MainApplication extends Application {
 
     Player player = new Player(0, windowSizeY - 100, 100, 100);
 
+    //Temporary Player Sprite !t
     Image playerSprite = new Image("/assets/playerSprite.png");
     ImageView playerSpriteView = new ImageView(playerSprite);
 
-    // TEMP !t
+    // Temporary Map Background !t
     Image mapBg = new Image("/assets/bg.png");
     ImageView mapBgView = new ImageView(mapBg);
 
     // !f
     Label fpsCounter = new Label();
+
+    // Root and Scene
+    Pane root = new Pane();
+    Scene scene = new Scene(root, windowSizeX, windowSizeY);
 
     public static void main(String[] args) {
         launch(args);
@@ -43,12 +48,11 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Pane root = new Pane();
-        Scene scene = new Scene(root, windowSizeX, windowSizeY);
-
+        // !t
         playerSpriteView.setX(10);
         playerSpriteView.setY(10);
 
+        // !f
         fpsCounter.setTextFill(Color.GREEN);
 
         // Get key(s) pressed for player movements.
@@ -80,7 +84,7 @@ public class MainApplication extends Application {
 
         });
 
-        // Timer for game loop. / Should stay at ~60 UPS unless something went wrong (which can and has happened).
+        // Timer for game loop. / Should stay at ~60 UPS unless something went wrong which happens often.
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -100,6 +104,12 @@ public class MainApplication extends Application {
                     double frameRate = 1000000000.0 / elapsedNanosPerFrame;
                     fpsCounter.setText(String.format("UPS: %.2f", frameRate));
 
+                    if(frameRate > 65.00 || frameRate < 55.00){
+                        fpsCounter.setTextFill(Color.RED);
+                    }else {
+                        fpsCounter.setTextFill(Color.GREEN);
+                    }
+
                 }
 
             }
@@ -113,6 +123,7 @@ public class MainApplication extends Application {
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
 
+        // !t
         primaryStage.getIcons().add(new Image("/assets/favicon128.png"));
         primaryStage.setTitle("Placeholder Title");
         primaryStage.setScene(scene);
@@ -123,6 +134,8 @@ public class MainApplication extends Application {
     // Game Loop
     void update() {
         player.onUpdate(up, left, right);
+
+        // !t
         playerSpriteView.setX(player.getX());
         playerSpriteView.setY(player.getY());
     }
