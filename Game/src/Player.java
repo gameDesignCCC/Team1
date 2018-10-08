@@ -6,6 +6,9 @@ public class Player extends Rectangle {
     private double windowSizeX = MainApplication.windowSizeX;
     private double windowSizeY = MainApplication.windowSizeY;
 
+    // Player is in jump animation
+    private static boolean inJumpAnimaion = false;
+
     // Player "HitBox"
     private BoundingBox bbox = new BoundingBox(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight());
 
@@ -17,7 +20,7 @@ public class Player extends Rectangle {
     private static double vY = 0.0;
 
     // Gravity
-    static double g = 4;
+    static double g = 0.5;
 
     Player(double x, double y, double width, double height) {
         this.setX(x);
@@ -55,11 +58,10 @@ public class Player extends Rectangle {
 
     // Player Jump
     public void jump() {
-        //TODO : Add jump
     }
 
     // Player Gravity
-    public void enforceGravity() {
+    /*public void enforceGravity() {
 
         if (this.getY() + this.getHeight() >= windowSizeY) {
             vY = 0;
@@ -68,7 +70,7 @@ public class Player extends Rectangle {
             this.setY(this.getY() + g);
         }
 
-    }
+    }*/
 
     // Velocity Getters
     // Position and size can be called fromm Rectangle.
@@ -82,28 +84,50 @@ public class Player extends Rectangle {
     }
 
     // Player Update
+    // Not sure if this should be put in MainApplication.
     public void onUpdate(boolean up, boolean left, boolean right) {
 
+
         vX = 0;
-        vY = 0;
+        if(!inJumpAnimaion) {
+            vY = 0;
+        }
 
         // Player Controls
 
         if (right && !isCollidingRight()) {
-            vX = playerSpeed;
-            move();
+            vX += playerSpeed;
         }
 
         if (left && !isCollidingLeft()) {
-            vX = playerSpeed * -1;
-            move();
+            vX += playerSpeed * -1;
         }
 
+        if(inJumpAnimaion){
+            vY += g;
+        }
+
+        if (up && !inJumpAnimaion){
+
+            vY += -10.0;
+            inJumpAnimaion = true;
+
+        }
+
+        if(this.getY() + this.getHeight() >= windowSizeY){
+            inJumpAnimaion = false;
+            this.setY(windowSizeY - this.getHeight());
+        }
+
+        move();
+
+        // Reset BoundingBox bounds to current position.
         bbox.setBounds(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight());
 
         // I couldn't figure out how to get jumping to work so I made this.
-        enforceGravity();
+        //enforceGravity();
 
+        System.out.println(vX + " " + vY);
     }
 
 }
