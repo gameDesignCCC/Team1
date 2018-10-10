@@ -1,3 +1,16 @@
+/*
+ * Name: CCC 2018 Platformer Game (Fork)
+ * Date: 6/10/2018 - 10/10/2018
+ * Team: Advanced Game Development Team 1
+ * Author(s):
+ * Repo: https://github.com/JacobDixon0/Team1
+ * Original Repo: https://github.com/gameDesignCCC/Team1
+ */
+
+// Everything may be broken, but at least it's not as broken as before.
+// Probably going to end up re-writing all of this. - JD
+
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -10,6 +23,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class MainApplication extends Application {
+
+    Stage stage;
 
     //For FPS Display !f
     private final long[] frameTimes = new long[100];
@@ -24,7 +39,7 @@ public class MainApplication extends Application {
     public static double windowSizeX = 600.0;
     public static double windowSizeY = 400.0;
 
-    Player player = new Player(0, windowSizeY - 93, 40, 93);
+    Player player = new Player(34, windowSizeY - 93, 40, 93);
 
     //Temporary Player Sprite !t
     Image playerSprite = new Image("/assets/PlayerSprite.png");
@@ -48,6 +63,8 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        stage = primaryStage;
+
         // !t
         playerSpriteView.setX(10);
         playerSpriteView.setY(10);
@@ -56,7 +73,6 @@ public class MainApplication extends Application {
         fpsCounter.setTextFill(Color.GREEN);
 
         // Get key(s) pressed for player movements.
-        // (Move to player class?)
 
         scene.setOnKeyPressed(e -> {
             KeyCode key = e.getCode();
@@ -84,13 +100,14 @@ public class MainApplication extends Application {
 
         });
 
-        // Timer for game loop. / Should stay at ~60 UPS unless something went wrong which happens often.
+        // Timer for game loop. / Should stay at ~60 UPS unless something went wrong, which happens often.
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 update();
 
                 // FPS Display !f
+
                 long oldFrameTime = frameTimes[frameTimeIndex];
                 frameTimes[frameTimeIndex] = now;
                 frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
@@ -104,7 +121,7 @@ public class MainApplication extends Application {
                     double frameRate = 1000000000.0 / elapsedNanosPerFrame;
                     fpsCounter.setText(String.format("UPS: %.2f", frameRate));
 
-                    if(frameRate > 65.00 || frameRate < 55.00){
+                    if(frameRate > 70.00 || frameRate < 50.00){
                         fpsCounter.setTextFill(Color.RED);
                     }else {
                         fpsCounter.setTextFill(Color.GREEN);
@@ -122,6 +139,7 @@ public class MainApplication extends Application {
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
+        primaryStage.setOnCloseRequest(e -> exit());
 
         // !t
         primaryStage.getIcons().add(new Image("/assets/favicon128.png"));
@@ -138,6 +156,12 @@ public class MainApplication extends Application {
         // !t
         playerSpriteView.setX(player.getX());
         playerSpriteView.setY(player.getY());
+
+    }
+
+    public void exit(){
+        // Save something or whatever.
+        stage.close();
     }
 
 }

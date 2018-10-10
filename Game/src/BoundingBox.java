@@ -1,4 +1,9 @@
-// I don't know if this is what we're going to end up using.
+/*
+ * Author(s): Jacob Dixon @jacobrdixon.com
+ * Date: 6/10/2018 - 10/10/2018
+ */
+
+// I don't know if we're going to use this.
 
 public class BoundingBox {
 
@@ -9,12 +14,10 @@ public class BoundingBox {
     double minX, minY, maxX, maxY;
 
     public BoundingBox(double minX, double minY, double maxX, double maxY){
-
         this.minX = minX;
         this.minY = minY;
         this.maxX = maxX;
         this.maxY = maxY;
-
     }
 
     // Check Other BoundingBox Collision
@@ -23,25 +26,41 @@ public class BoundingBox {
         return(maxX >= other.minX && minX <= other.maxX && maxY >= other.minY && minY <= other.maxX);
     }
 
+    public boolean checkCollisionTop(BoundingBox other){
+        return(minY <= other.maxY);
+    }
+
+    public boolean checkCollisionBottom(BoundingBox other){
+        return(maxY <= other.minY);
+    }
+
+    public boolean checkCollisionLeft(BoundingBox other){
+        return(minX >= other.maxX);
+    }
+
+    public boolean checkCollisionRight(BoundingBox other){
+        return(maxX <= other.minX);
+    }
+
     //Check Stage Collision
 
-    public boolean checkStageCollisionT(){
+    public boolean checkStageCollisionTop(){
         return(minY <= 0);
     }
 
-    public boolean checkStageCollisionB(){
+    public boolean checkStageCollisionBottom(){
         return(maxY >= windowSizeY);
     }
 
-    public boolean checkStageCollisionL(){
+    public boolean checkStageCollisionLeft(){
         return(minX <= 0);
     }
 
-    public boolean checkStageCollisionR(){
+    public boolean checkStageCollisionRight(){
         return(maxX >= windowSizeX);
     }
 
-    //Getters
+    //Get Bounds
 
     public double getMinX(){
         return this.minX;
@@ -59,7 +78,7 @@ public class BoundingBox {
         return this.maxY;
     }
 
-    //Setters
+    //Set Bounds
 
     public void setMinX(double newMinX){
         this.minX = newMinX;

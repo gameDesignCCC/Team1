@@ -1,5 +1,11 @@
+/*
+ * Author(s): Jacob Dixon @jacobrdixon.com
+ * Date: 6/10/2018 - 10/10/2018
+ */
+
 import javafx.scene.shape.Rectangle;
 
+// This should probably be changed to ImageView.
 public class Player extends Rectangle {
 
     // Get Window Size
@@ -19,6 +25,9 @@ public class Player extends Rectangle {
     private static double vX = 0.0;
     private static double vY = 0.0;
 
+    private boolean isMovingRight = false;
+    private boolean isMovingLeft = false;
+
     // Gravity
     static double g = 0.5; /* This is really sensitive, no touchy touchy. */
 
@@ -28,6 +37,8 @@ public class Player extends Rectangle {
         this.setWidth(width);
         this.setHeight(height);
 
+        this.bbox.setBounds(x, y, width, height);
+
         this.setOpacity(0);
 
     }
@@ -35,19 +46,19 @@ public class Player extends Rectangle {
     // Check Collisions
 
     public boolean isCollidingLeft() {
-        return bbox.checkStageCollisionL();
+        return bbox.checkStageCollisionLeft();
     }
 
     public boolean isCollidingRight() {
-        return bbox.checkStageCollisionR();
+        return bbox.checkStageCollisionRight();
     }
 
     public boolean isCollidingBottom() {
-        return bbox.checkStageCollisionB();
+        return bbox.checkStageCollisionBottom();
     }
 
     public boolean isCollidingTop() {
-        return bbox.checkStageCollisionT();
+        return bbox.checkStageCollisionTop();
     }
 
 
@@ -62,19 +73,8 @@ public class Player extends Rectangle {
     public void jump() {
     }
 
-    // Player Gravity
-    /*public void enforceGravity() {
 
-        if (this.getY() + this.getHeight() >= windowSizeY) {
-            vY = 0;
-            this.setY(windowSizeY - this.getHeight());
-        } else {
-            this.setY(this.getY() + g);
-        }
-
-    }*/
-
-    // Velocity Getters
+    // Get Velocity
     // Position and size can be called fromm Rectangle.
 
     public double getVelocityY() {
@@ -85,12 +85,17 @@ public class Player extends Rectangle {
         return vX;
     }
 
+    // Get BoundingBox
+    public BoundingBox getBbox(){
+        return bbox;
+    }
+
     // Player Update
     // Not sure if this should be put in MainApplication.
     public void onUpdate(boolean up, boolean left, boolean right) {
 
-
         vX = 0;
+
         if(!inJumpAnimaion) {
             vY = 0;
         }
@@ -99,10 +104,12 @@ public class Player extends Rectangle {
 
         if (right && !isCollidingRight()) {
             vX += playerSpeed;
+            isMovingRight = true;
         }
 
         if (left && !isCollidingLeft()) {
             vX += playerSpeed * -1;
+            isMovingLeft = true;
         }
 
         if(inJumpAnimaion){
@@ -126,9 +133,6 @@ public class Player extends Rectangle {
         // Reset BoundingBox bounds to current position.
         bbox.setBounds(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight());
 
-        // I couldn't figure out how to get jumping to work so I made this.
-        //enforceGravity();
-        
     }
 
 }
