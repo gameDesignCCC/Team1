@@ -36,8 +36,8 @@ public class MainApplication extends Application {
     private static boolean right = false;
     private static boolean left = false;
 
-    public static double windowSizeX = 600.0;
-    public static double windowSizeY = 400.0;
+    public static double windowSizeX = 1280.0;
+    public static double windowSizeY = 720.0;
 
     Player player = new Player(34, windowSizeY - 93, 40, 93);
 
