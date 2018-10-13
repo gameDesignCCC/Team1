@@ -42,7 +42,7 @@ public class MainApplication extends Application {
     Player player = new Player(34, windowSizeY - 93, 40, 93);
 
     //Temporary Player Sprite !t
-    Image playerSprite = new Image("/assets/PlayerSprite.png");
+    Image playerSprite = new Image("/assets/playerSprite.png");
     ImageView playerSpriteView = new ImageView(playerSprite);
 
     // Temporary Map Background !t
