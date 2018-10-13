@@ -1,15 +1,11 @@
 /*
  * Name: CCC 2018 Platformer Game (Fork)
- * Date: 6/10/2018 - 10/10/2018
+ * Date: 6/10/2018 - 13/10/2018
  * Team: Advanced Game Development Team 1
  * Author(s):
  * Repo: https://github.com/JacobDixon0/Team1
  * Original Repo: https://github.com/gameDesignCCC/Team1
  */
-
-// Everything may be broken, but at least it's not as broken as before.
-// Probably going to end up re-writing all of this. - JD
-
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -20,13 +16,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class MainApplication extends Application {
 
     Stage stage;
 
-    //For FPS Display !f
+    //For FPS Display
     private final long[] frameTimes = new long[100];
     private int frameTimeIndex = 0;
     private boolean arrayFilled = false;
@@ -36,41 +33,36 @@ public class MainApplication extends Application {
     private static boolean right = false;
     private static boolean left = false;
 
-    public static double windowSizeX = 1280.0;
-    public static double windowSizeY = 720.0;
+    // Stage size
+    public static final double WINDOWSIZEX = 1280.0;
+    public static final double WINDOWSIZEY = 720.0;
 
-    Player player = new Player(34, windowSizeY - 93, 40, 93);
+    //Temporary Player Sprite
+    public Image playerSprite = new Image("/assets/playerSprite.png");
+    public Image PplayerSprite = new Image("/assets/PlaceholderPlayerSprite.png");
 
-    //Temporary Player Sprite !t
-    Image playerSprite = new Image("/assets/playerSprite.png");
-    ImageView playerSpriteView = new ImageView(playerSprite);
+    public Player player = new Player(0, WINDOWSIZEY - PplayerSprite.getHeight(), PplayerSprite.getWidth(), PplayerSprite.getHeight(), PplayerSprite );
 
-    // Temporary Map Background !t
-    Image mapBg = new Image("/assets/bg.png");
-    ImageView mapBgView = new ImageView(mapBg);
+    // Temporary Map Background
+    public Image mapBg = new Image("/assets/bg.png");
+    public ImageView mapBgView = new ImageView(mapBg);
 
-    // !f
-    Label fpsCounter = new Label();
+    public Label fpsCounter = new Label();
 
     // Root and Scene
-    Pane root = new Pane();
-    Scene scene = new Scene(root, windowSizeX, windowSizeY);
+    private Pane root = new Pane();
+    private Scene scene = new Scene(root, WINDOWSIZEX, WINDOWSIZEY);
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    // Temporary for collision detection.
+    static Rectangle box = new Rectangle(500, WINDOWSIZEY-100, 100, 100);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         stage = primaryStage;
 
-        // !t
-        playerSpriteView.setX(10);
-        playerSpriteView.setY(10);
-
-        // !f
-        fpsCounter.setTextFill(Color.GREEN);
+        // Temporary for collision detection.
+        box.setFill(Color.RED);
 
         // Get key(s) pressed for player movements.
 
@@ -106,7 +98,7 @@ public class MainApplication extends Application {
             public void handle(long now) {
                 update();
 
-                // FPS Display !f
+                // FPS Display
 
                 long oldFrameTime = frameTimes[frameTimeIndex];
                 frameTimes[frameTimeIndex] = now;
@@ -134,14 +126,12 @@ public class MainApplication extends Application {
 
         timer.start();
 
-        // !f !t
-        root.getChildren().addAll(mapBgView, player, fpsCounter, playerSpriteView);
+        root.getChildren().addAll(mapBgView, fpsCounter, player, box);
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         primaryStage.setOnCloseRequest(e -> exit());
 
-        // !t
         primaryStage.getIcons().add(new Image("/assets/favicon128.png"));
         primaryStage.setTitle("Placeholder Title");
         primaryStage.setScene(scene);
@@ -152,16 +142,16 @@ public class MainApplication extends Application {
     // Game Loop
     void update() {
         player.onUpdate(up, left, right);
-
-        // !t
-        playerSpriteView.setX(player.getX());
-        playerSpriteView.setY(player.getY());
-
     }
 
+    // Exit Application
     public void exit(){
         // Save something or whatever.
         stage.close();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
 }
