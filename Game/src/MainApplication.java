@@ -20,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class MainApplication extends Application {
@@ -36,16 +37,18 @@ public class MainApplication extends Application {
     private static boolean right = false;
     private static boolean left = false;
 
-    public static double windowSizeX = 1280.0;
-    public static double windowSizeY = 720.0;
+    public static final double WINDOWSIZEX = 1280.0;
+    public static final double WINDOWSIZEY = 720.0;
 
-    Player player = new Player(34, windowSizeY - 93, 40, 93);
+    public final Collision c = new Collision();
 
-    //Temporary Player Sprite !t
+    //Temporary Player Sprite
     Image playerSprite = new Image("/assets/playerSprite.png");
-    ImageView playerSpriteView = new ImageView(playerSprite);
+    Image PplayerSprite = new Image("/assets/PlaceholderPlayerSprite.png");
 
-    // Temporary Map Background !t
+    Player player = new Player(700, WINDOWSIZEY - PplayerSprite.getHeight(), PplayerSprite.getWidth(), PplayerSprite.getHeight(), PplayerSprite );
+
+    // Temporary Map Background
     Image mapBg = new Image("/assets/bg.png");
     ImageView mapBgView = new ImageView(mapBg);
 
@@ -54,7 +57,9 @@ public class MainApplication extends Application {
 
     // Root and Scene
     Pane root = new Pane();
-    Scene scene = new Scene(root, windowSizeX, windowSizeY);
+    Scene scene = new Scene(root, WINDOWSIZEX, WINDOWSIZEY);
+
+    static Rectangle box = new Rectangle(500, WINDOWSIZEY-100, 100, 100);
 
     public static void main(String[] args) {
         launch(args);
@@ -65,9 +70,7 @@ public class MainApplication extends Application {
 
         stage = primaryStage;
 
-        // !t
-        playerSpriteView.setX(10);
-        playerSpriteView.setY(10);
+        box.setFill(Color.RED);
 
         // !f
         fpsCounter.setTextFill(Color.GREEN);
@@ -135,7 +138,7 @@ public class MainApplication extends Application {
         timer.start();
 
         // !f !t
-        root.getChildren().addAll(mapBgView, player, fpsCounter, playerSpriteView);
+        root.getChildren().addAll(mapBgView, fpsCounter, player, box);
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
@@ -148,15 +151,10 @@ public class MainApplication extends Application {
         primaryStage.show();
 
     }
-
     // Game Loop
     void update() {
         player.onUpdate(up, left, right);
-
-        // !t
-        playerSpriteView.setX(player.getX());
-        playerSpriteView.setY(player.getY());
-
+        System.out.println(c.isCollidingRight(box,player) + " " + c.isCollidingLeft(box,player));
     }
 
     public void exit(){
