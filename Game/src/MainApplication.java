@@ -1,15 +1,11 @@
 /*
  * Name: CCC 2018 Platformer Game (Fork)
- * Date: 6/10/2018 - 10/10/2018
+ * Date: 6/10/2018 - 13/10/2018
  * Team: Advanced Game Development Team 1
  * Author(s):
  * Repo: https://github.com/JacobDixon0/Team1
  * Original Repo: https://github.com/gameDesignCCC/Team1
  */
-
-// Everything may be broken, but at least it's not as broken as before.
-// Probably going to end up re-writing all of this. - JD
-
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -27,7 +23,7 @@ public class MainApplication extends Application {
 
     Stage stage;
 
-    //For FPS Display !f
+    //For FPS Display
     private final long[] frameTimes = new long[100];
     private int frameTimeIndex = 0;
     private boolean arrayFilled = false;
@@ -40,40 +36,32 @@ public class MainApplication extends Application {
     public static final double WINDOW_SIZE_X = 1280.0;
     public static final double WINDOW_SIZE_Y = 720.0;
 
-    public final Collision c = new Collision();
-
     //Temporary Player Sprite
-    Image playerSprite = new Image("/assets/playerSprite.png");
-    Image PplayerSprite = new Image("/assets/PlaceholderPlayerSprite.png");
+    public Image playerSprite = new Image("/assets/playerSprite.png");
+    public Image PplayerSprite = new Image("/assets/PlaceholderPlayerSprite.png");
 
-    Player player = new Player(700, WINDOW_SIZE_Y - PplayerSprite.getHeight(), PplayerSprite.getWidth(), PplayerSprite.getHeight(), PplayerSprite );
+    public Player player = new Player(0, WINDOW_SIZE_Y - PplayerSprite.getHeight(), PplayerSprite.getWidth(), PplayerSprite.getHeight(), PplayerSprite );
 
     // Temporary Map Background
-    Image mapBg = new Image("/assets/bg.png");
-    ImageView mapBgView = new ImageView(mapBg);
+    public Image mapBg = new Image("/assets/bg.png");
+    public ImageView mapBgView = new ImageView(mapBg);
 
-    // !f
-    Label fpsCounter = new Label();
+    public Label fpsCounter = new Label();
 
     // Root and Scene
-    Pane root = new Pane();
-    Scene scene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+    private Pane root = new Pane();
+    private Scene scene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
-    static Rectangle box = new Rectangle(500, WINDOW_SIZE_Y -100, 100, 100);
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+    // Temporary for collision detection.
+    static Rectangle box = new Rectangle(500, WINDOW_SIZE_Y-100, 100, 100);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         stage = primaryStage;
 
+        // Temporary for collision detection.
         box.setFill(Color.RED);
-
-        // !f
-        fpsCounter.setTextFill(Color.GREEN);
 
         // Get key(s) pressed for player movements.
 
@@ -109,7 +97,7 @@ public class MainApplication extends Application {
             public void handle(long now) {
                 update();
 
-                // FPS Display !f
+                // FPS Display
 
                 long oldFrameTime = frameTimes[frameTimeIndex];
                 frameTimes[frameTimeIndex] = now;
@@ -137,14 +125,12 @@ public class MainApplication extends Application {
 
         timer.start();
 
-        // !f !t
         root.getChildren().addAll(mapBgView, fpsCounter, player, box);
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         primaryStage.setOnCloseRequest(e -> exit());
 
-        // !t
         primaryStage.getIcons().add(new Image("/assets/favicon128.png"));
         primaryStage.setTitle("Placeholder Title");
         primaryStage.setScene(scene);
@@ -157,15 +143,18 @@ public class MainApplication extends Application {
      */
     void update() {
         player.onUpdate(up, left, right);
-        System.out.println(c.isCollidingRight(box,player) + " " + c.isCollidingLeft(box,player));
     }
 
     /**
-     * TODO Add descriptions
+     * Exit Application
      */
     public void exit(){
         // Save something or whatever.
         stage.close();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
 }

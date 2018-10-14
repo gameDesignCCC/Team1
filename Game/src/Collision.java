@@ -1,6 +1,6 @@
 /*
  * Author(s):
- * Date: 6/10/2018
+ * Date: 13/10/2018
  */
 
 import javafx.scene.image.ImageView;
@@ -16,15 +16,7 @@ public class Collision {
      * @return
      */
     public boolean isCollidingRight(Rectangle box, ImageView player) {
-
-
-        if (player.getX() + player.getFitWidth() >= box.getX() && !(player.getX() >= box.getX() + box.getWidth())) {
-            return true;
-
-        } else {
-            return false;
-        }
-
+        return (player.getX() + player.getFitWidth() >= box.getX() && !(player.getX() >= box.getX() + box.getWidth()));
     }
 
     /**
@@ -35,12 +27,6 @@ public class Collision {
      * @return
      */
     public boolean isCollidingLeft(Rectangle box, ImageView player) {
-
-
-        if (player.getX() <= box.getX() + box.getWidth() && !(player.getX() + player.getFitWidth() <= box.getX())) {
-            return true;
-        } else {
-            return false;
-        }
+        return (player.getX() <= box.getX() + box.getWidth() && !(player.getX() + player.getFitWidth() <= box.getX()));
     }
 }

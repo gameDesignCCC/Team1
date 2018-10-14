@@ -1,6 +1,6 @@
 /*
  * Author(s): Jacob Dixon @jacobrdixon.com
- * Date: 6/10/2018 - 10/10/2018
+ * Date: 6/10/2018 - 13/10/2018
  */
 
 import javafx.scene.image.Image;
@@ -9,12 +9,8 @@ import javafx.scene.shape.Rectangle;
 
 public class Player extends ImageView {
 
-    // Get Window Size
-    private double WINDOWSIZEX = MainApplication.WINDOW_SIZE_X;
-    private double WINDOWSIZEY = MainApplication.WINDOW_SIZE_Y;
-
     // Player is in jump animation
-    private static boolean inJumpAnimaion = false;
+    private static boolean inJumpAnimation = false;
 
     // Player Speed When Moved
     private static double playerSpeed = 10.0;
@@ -29,7 +25,8 @@ public class Player extends ImageView {
     // Gravity
     static double g = 0.5; /* This is really sensitive, no touchy touchy. */
 
-    Collision c = new Collision();
+    Collision playerCollision = new Collision();
+
     Rectangle box = MainApplication.box;
 
     Player(double x, double y, double width, double height, Image sprite) {
@@ -64,8 +61,8 @@ public class Player extends ImageView {
      * Check Collision Left
      * @return
      */
-    public boolean checkStageCollisionLeft(){
-        return(this.getX() <= 0);
+    public boolean checkStageCollisionLeft() {
+        return (this.getX() + this.getFitWidth() >= MainApplication.WINDOW_SIZE_X);
     }
 
     /**
@@ -118,49 +115,57 @@ public class Player extends ImageView {
     public void onUpdate(boolean up, boolean left, boolean right) {
         vX = 0;
 
-
-        if(!inJumpAnimaion) {
+        if(!inJumpAnimation) {
             vY = 0;
         }
 
         // Player Controls
+        if (right &&
+                !checkStageCollisionRight() &&
+                !( this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X ) &&
+                !( playerCollision.isCollidingRight( box,this ) ) ) {
 
-        if (right && !checkStageCollisionRight() && !(this.getX() + this.getFitWidth() + playerSpeed >= WINDOWSIZEX) && !(c.isCollidingRight(box,this))) {
             vX += playerSpeed;
             isMovingRight = true;
-        }else if(isMovingRight && this.getX() + this.getFitWidth() + playerSpeed >= WINDOWSIZEX) {
-            setX(WINDOWSIZEX - this.getFitWidth());
+
+        } else if ( isMovingRight && this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X ) {
+            setX( MainApplication.WINDOW_SIZE_X - this.getFitWidth() );
             isMovingRight = false;
 
         }
 
-        if (left && !checkStageCollisionLeft() && !(this.getX() - playerSpeed <= 0) && !(c.isCollidingLeft(box,this))){
+
+        if (left &&
+                !checkStageCollisionLeft() &&
+                !( this.getX() - playerSpeed <= 0 ) &&
+                !( playerCollision.isCollidingLeft( box,this ) ) ) {
+
             vX += playerSpeed * -1;
             isMovingLeft = true;
-        }else if(isMovingLeft && this.getX() - playerSpeed <= 0) {
+
+        } else if ( isMovingLeft && this.getX() - playerSpeed <= 0 ) {
             setX(0);
             isMovingLeft = false;
 
         }
 
-        if(inJumpAnimaion){
-            if(!(this.getY() + this.getFitHeight() >= WINDOWSIZEY)) {
+        if(inJumpAnimation){
+            if(!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y ) ) {
                 vY += g;
-            }else if(this.getY() + this.getFitHeight() >= WINDOWSIZEY){
+            }else if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
                 vY = 0;
             }
         }
 
-        if (up && !inJumpAnimaion){
-
+        if (up && !inJumpAnimation){
             vY += -10.0; /* This is also really sensitive, no touchy touchy. */
-            inJumpAnimaion = true;
+            inJumpAnimation = true;
 
         }
 
-        if(this.getY() + this.getFitHeight() >= WINDOWSIZEY){
-            inJumpAnimaion = false;
-            this.setY(WINDOWSIZEY - this.getFitHeight());
+        if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
+            inJumpAnimation = false;
+            this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
         }
 
         move();
