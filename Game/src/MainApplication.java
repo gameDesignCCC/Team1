@@ -37,8 +37,8 @@ public class MainApplication extends Application {
     private static boolean right = false;
     private static boolean left = false;
 
-    public static final double WINDOWSIZEX = 1280.0;
-    public static final double WINDOWSIZEY = 720.0;
+    public static final double WINDOW_SIZE_X = 1280.0;
+    public static final double WINDOW_SIZE_Y = 720.0;
 
     public final Collision c = new Collision();
 
@@ -46,7 +46,7 @@ public class MainApplication extends Application {
     Image playerSprite = new Image("/assets/playerSprite.png");
     Image PplayerSprite = new Image("/assets/PlaceholderPlayerSprite.png");
 
-    Player player = new Player(700, WINDOWSIZEY - PplayerSprite.getHeight(), PplayerSprite.getWidth(), PplayerSprite.getHeight(), PplayerSprite );
+    Player player = new Player(700, WINDOW_SIZE_Y - PplayerSprite.getHeight(), PplayerSprite.getWidth(), PplayerSprite.getHeight(), PplayerSprite );
 
     // Temporary Map Background
     Image mapBg = new Image("/assets/bg.png");
@@ -57,9 +57,9 @@ public class MainApplication extends Application {
 
     // Root and Scene
     Pane root = new Pane();
-    Scene scene = new Scene(root, WINDOWSIZEX, WINDOWSIZEY);
+    Scene scene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
-    static Rectangle box = new Rectangle(500, WINDOWSIZEY-100, 100, 100);
+    static Rectangle box = new Rectangle(500, WINDOW_SIZE_Y -100, 100, 100);
 
     public static void main(String[] args) {
         launch(args);
@@ -151,12 +151,18 @@ public class MainApplication extends Application {
         primaryStage.show();
 
     }
-    // Game Loop
+
+    /**
+     * Main Game Loop
+     */
     void update() {
         player.onUpdate(up, left, right);
         System.out.println(c.isCollidingRight(box,player) + " " + c.isCollidingLeft(box,player));
     }
 
+    /**
+     * TODO Add descriptions
+     */
     public void exit(){
         // Save something or whatever.
         stage.close();

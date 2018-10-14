@@ -7,12 +7,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
-// This should probably be changed to ImageView.
 public class Player extends ImageView {
 
     // Get Window Size
-    private double WINDOWSIZEX = MainApplication.WINDOWSIZEX;
-    private double WINDOWSIZEY = MainApplication.WINDOWSIZEY;
+    private double WINDOWSIZEX = MainApplication.WINDOW_SIZE_X;
+    private double WINDOWSIZEY = MainApplication.WINDOW_SIZE_Y;
 
     // Player is in jump animation
     private static boolean inJumpAnimaion = false;
@@ -42,50 +41,80 @@ public class Player extends ImageView {
 
     }
 
-    // Check Collisions
-
+    /**
+     * TODO Add descriptions
+     * Check Collision Top
+     * @return
+     */
     public boolean checkStageCollisionTop(){
         return(this.getY() <= 0);
     }
 
+    /**
+     * TODO Add descriptions
+     * Check Collision Bottom
+     * @return
+     */
     public boolean checkStageCollisionBottom(){
-        return(this.getY()  + this.getFitHeight() >= WINDOWSIZEY);
+        return(this.getY()  + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y);
     }
 
+    /**
+     * TODO Add descriptions
+     * Check Collision Left
+     * @return
+     */
     public boolean checkStageCollisionLeft(){
         return(this.getX() <= 0);
     }
 
+    /**
+     * TODO Add descriptions
+     * Check Collision Right
+     * @return
+     */
     public boolean checkStageCollisionRight(){
-        return(this.getX() + this.getFitWidth() >= WINDOWSIZEX);
+        return(this.getX() + this.getFitWidth() >= MainApplication.WINDOW_SIZE_X);
     }
 
-
-    // Player Movement
-
+    /**
+     * TODO update description
+     * Player Movement
+     */
     public void move(){
         this.setX(this.getX() + vX);
         this.setY(this.getY() + vY);
     }
 
-    // Player Jump
+    /**
+     * TODO update description
+     * Player Jump
+     */
     public void jump() {
     }
 
-
-    // Get Velocity
-    // Position and size can be called fromm Rectangle.
-
+    /**
+     * TODO Add descriptions
+     *
+     * Position and size can be called fromm Rectangle.
+     *
+     * @return
+     */
     public double getVelocityY() {
         return vY;
     }
 
+    /**
+     * TODO Add descriptions
+     * @return
+     */
     public double getVelocityX() {
         return vX;
     }
 
-    // Player Update
-    // Not sure if this should be put in MainApplication.
+    /**
+     * Player update method called every frame
+     */
     public void onUpdate(boolean up, boolean left, boolean right) {
         vX = 0;
 

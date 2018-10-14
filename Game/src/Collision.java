@@ -7,6 +7,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
 public class Collision {
+
+    /**
+     * TODO Add descriptions
+     *
+     * @param box
+     * @param player
+     * @return
+     */
     public boolean isCollidingRight(Rectangle box, ImageView player) {
 
 
@@ -19,6 +27,13 @@ public class Collision {
 
     }
 
+    /**
+     * TODO Add descriptions
+     *
+     * @param box
+     * @param player
+     * @return
+     */
     public boolean isCollidingLeft(Rectangle box, ImageView player) {
 
 
