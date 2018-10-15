@@ -23,9 +23,10 @@ public class Player extends ImageView {
     private boolean isMovingLeft = false;
 
     // Gravity
-    static double g = 0.5; /* This is really sensitive, no touchy touchy. */
+    static double g = 0.5;
 
     Collision playerCollision = new Collision();
+
 
     Rectangle box = MainApplication.box;
 
@@ -59,16 +60,16 @@ public class Player extends ImageView {
     /**
      * TODO Add descriptions
      * Check Collision Left
-     * @return
+     * @return Whether the player is colliding with the left edge of the stage or not.
      */
     public boolean checkStageCollisionLeft() {
-        return (this.getX() + this.getFitWidth() >= MainApplication.WINDOW_SIZE_X);
+        return (this.getX() <= 0);
     }
 
     /**
      * TODO Add descriptions
      * Check Collision Right
-     * @return
+     * @return Returns whether the player is colliding with the right edge of the stage or not.
      */
     public boolean checkStageCollisionRight(){
         return(this.getX() + this.getFitWidth() >= MainApplication.WINDOW_SIZE_X);
@@ -77,6 +78,7 @@ public class Player extends ImageView {
     /**
      * TODO update description
      * Player Movement
+     * Moves the player every frame.
      */
     public void move(){
         this.setX(this.getX() + vX);
@@ -84,35 +86,29 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO update description
-     * Player Jump
-     */
-    public void jump() {
-    }
-
-    /**
      * TODO Add descriptions
      *
-     * Position and size can be called fromm Rectangle.
+     * Position and size can be called fromm ImageView.
      *
-     * @return
+     * @return Returns value of Y velocity.
      */
-    public double getVelocityY() {
+    public double getvY() {
         return vY;
     }
 
     /**
      * TODO Add descriptions
-     * @return
+     * @return Returns value of X velocity.
      */
-    public double getVelocityX() {
+    public double getvX() {
         return vX;
     }
 
     /**
-     * Player update method called every frame
+     * Player update method called every frame.
      */
     public void onUpdate(boolean up, boolean left, boolean right) {
+
         vX = 0;
 
         if(!inJumpAnimation) {
@@ -120,6 +116,7 @@ public class Player extends ImageView {
         }
 
         // Player Controls
+
         if (right &&
                 !checkStageCollisionRight() &&
                 !( this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X ) &&
@@ -133,7 +130,6 @@ public class Player extends ImageView {
             isMovingRight = false;
 
         }
-
 
         if (left &&
                 !checkStageCollisionLeft() &&
@@ -155,16 +151,31 @@ public class Player extends ImageView {
             }else if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
                 vY = 0;
             }
+
+            if (playerCollision.willCollide(box, this)) {
+
+                vY  = 0.0;
+                double diff = box.getY() - (this.getY() + this.getFitHeight());
+
+                this.setY(this.getY() + diff);
+
+                inJumpAnimation = false;
+            }
+
         }
 
         if (up && !inJumpAnimation){
-            vY += -10.0; /* This is also really sensitive, no touchy touchy. */
+            vY += -10.0;
             inJumpAnimation = true;
 
         }
 
         if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
             inJumpAnimation = false;
+            this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
+        }
+
+        if( !inJumpAnimation && !playerCollision.isCollidingBottom(box, this) && !checkStageCollisionBottom()){
             this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
         }
 

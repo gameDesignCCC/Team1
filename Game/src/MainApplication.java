@@ -9,6 +9,7 @@
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -36,11 +37,11 @@ public class MainApplication extends Application {
     public static final double WINDOW_SIZE_X = 1280.0;
     public static final double WINDOW_SIZE_Y = 720.0;
 
-    //Temporary Player Sprite
+    //Temporary Player Sprites
     public Image playerSprite = new Image("/assets/playerSprite.png");
-    public Image PplayerSprite = new Image("/assets/PlaceholderPlayerSprite.png");
+    public Image pPlayerSprite = new Image("/assets/placeholderPlayerSprite.png");
 
-    public Player player = new Player(0, WINDOW_SIZE_Y - PplayerSprite.getHeight(), PplayerSprite.getWidth(), PplayerSprite.getHeight(), PplayerSprite );
+    public Player player = new Player(0, WINDOW_SIZE_Y - pPlayerSprite.getHeight(), pPlayerSprite.getWidth(), pPlayerSprite.getHeight(), pPlayerSprite );
 
     // Temporary Map Background
     public Image mapBg = new Image("/assets/bg.png");
@@ -53,14 +54,14 @@ public class MainApplication extends Application {
     private Scene scene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
     // Temporary for collision detection.
-    static Rectangle box = new Rectangle(500, WINDOW_SIZE_Y-100, 100, 100);
+    static Rectangle box = new Rectangle(500, WINDOW_SIZE_Y - 100, 100, 100);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         stage = primaryStage;
 
-        // Temporary for collision detection.
+        // Temporary for testing collision detection.
         box.setFill(Color.RED);
 
         // Get key(s) pressed for player movements.
@@ -138,11 +139,16 @@ public class MainApplication extends Application {
 
     }
 
+    public void addToRoot(Node node){
+        root.getChildren().add(node);
+    }
+
     /**
      * Main Game Loop
      */
-    void update() {
+    private void update() {
         player.onUpdate(up, left, right);
+
     }
 
     /**
