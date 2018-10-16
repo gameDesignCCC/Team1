@@ -12,8 +12,8 @@ public class Player extends ImageView {
     // Player is in jump animation
     private static boolean inJumpAnimation = false;
 
-    // Player Speed When Moved
-    private static double playerSpeed = 10.0;
+    // Player Speed When Moved / It's hard to tell what a good player speed would be because I'm getting ~300 UPS :/
+    private static double playerSpeed = 5.0;
 
     // Player Velocity
     private static double vX = 0.0;
@@ -117,6 +117,8 @@ public class Player extends ImageView {
 
         // Player Controls
 
+        // L&R Controls
+
         if (right &&
                 !checkStageCollisionRight() &&
                 !( this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X ) &&
@@ -145,11 +147,15 @@ public class Player extends ImageView {
 
         }
 
+        // Jumping Controls
+
         if(inJumpAnimation){
+
             if(!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y ) ) {
                 vY += g;
             }else if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
                 vY = 0;
+                inJumpAnimation = false;
             }
 
             if (playerCollision.willCollide(box, this)) {
@@ -164,19 +170,24 @@ public class Player extends ImageView {
 
         }
 
+        // Jump
         if (up && !inJumpAnimation){
             vY += -10.0;
             inJumpAnimation = true;
 
         }
 
+        // Set inJumpAnimation false when player collides with stage bottom.
         if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
             inJumpAnimation = false;
             this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
         }
 
+        // This works for now but probably won't work in the future... actually that's applicable for pretty much everything here.
         if( !inJumpAnimation && !playerCollision.isCollidingBottom(box, this) && !checkStageCollisionBottom()){
-            this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
+            //this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
+            inJumpAnimation = true;
+
         }
 
         move();
