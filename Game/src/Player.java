@@ -27,7 +27,7 @@ public class Player extends ImageView {
 
     Collision playerCollision = new Collision();
 
-
+    // Temporary object created fore testing collision.
     Rectangle box = MainApplication.box;
 
     Player(double x, double y, double width, double height, Image sprite) {
@@ -117,7 +117,7 @@ public class Player extends ImageView {
 
         // Player Controls
 
-        // L&R Controls
+        //  |- L&R Controls
 
         if (right &&
                 !checkStageCollisionRight() &&
@@ -147,22 +147,22 @@ public class Player extends ImageView {
 
         }
 
-        // Jumping Controls
+        // |- Jumping Controls
 
         if(inJumpAnimation){
 
             if(!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y ) ) {
                 vY += g;
-            }else if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
+            }else if( this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
                 vY = 0;
                 inJumpAnimation = false;
             }
 
+            // ?
             if (playerCollision.willCollide(box, this)) {
-
                 vY  = 0.0;
-                double diff = box.getY() - (this.getY() + this.getFitHeight());
 
+                double diff = box.getY() - (this.getY() + this.getFitHeight());
                 this.setY(this.getY() + diff);
 
                 inJumpAnimation = false;
@@ -175,17 +175,16 @@ public class Player extends ImageView {
             vY += -10.0;
             inJumpAnimation = true;
 
+
         }
 
         // Set inJumpAnimation false when player collides with stage bottom.
         if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
             inJumpAnimation = false;
-            this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
         }
 
-        // This works for now but probably won't work in the future... actually that's applicable for pretty much everything here.
+        // TODO : Update player falling.
         if( !inJumpAnimation && !playerCollision.isCollidingBottom(box, this) && !checkStageCollisionBottom()){
-            //this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
             inJumpAnimation = true;
 
         }

@@ -11,6 +11,7 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,7 +23,7 @@ import javafx.stage.Stage;
 
 public class MainApplication extends Application {
 
-    Stage stage;
+    private static Stage stage;
 
     //For FPS Display
     private final long[] frameTimes = new long[100];
@@ -38,20 +39,20 @@ public class MainApplication extends Application {
     public static final double WINDOW_SIZE_Y = 720.0;
 
     //Temporary Player Sprites
-    public Image playerSprite = new Image("/assets/playerSprite.png");
-    public Image pPlayerSprite = new Image("/assets/placeholderPlayerSprite.png");
+    public Image playerSprite = new Image("/assets/sprites/playerSprite.png");
+    public Image pPlayerSprite = new Image("/assets/sprites/placeholderPlayerSprite.png");
 
     public Player player = new Player(0, WINDOW_SIZE_Y - pPlayerSprite.getHeight(), pPlayerSprite.getWidth(), pPlayerSprite.getHeight(), pPlayerSprite );
 
     // Temporary Map Background
-    public Image mapBg = new Image("/assets/bg.png");
+    public Image mapBg = new Image("/assets/maps/00/bg.png");
     public ImageView mapBgView = new ImageView(mapBg);
 
-    public Label fpsCounter = new Label();
+    public static Label fpsCounter = new Label();
 
     // Root and Scene
-    private Pane root = new Pane();
-    private Scene scene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+    private static Pane root = new Pane();
+    private static Scene scene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
     // Temporary for collision detection.
     static Rectangle box = new Rectangle(500, WINDOW_SIZE_Y - 100, 100, 100);
@@ -60,6 +61,7 @@ public class MainApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         stage = primaryStage;
+        scene.getStylesheets().add("/assets/ui/style.css");
 
         // Temporary for testing collision detection.
         box.setFill(Color.RED);
@@ -128,11 +130,20 @@ public class MainApplication extends Application {
 
         root.getChildren().addAll(mapBgView, fpsCounter, player, box);
 
+        Button testBtn = new Button();
+        testBtn.setText("Button");
+        testBtn.setTranslateX(10);
+        testBtn.setTranslateY(10);
+        testBtn.setOnAction(e ->{
+            MapLoader.loadMap("00");
+        });
+        addToRoot(testBtn);
+
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         primaryStage.setOnCloseRequest(e -> exit());
 
-        primaryStage.getIcons().add(new Image("/assets/favicon128.png"));
+        primaryStage.getIcons().add(new Image("/assets/application/favicon128.png"));
         primaryStage.setTitle("Placeholder Title");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -141,6 +152,10 @@ public class MainApplication extends Application {
 
     public void addToRoot(Node node){
         root.getChildren().add(node);
+    }
+
+    public void rmFromRoot(Node node){
+        root.getChildren().remove(node);
     }
 
     /**
@@ -154,7 +169,7 @@ public class MainApplication extends Application {
     /**
      * Exit Application
      */
-    public void exit(){
+    public static void exit(){
         // Save something or whatever.
         stage.close();
     }
