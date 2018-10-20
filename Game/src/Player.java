@@ -12,7 +12,7 @@ public class Player extends ImageView {
     // Player is in jump animation
     private static boolean inJumpAnimation = false;
 
-    // Player Speed When Moved / It's hard to tell what a good player speed would be because I'm getting ~300 UPS :/
+    // Player Speed When Moved
     private static double playerSpeed = 5.0;
 
     // Player Velocity
@@ -181,6 +181,7 @@ public class Player extends ImageView {
         // Set inJumpAnimation false when player collides with stage bottom.
         if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
             inJumpAnimation = false;
+            this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
         }
 
         // TODO : Update player falling.
