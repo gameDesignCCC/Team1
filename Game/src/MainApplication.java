@@ -1,6 +1,6 @@
 /*
  * Name: CCC 2018 Platformer Game (Fork)
- * Date: 6/10/2018 - 13/10/2018
+ * Date: 6/10/2018 - 20/10/2018
  * Team: Advanced Game Development Team 1
  * Author(s):
  * Repo: https://github.com/JacobDixon0/Team1
@@ -11,7 +11,6 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -39,16 +38,16 @@ public class MainApplication extends Application {
     public static final double WINDOW_SIZE_Y = 720.0;
 
     //Temporary Player Sprites
-    public Image playerSprite = new Image("/assets/sprites/playerSprite.png");
-    public Image pPlayerSprite = new Image("/assets/sprites/placeholderPlayerSprite.png");
+    private Image playerSprite = new Image("/assets/sprites/playerSprite.png");
+    private Image pPlayerSprite = new Image("/assets/sprites/placeholderPlayerSprite.png");
 
     public Player player = new Player(0, WINDOW_SIZE_Y - pPlayerSprite.getHeight(), pPlayerSprite.getWidth(), pPlayerSprite.getHeight(), pPlayerSprite );
 
     // Temporary Map Background
-    public Image mapBg = new Image("/assets/maps/00/bg.png");
-    public ImageView mapBgView = new ImageView(mapBg);
+    private Image mapBg = new Image("/assets/maps/00/bg.png");
+    private ImageView mapBgView = new ImageView(mapBg);
 
-    public static Label fpsCounter = new Label();
+    private static Label fpsCounter = new Label();
 
     // Root and Scene
     private static Pane root = new Pane();
@@ -129,15 +128,6 @@ public class MainApplication extends Application {
         timer.start();
 
         root.getChildren().addAll(mapBgView, fpsCounter, player, box);
-
-        Button testBtn = new Button();
-        testBtn.setText("Button");
-        testBtn.setTranslateX(10);
-        testBtn.setTranslateY(10);
-        testBtn.setOnAction(e ->{
-            MapLoader.loadMap("00");
-        });
-        addToRoot(testBtn);
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
