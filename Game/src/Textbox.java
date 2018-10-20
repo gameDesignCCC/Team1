@@ -15,6 +15,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Textbox extends Application {
@@ -27,6 +29,8 @@ public class Textbox extends Application {
         public EventHandler<ActionEvent> handler1;
         public EventHandler<ActionEvent> handler2;
     } // End Nested BoxPreset Class
+
+
 
     public static void main ( String[] args ) {
         launch(args);
@@ -43,13 +47,22 @@ public class Textbox extends Application {
      * @param filename
      * @return
      */
-    public BoxPreset loadtree(String filename) {
+    public ArrayList<DialogNode> loadtree(String filename) {
+        ArrayList<DialogNode> dialogNodes = new ArrayList<>();
+
         try {
-            Scanner in = new Scanner("/assets/decision_trees/" + filename);
+            File f = new File(filename);
+
+            Scanner in = new Scanner(f);
+
+            while (in.hasNextLine()) {
+                String line = in.nextLine();
+
+            }
         }catch(Exception e) {
             e.printStackTrace();
         }
-        return new BoxPreset();
+        return dialogNodes;
     }
 
     /**
@@ -136,10 +149,10 @@ public class Textbox extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         Pane root = new Pane();
         BoxPreset preset = new BoxPreset();
         preset.text = "1";
+
 
         createBox("Hello world",
                 "Option 1",
