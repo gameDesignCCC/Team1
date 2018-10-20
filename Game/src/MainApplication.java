@@ -129,13 +129,7 @@ public class MainApplication extends Application {
         timer.start();
 
         root.getChildren().addAll(mapBgView, fpsCounter, player, box);
-
-        Button btn = new Button();
-        btn.setText("Button");
-        btn.setLayoutX(20);
-        btn.setLayoutY(20);
-        addToRoot(btn);
-
+        
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         primaryStage.setOnCloseRequest(e -> exit());
