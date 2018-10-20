@@ -11,7 +11,6 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,7 +18,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import java.util.HashMap;
 
 public class MainApplication extends Application {
 
@@ -30,17 +32,15 @@ public class MainApplication extends Application {
     private int frameTimeIndex = 0;
     private boolean arrayFilled = false;
 
-    // Key(s) pressed for player movement.
-    private static boolean up = false;
-    private static boolean right = false;
-    private static boolean left = false;
+    // Key(s) pressed for player movement. I don't know if this is better than using separate booleans, I just wanted to try this out.
+    private static HashMap<KeyCode, Boolean> keys = new HashMap<>();
 
     public static final double WINDOW_SIZE_X = 1280.0;
     public static final double WINDOW_SIZE_Y = 720.0;
 
     //Temporary Player Sprites
     private Image playerSprite = new Image("/assets/sprites/playerSprite.png");
-    private Image pPlayerSprite = new Image("/assets/sprites/placeholderPlayerSprite.png");
+    private Image pPlayerSprite = new Image("/assets/sprites/pPlayerSprite.png");
 
     public Player player = new Player(0, WINDOW_SIZE_Y - pPlayerSprite.getHeight(), pPlayerSprite.getWidth(), pPlayerSprite.getHeight(), pPlayerSprite );
 
@@ -67,32 +67,8 @@ public class MainApplication extends Application {
         box.setFill(Color.RED);
 
         // Get key(s) pressed for player movements.
-
-        scene.setOnKeyPressed(e -> {
-            KeyCode key = e.getCode();
-
-            if (key == KeyCode.RIGHT) {
-                right = true;
-            } else if (key == KeyCode.LEFT) {
-                left = true;
-            } else if (key == KeyCode.UP) {
-                up = true;
-            }
-
-        });
-
-        scene.setOnKeyReleased(e -> {
-            KeyCode key = e.getCode();
-
-            if (key == KeyCode.RIGHT) {
-                right = false;
-            } else if (key == KeyCode.LEFT) {
-                left = false;
-            } else if (key == KeyCode.UP) {
-                up = false;
-            }
-
-        });
+        scene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
+        scene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
 
         // Timer for game loop. / Should stay at ~60 UPS unless something went wrong, which happens often.
         AnimationTimer timer = new AnimationTimer() {
@@ -129,31 +105,50 @@ public class MainApplication extends Application {
         timer.start();
 
         root.getChildren().addAll(mapBgView, fpsCounter, player, box);
-        
+
+        primaryStage.setScene(Menu.menu());
+
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         primaryStage.setOnCloseRequest(e -> exit());
 
         primaryStage.getIcons().add(new Image("/assets/application/favicon128.png"));
         primaryStage.setTitle("Placeholder Title");
-        primaryStage.setScene(scene);
+        //primaryStage.setScene(scene);
         primaryStage.show();
 
     }
 
-    public void addToRoot(Node node){
+    private static boolean isPressed(KeyCode key){
+        return keys.getOrDefault(key, false);
+    }
+
+    public static void addToRoot(Node node){
         root.getChildren().add(node);
     }
 
-    public void rmFromRoot(Node node){
+    public static void rmFromRoot(Node node){
         root.getChildren().remove(node);
+    }
+
+    // is this better than making them public? idkkkkkkkkk
+
+    public static Stage getStage(){
+        return stage;
+    }
+
+    public static Scene getScene(){
+        return scene;
     }
 
     /**
      * Main Game Loop
      */
     private void update() {
-        player.onUpdate(up, left, right);
+        player.onUpdate(isPressed(KeyCode.UP), isPressed(KeyCode.LEFT), isPressed(KeyCode.RIGHT));
+        if(isPressed(KeyCode.ESCAPE)){
+            exit();
+        }
 
     }
 
@@ -161,8 +156,10 @@ public class MainApplication extends Application {
      * Exit Application
      */
     public static void exit(){
+
         // Save something or whatever.
         stage.close();
+
     }
 
     public static void main(String[] args) {
