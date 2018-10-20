@@ -54,16 +54,15 @@ public class MainApplication extends Application {
     private static Scene gameScene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
     // Temporary for collision detection.
-    static Rectangle box = new Rectangle(500, WINDOW_SIZE_Y - 100, 100, 100);
+    static StaticRect box2 = new StaticRect(500, WINDOW_SIZE_Y - 100, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
+    static Rectangle box = new Rectangle(700, WINDOW_SIZE_Y - 500, 100, 100);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         stage = primaryStage;
-        gameScene.getStylesheets().add("/assets/ui/style.css");
 
-        // Temporary for testing collision detection.
-        box.setFill(Color.RED);
+        gameScene.getStylesheets().add("/assets/ui/style.css");
 
         // Get key(s) pressed for player movements.
         gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
@@ -103,7 +102,8 @@ public class MainApplication extends Application {
 
         timer.start();
 
-        root.getChildren().addAll(mapBgView, fpsCounter, player, box);
+        root.getChildren().addAll(mapBgView, fpsCounter, player);
+        box2.toFront();
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
@@ -112,6 +112,7 @@ public class MainApplication extends Application {
 
         primaryStage.getIcons().add(new Image("/assets/application/favicon128.png"));
         primaryStage.setTitle("Placeholder Title");
+
         // Load Main Menu
         primaryStage.setScene(Menu.menu());
         primaryStage.show();
@@ -128,6 +129,10 @@ public class MainApplication extends Application {
 
     public static void rmFromRoot(Node node){
         root.getChildren().remove(node);
+    }
+
+    public static void toFront(Node node){
+        node.toFront();
     }
 
 
@@ -147,6 +152,8 @@ public class MainApplication extends Application {
         if(isPressed(KeyCode.ESCAPE)){
             exit();
         }
+
+        System.out.println(box2.checkCollision(player));
 
     }
 
