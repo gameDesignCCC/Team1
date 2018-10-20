@@ -1,11 +1,9 @@
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 
 public class Menu {
 
@@ -28,18 +26,18 @@ public class Menu {
         btnStart.setTranslateY(-80);
         btnExit.setTranslateY(80);
 
-        // ? Start game loop when start button is pressed?
-        btnStart.setOnAction(e ->{
-            MainApplication.getStage().setScene(MainApplication.getScene()); // idk
-        });
 
-        btnOptions.setOnAction(e ->{
-            MainApplication.getStage().setScene(optionsMenu());
-        });
+        btnStart.setOnAction(e ->
+            MainApplication.getStage().setScene(MainApplication.getGameScene())
+        );
 
-        btnExit.setOnAction(e ->{
-            MainApplication.exit();
-        });
+        btnOptions.setOnAction(e ->
+            MainApplication.getStage().setScene(optionsMenu())
+        );
+
+        btnExit.setOnAction(e ->
+            MainApplication.exit()
+        );
 
         title.setTranslateY(-200);
 

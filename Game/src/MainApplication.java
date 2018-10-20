@@ -130,7 +130,6 @@ public class MainApplication extends Application {
         root.getChildren().remove(node);
     }
 
-    // is this better than making them public? idkkkkkkkkk
 
     public static Stage getStage(){
         return stage;
