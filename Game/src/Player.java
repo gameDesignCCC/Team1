@@ -1,17 +1,16 @@
 /*
  * Author(s): Jacob Dixon @jacobrdixon.com
- * Date: 6/10/2018 - 13/10/2018
+ * Date: 6/10/2018 - 21/10/2018
  */
 
 /*
-KNOW ISSUES:
-player gets stuck when jumping on the box
+ * KNOW ISSUES:
+ * Player slightly intersects through top of map objects when jumping on them before returning to correct position.
  */
 
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.Rectangle;
 
 public class Player extends ImageView {
 
@@ -32,9 +31,6 @@ public class Player extends ImageView {
     static double g = 0.5;
 
     Collision playerCollision = new Collision();
-
-    // Temporary object created fore testing collision.
-    Rectangle box = MainApplication.box;
 
     Player(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
@@ -132,7 +128,7 @@ public class Player extends ImageView {
         if (right &&
                 !checkStageCollisionRight() &&
                 !( this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X ) &&
-                !( playerCollision.isCollidingRight( box,this ) ) ) {
+                !( playerCollision.isCollidingRight( this ) ) ) {
 
             vX += playerSpeed;
             isMovingRight = true;
@@ -146,7 +142,7 @@ public class Player extends ImageView {
         if (left &&
                 !checkStageCollisionLeft() &&
                 !( this.getX() - playerSpeed <= 0 ) &&
-                !( playerCollision.isCollidingLeft( box,this ) ) ) {
+                !( playerCollision.isCollidingLeft(this ) ) ) {
 
             vX += playerSpeed * -1;
             isMovingLeft = true;
@@ -185,16 +181,24 @@ public class Player extends ImageView {
         }
 
         // TODO : Update player falling.
-        if( !inJumpAnimation && !playerCollision.isCollidingBottom(MainApplication.box2, this) && !checkStageCollisionBottom()){
+        if( !inJumpAnimation && !playerCollision.isCollidingBottom(this) && !checkStageCollisionBottom()){
             inJumpAnimation = true;
 
         }
-        if(playerCollision.isCollidingBottom(MainApplication.box2, this)){
-            vY=0;
-            inJumpAnimation = false;
-        }
-        System.out.println(inJumpAnimation);
 
+        // TODO : Fix bottom collisions with map objects.
+        if(playerCollision.isCollidingBottom(this)){
+            inJumpAnimation = false;
+            this.setY(MainApplication.box2.getY() - this.getFitWidth());
+        }
+        if(playerCollision.isCollidingBottom(this)){
+            inJumpAnimation = false;
+            this.setY(MainApplication.box3.getY() - this.getFitWidth());
+        }
+        if(playerCollision.isCollidingBottom(this)){
+            inJumpAnimation = false;
+            this.setY(MainApplication.box4.getY() - this.getFitWidth());
+        }
 
         move();
 

@@ -38,6 +38,7 @@ public class StaticRect extends StaticObject{
         spriteView.setFitHeight(height);
 
         MainApplication.addToRoot(spriteView);
+        MainApplication.mapObjects.add(this);
 
     }
 
@@ -78,6 +79,30 @@ public class StaticRect extends StaticObject{
             collisions.add(CollisionType.None);
         }
         return collisions;
+    }
+
+    public double getX(){
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public Image getSprite() {
+        return sprite;
+    }
+
+    public ImageView getSpriteView() {
+        return spriteView;
     }
 
     /**
