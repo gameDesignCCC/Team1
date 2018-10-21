@@ -3,6 +3,12 @@
  * Date: 6/10/2018 - 13/10/2018
  */
 
+/*
+KNOW ISSUES:
+player gets stuck when jumping on the box
+ */
+
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
@@ -162,16 +168,6 @@ public class Player extends ImageView {
                 inJumpAnimation = false;
             }
 
-            // ?
-            if (playerCollision.willCollide(box, this)) {
-                vY  = 0.0;
-
-                double diff = box.getY() - (this.getY() + this.getFitHeight());
-                this.setY(this.getY() + diff);
-
-                inJumpAnimation = false;
-            }
-
         }
 
         // Jump
@@ -189,10 +185,16 @@ public class Player extends ImageView {
         }
 
         // TODO : Update player falling.
-        if( !inJumpAnimation && !playerCollision.isCollidingBottom(box, this) && !checkStageCollisionBottom()){
+        if( !inJumpAnimation && !playerCollision.isCollidingBottom(MainApplication.box2, this) && !checkStageCollisionBottom()){
             inJumpAnimation = true;
 
         }
+        if(playerCollision.isCollidingBottom(MainApplication.box2, this)){
+            vY=0;
+            inJumpAnimation = false;
+        }
+        System.out.println(inJumpAnimation);
+
 
         move();
 
