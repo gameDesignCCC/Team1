@@ -16,10 +16,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainApplication extends Application {
@@ -53,9 +53,12 @@ public class MainApplication extends Application {
     private static Pane root = new Pane();
     private static Scene gameScene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
+    public static ArrayList<StaticRect> mapObjects = new ArrayList<>();
+
     // Temporary for collision detection.
     static StaticRect box2 = new StaticRect(500, WINDOW_SIZE_Y - 100, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
-    static Rectangle box = new Rectangle(700, WINDOW_SIZE_Y - 500, 100, 100);
+    static StaticRect box3 = new StaticRect(800, WINDOW_SIZE_Y - 100, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
+    static StaticRect box4 = new StaticRect(250, WINDOW_SIZE_Y - 100, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -103,7 +106,8 @@ public class MainApplication extends Application {
         timer.start();
 
         root.getChildren().addAll(mapBgView, fpsCounter, player);
-        box2.toFront();
+
+        mapBgView.toBack();
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
@@ -131,11 +135,6 @@ public class MainApplication extends Application {
         root.getChildren().remove(node);
     }
 
-    public static void toFront(Node node){
-        node.toFront();
-    }
-
-
     public static Stage getStage(){
         return stage;
     }
@@ -152,8 +151,6 @@ public class MainApplication extends Application {
         if(isPressed(KeyCode.ESCAPE)){
             exit();
         }
-
-        System.out.println(box2.checkCollision(player));
 
     }
 
