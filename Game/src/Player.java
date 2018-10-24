@@ -1,11 +1,11 @@
 /*
  * Author(s): Jacob Dixon @jacobrdixon.com
- * Date: 6/10/2018 - 21/10/2018
+ * Date: 24/10/2018
  */
 
 /*
  * KNOW ISSUES:
- * Player slightly intersects through top of map objects when jumping on them before returning to correct position.
+ * Player does not use top or bottom collision detection.
  */
 
 
@@ -18,12 +18,13 @@ public class Player extends ImageView {
     private static boolean inJumpAnimation = false;
 
     // Player Speed When Moved
-    private static double playerSpeed = 5.0;
+    private static double playerSpeed = 10.0;
 
     // Player Velocity
     private static double vX = 0.0;
     private static double vY = 0.0;
 
+    // Don't rely on these doing anything useful elsewhere in the application.
     private boolean isMovingRight = false;
     private boolean isMovingLeft = false;
 
@@ -38,12 +39,10 @@ public class Player extends ImageView {
         this.setFitWidth(width);
         this.setFitHeight(height);
         this.setImage(sprite);
-
     }
 
     /**
-     * TODO Add descriptions
-     * Check Collision Top
+     * Check Stage Collision Top
      * @return
      */
     public boolean checkStageCollisionTop(){
@@ -51,8 +50,7 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO Add descriptions
-     * Check Collision Bottom
+     * Check Stage Collision Bottom
      * @return
      */
     public boolean checkStageCollisionBottom(){
@@ -60,8 +58,7 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO Add descriptions
-     * Check Collision Left
+     * Check Stage Collision Left
      * @return Whether the player is colliding with the left edge of the stage or not.
      */
     public boolean checkStageCollisionLeft() {
@@ -69,8 +66,7 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO Add descriptions
-     * Check Collision Right
+     * Check Stage Collision Right
      * @return Returns whether the player is colliding with the right edge of the stage or not.
      */
     public boolean checkStageCollisionRight(){
@@ -78,7 +74,6 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO update description
      * Player Movement
      * Moves the player every frame.
      */
@@ -88,17 +83,8 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO update description
-     * Player Jump
-     */
-    public void jump() {
-    }
-
-    /**
-     * TODO Add descriptions
-     *
+     * Get Y Velocity
      * Position and size can be called fromm ImageView.
-     *
      * @return Returns value of Y velocity.
      */
     public double getvY() {
@@ -106,7 +92,7 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO Add descriptions
+     * Get X Velocity
      * @return Returns value of X velocity.
      */
     public double getvX() {
@@ -117,6 +103,7 @@ public class Player extends ImageView {
      * Player update method called every frame.
      */
     public void onUpdate(boolean up, boolean left, boolean right) {
+
         vX = 0;
 
         if(!inJumpAnimation) {
@@ -157,9 +144,9 @@ public class Player extends ImageView {
 
         if(inJumpAnimation){
 
-            if(!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y ) ) {
+            if(!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y )) {
                 vY += g;
-            }else if( this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
+            }else if( this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y ){
                 vY = 0;
                 inJumpAnimation = false;
             }
@@ -174,7 +161,7 @@ public class Player extends ImageView {
 
         }
 
-        // Set inJumpAnimation false when player collides with stage bottom.
+        // Ends jump animation when the player collides with stage bottom.
         if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
             inJumpAnimation = false;
             this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
@@ -186,19 +173,7 @@ public class Player extends ImageView {
 
         }
 
-        // TODO : Fix bottom collisions with map objects.
-        if(playerCollision.isCollidingBottom(this)){
-            inJumpAnimation = false;
-            this.setY(MainApplication.box2.getY() - this.getFitWidth());
-        }
-        if(playerCollision.isCollidingBottom(this)){
-            inJumpAnimation = false;
-            this.setY(MainApplication.box3.getY() - this.getFitWidth());
-        }
-        if(playerCollision.isCollidingBottom(this)){
-            inJumpAnimation = false;
-            this.setY(MainApplication.box4.getY() - this.getFitWidth());
-        }
+        // TODO : Fix top & bottom collisions with map objects.
 
         move();
 

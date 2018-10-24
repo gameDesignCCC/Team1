@@ -1,6 +1,5 @@
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
@@ -13,7 +12,7 @@ public class StaticRect extends StaticObject{
     double height;
     Image sprite;
 
-    ImageView spriteView = new ImageView();
+    ImageView rSprite = new ImageView();
 
     /**
      * constructor
@@ -31,13 +30,13 @@ public class StaticRect extends StaticObject{
         this.height = height;
         this.sprite = sprite;
 
-        spriteView.setImage(sprite);
-        spriteView.setX(x);
-        spriteView.setY(y);
-        spriteView.setFitWidth(width);
-        spriteView.setFitHeight(height);
+        rSprite.setImage(sprite);
+        rSprite.setX(x);
+        rSprite.setY(y);
+        rSprite.setFitWidth(width);
+        rSprite.setFitHeight(height);
 
-        MainApplication.addToRoot(spriteView);
+        MainApplication.addToRoot(rSprite);
         MainApplication.mapObjects.add(this);
 
     }
@@ -54,23 +53,31 @@ public class StaticRect extends StaticObject{
 
         boolean collided = false;
 
-        if(player.getX() + player.getFitWidth() >= spriteView.getX() &&
-                !(player.getX() >= spriteView.getX() + spriteView.getFitWidth()) &&
-                !(player.getY() + player.getFitHeight() <= spriteView.getY()) &&
-                !(player.getY() >= spriteView.getY() + spriteView.getFitHeight())){
+        if(player.getX() + player.getFitWidth() >= rSprite.getX() &&
+                !(player.getX() >= rSprite.getX() + rSprite.getFitWidth()) &&
+                !(player.getY() + player.getFitHeight() <= rSprite.getY()) &&
+                !(player.getY() >= rSprite.getY() + rSprite.getFitHeight())){
             collisions.add(CollisionType.Right);
             collided = true;
         }
-        if (player.getX() <= spriteView.getX() + spriteView.getFitWidth() &&
-                !(player.getX() + player.getFitWidth() <= spriteView.getX()) &&
-                !(player.getY() + player.getFitHeight() <= spriteView.getY()) &&
-                !(player.getY() >= spriteView.getY() + spriteView.getFitHeight())){
+        if (player.getX() <= rSprite.getX() + rSprite.getFitWidth() &&
+                !(player.getX() + player.getFitWidth() <= rSprite.getX()) &&
+                !(player.getY() + player.getFitHeight() <= rSprite.getY()) &&
+                !(player.getY() >= rSprite.getY() + rSprite.getFitHeight())){
             collisions.add(CollisionType.Left);
             collided = true;
         }
-        if (player.getY() + player.getFitHeight() >= spriteView.getY() &&
-                player.getX() + player.getFitWidth() > spriteView.getX() &&
-                player.getX() < spriteView.getX() + spriteView.getFitWidth()){
+        if(player.getY() <= rSprite.getY() + rSprite.getFitHeight() &&
+                !(player.getY() + player.getFitHeight() <= rSprite.getY()) &&
+                !(player.getX() + player.getFitWidth() <= rSprite.getX()) &&
+                !(player.getX() >= rSprite.getX() + rSprite.getFitWidth())){
+            collisions.add(CollisionType.Top);
+            collided = true;
+        }
+        if (player.getY() + player.getFitHeight() >= rSprite.getY() &&
+                !(player.getY() >= rSprite.getY() + rSprite.getFitHeight()) &&
+                !(player.getX() + player.getFitWidth() <= rSprite.getX()) &&
+                !(player.getX() >= rSprite.getX() + rSprite.getFitWidth())){
             collisions.add(CollisionType.Bottom);
             collided = true;
         }
@@ -101,8 +108,8 @@ public class StaticRect extends StaticObject{
         return sprite;
     }
 
-    public ImageView getSpriteView() {
-        return spriteView;
+    public ImageView getrSprite() {
+        return rSprite;
     }
 
     /**
@@ -110,7 +117,7 @@ public class StaticRect extends StaticObject{
      * moves rectangle to the front of stage
      */
     public void toFront(){
-        this.spriteView.toFront();
+        this.rSprite.toFront();
     }
 
 }

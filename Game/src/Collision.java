@@ -1,10 +1,15 @@
 /*
  * Author(s):
- * Date: 13/10/2018
+ * Date: 24/10/2018
  */
 
-public class Collision {
+public class Collision{
 
+    /**
+     * Right edge of player is colliding.
+     * @param player The player.
+     * @return The right edge of the player is colliding with any static map object (StaticRect) in mapObjects.
+     */
     public boolean isCollidingRight(Player player){
 
         for( StaticRect staticRect : MainApplication.mapObjects){
@@ -12,13 +17,13 @@ public class Collision {
                 return true;
             }
         }
-            return false;
+        return false;
     }
 
     /**
-     * TODO : Add desc
-     * @param player
-     * @return
+     * Left edge of player is colliding.
+     * @param player The player.
+     * @return The left edge of the player is colliding with any static map object (StaticRect) in mapObjects.
      */
     public boolean isCollidingLeft(Player player){
 
@@ -31,9 +36,24 @@ public class Collision {
     }
 
     /**
-     * TODO : Add desc
-     * @param player
-     * @return
+     * Top edge of player is colliding.
+     * @param player The player.
+     * @return The top edge of the player is colliding with any static map object (StaticRect) in mapObjects.
+     */
+    public boolean isCollidingTop(Player player){
+
+        for( StaticRect staticRect : MainApplication.mapObjects){
+            if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Top)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Bottom edge of player is colliding.
+     * @param player The player.
+     * @return The bottom edge of the player is colliding with any static map object (StaticRect) in mapObjects.
      */
     public boolean isCollidingBottom(Player player){
 
