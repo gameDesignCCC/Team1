@@ -1,18 +1,14 @@
 /*
- * Name: CCC 2018 Platformer Game (Fork)
- * Date: 6/10/2018 - 10/10/2018
+ * Name: CCC 2018 Platformer Game
+ * Date: 6/10/2018 - 20/10/2018
  * Team: Advanced Game Development Team 1
  * Author(s):
- * Repo: https://github.com/JacobDixon0/Team1
- * Original Repo: https://github.com/gameDesignCCC/Team1
+ * Repo: https://github.com/gameDesignCCC/Team1
  */
-
-// Everything may be broken, but at least it's not as broken as before.
-// Probably going to end up re-writing all of this. - JD
-
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -20,85 +16,57 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
 import javafx.stage.Stage;
+
+import java.util.HashMap;
 
 public class MainApplication extends Application {
 
-    Stage stage;
+    private static Stage stage;
 
-    //For FPS Display !f
+    //For FPS Display
     private final long[] frameTimes = new long[100];
     private int frameTimeIndex = 0;
     private boolean arrayFilled = false;
 
-    // Key(s) pressed for player movement.
-    private static boolean up = false;
-    private static boolean right = false;
-    private static boolean left = false;
+    // Key(s) pressed for player movement. I don't know if this is better than using separate booleans, I just wanted to try this out.
+    private static HashMap<KeyCode, Boolean> keys = new HashMap<>();
 
-    public static double windowSizeX = 1280.0;
-    public static double windowSizeY = 720.0;
+    public static final double WINDOW_SIZE_X = 1280.0;
+    public static final double WINDOW_SIZE_Y = 720.0;
 
-    Player player = new Player(34, windowSizeY - 93, 40, 93);
+    //Temporary Player Sprites
+    private Image playerSprite = new Image("/assets/sprites/playerSprite.png");
+    private Image pPlayerSprite = new Image("/assets/sprites/pPlayerSprite.png");
 
-    //Temporary Player Sprite !t
-    Image playerSprite = new Image("/assets/playerSprite.png");
-    ImageView playerSpriteView = new ImageView(playerSprite);
+    public Player player = new Player(0, WINDOW_SIZE_Y - pPlayerSprite.getHeight(), pPlayerSprite.getWidth(), pPlayerSprite.getHeight(), pPlayerSprite );
 
-    // Temporary Map Background !t
-    Image mapBg = new Image("/assets/bg.png");
-    ImageView mapBgView = new ImageView(mapBg);
+    // Temporary Map Background
+    private Image mapBg = new Image("/assets/maps/00/bg.png");
+    private ImageView mapBgView = new ImageView(mapBg);
 
-    // !f
-    Label fpsCounter = new Label();
+    private static Label fpsCounter = new Label();
 
     // Root and Scene
-    Pane root = new Pane();
-    Scene scene = new Scene(root, windowSizeX, windowSizeY);
+    private static Pane root = new Pane();
+    private static Scene gameScene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    // Temporary for collision detection.
+    static StaticRect box2 = new StaticRect(500, WINDOW_SIZE_Y - 100, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
+    static Rectangle box = new Rectangle(700, WINDOW_SIZE_Y - 500, 100, 100);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         stage = primaryStage;
 
-        // !t
-        playerSpriteView.setX(10);
-        playerSpriteView.setY(10);
-
-        // !f
-        fpsCounter.setTextFill(Color.GREEN);
+        gameScene.getStylesheets().add("/assets/ui/style.css");
 
         // Get key(s) pressed for player movements.
-
-        scene.setOnKeyPressed(e -> {
-            KeyCode key = e.getCode();
-
-            if (key == KeyCode.RIGHT) {
-                right = true;
-            } else if (key == KeyCode.LEFT) {
-                left = true;
-            } else if (key == KeyCode.UP) {
-                up = true;
-            }
-
-        });
-
-        scene.setOnKeyReleased(e -> {
-            KeyCode key = e.getCode();
-
-            if (key == KeyCode.RIGHT) {
-                right = false;
-            } else if (key == KeyCode.LEFT) {
-                left = false;
-            } else if (key == KeyCode.UP) {
-                up = false;
-            }
-
-        });
+        gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
+        gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
 
         // Timer for game loop. / Should stay at ~60 UPS unless something went wrong, which happens often.
         AnimationTimer timer = new AnimationTimer() {
@@ -106,7 +74,7 @@ public class MainApplication extends Application {
             public void handle(long now) {
                 update();
 
-                // FPS Display !f
+                // FPS Display
 
                 long oldFrameTime = frameTimes[frameTimeIndex];
                 frameTimes[frameTimeIndex] = now;
@@ -134,34 +102,73 @@ public class MainApplication extends Application {
 
         timer.start();
 
-        // !f !t
-        root.getChildren().addAll(mapBgView, player, fpsCounter, playerSpriteView);
+        root.getChildren().addAll(mapBgView, fpsCounter, player);
+        box2.toFront();
 
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         primaryStage.setOnCloseRequest(e -> exit());
 
-        // !t
-        primaryStage.getIcons().add(new Image("/assets/favicon128.png"));
+
+        primaryStage.getIcons().add(new Image("/assets/application/favicon128.png"));
         primaryStage.setTitle("Placeholder Title");
-        primaryStage.setScene(scene);
+
+        // Load Main Menu
+        primaryStage.setScene(Menu.menu());
         primaryStage.show();
 
     }
 
-    // Game Loop
-    void update() {
-        player.onUpdate(up, left, right);
+    private static boolean isPressed(KeyCode key){
+        return keys.getOrDefault(key, false);
+    }
 
-        // !t
-        playerSpriteView.setX(player.getX());
-        playerSpriteView.setY(player.getY());
+    public static void addToRoot(Node node){
+        root.getChildren().add(node);
+    }
+
+    public static void rmFromRoot(Node node){
+        root.getChildren().remove(node);
+    }
+
+    public static void toFront(Node node){
+        node.toFront();
+    }
+
+
+    public static Stage getStage(){
+        return stage;
+    }
+
+    public static Scene getGameScene(){
+        return gameScene;
+    }
+
+    /**
+     * Main Game Loop
+     */
+    private void update() {
+        player.onUpdate(isPressed(KeyCode.UP), isPressed(KeyCode.LEFT), isPressed(KeyCode.RIGHT));
+        if(isPressed(KeyCode.ESCAPE)){
+            exit();
+        }
+
+        System.out.println(box2.checkCollision(player));
 
     }
 
-    public void exit(){
+    /**
+     * Exit Application
+     */
+
+    public static void exit(){
+
         // Save something or whatever.
         stage.close();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
 }

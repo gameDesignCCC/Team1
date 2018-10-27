@@ -1,0 +1,22 @@
+.root{
+    -fx-background-color: #000000;
+}
+
+.button {
+    -fx-background-color: #a9e6e0;
+    -fx-background-radius: 2;
+    -fx-text-fill: #2d2d2d;
+    -fx-font-size: 20pt;
+    -fx-min-width: 160px;
+    -fx-max-width: 160px;
+    -fx-min-height: 60;
+    -fx-max-height: 60;
+}
+
+.button:hover{
+    -fx-background-color: #8ec6c1;
+}
+
+.button:armed{
+    -fx-background-color: #83b7b2;
+}

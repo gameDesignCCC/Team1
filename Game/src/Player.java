@@ -1,25 +1,25 @@
 /*
  * Author(s): Jacob Dixon @jacobrdixon.com
- * Date: 6/10/2018 - 10/10/2018
+ * Date: 6/10/2018 - 13/10/2018
  */
 
+/*
+KNOW ISSUES:
+player gets stuck when jumping on the box
+ */
+
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
-// This should probably be changed to ImageView.
-public class Player extends Rectangle {
-
-    // Get Window Size
-    private double windowSizeX = MainApplication.windowSizeX;
-    private double windowSizeY = MainApplication.windowSizeY;
+public class Player extends ImageView {
 
     // Player is in jump animation
-    private static boolean inJumpAnimaion = false;
-
-    // Player "HitBox"
-    private BoundingBox bbox = new BoundingBox(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight());
+    private static boolean inJumpAnimation = false;
 
     // Player Speed When Moved
-    private static double playerSpeed = 10.0;
+    private static double playerSpeed = 5.0;
 
     // Player Velocity
     private static double vX = 0.0;
@@ -29,109 +29,174 @@ public class Player extends Rectangle {
     private boolean isMovingLeft = false;
 
     // Gravity
-    static double g = 0.5; /* This is really sensitive, no touchy touchy. */
+    static double g = 0.5;
 
-    Player(double x, double y, double width, double height) {
+    Collision playerCollision = new Collision();
+
+    // Temporary object created fore testing collision.
+    Rectangle box = MainApplication.box;
+
+    Player(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
         this.setY(y);
-        this.setWidth(width);
-        this.setHeight(height);
-
-        this.bbox.setBounds(x, y, width, height);
-
-        this.setOpacity(0);
+        this.setFitWidth(width);
+        this.setFitHeight(height);
+        this.setImage(sprite);
 
     }
 
-    // Check Collisions
-
-    public boolean isCollidingLeft() {
-        return bbox.checkStageCollisionLeft();
+    /**
+     * TODO Add descriptions
+     * Check Collision Top
+     * @return
+     */
+    public boolean checkStageCollisionTop(){
+        return(this.getY() <= 0);
     }
 
-    public boolean isCollidingRight() {
-        return bbox.checkStageCollisionRight();
+    /**
+     * TODO Add descriptions
+     * Check Collision Bottom
+     * @return
+     */
+    public boolean checkStageCollisionBottom(){
+        return(this.getY()  + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y);
     }
 
-    public boolean isCollidingBottom() {
-        return bbox.checkStageCollisionBottom();
+    /**
+     * TODO Add descriptions
+     * Check Collision Left
+     * @return Whether the player is colliding with the left edge of the stage or not.
+     */
+    public boolean checkStageCollisionLeft() {
+        return (this.getX() <= 0);
     }
 
-    public boolean isCollidingTop() {
-        return bbox.checkStageCollisionTop();
+    /**
+     * TODO Add descriptions
+     * Check Collision Right
+     * @return Returns whether the player is colliding with the right edge of the stage or not.
+     */
+    public boolean checkStageCollisionRight(){
+        return(this.getX() + this.getFitWidth() >= MainApplication.WINDOW_SIZE_X);
     }
 
-
-    // Player Movement
-
+    /**
+     * TODO update description
+     * Player Movement
+     * Moves the player every frame.
+     */
     public void move(){
         this.setX(this.getX() + vX);
         this.setY(this.getY() + vY);
     }
 
-    // Player Jump
+    /**
+     * TODO update description
+     * Player Jump
+     */
     public void jump() {
     }
 
-
-    // Get Velocity
-    // Position and size can be called fromm Rectangle.
-
-    public double getVelocityY() {
+    /**
+     * TODO Add descriptions
+     *
+     * Position and size can be called fromm ImageView.
+     *
+     * @return Returns value of Y velocity.
+     */
+    public double getvY() {
         return vY;
     }
 
-    public double getVelocityX() {
+    /**
+     * TODO Add descriptions
+     * @return Returns value of X velocity.
+     */
+    public double getvX() {
         return vX;
     }
 
-    // Get BoundingBox
-    public BoundingBox getBbox(){
-        return bbox;
-    }
-
-    // Player Update
-    // Not sure if this should be put in MainApplication.
+    /**
+     * Player update method called every frame.
+     */
     public void onUpdate(boolean up, boolean left, boolean right) {
-
         vX = 0;
 
-        if(!inJumpAnimaion) {
+        if(!inJumpAnimation) {
             vY = 0;
         }
 
         // Player Controls
+        //  |- L&R Controls
+        if (right &&
+                !checkStageCollisionRight() &&
+                !( this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X ) &&
+                !( playerCollision.isCollidingRight( box,this ) ) ) {
 
-        if (right && !isCollidingRight()) {
             vX += playerSpeed;
             isMovingRight = true;
+
+        } else if ( isMovingRight && this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X ) {
+            setX( MainApplication.WINDOW_SIZE_X - this.getFitWidth() );
+            isMovingRight = false;
+
         }
 
-        if (left && !isCollidingLeft()) {
+        if (left &&
+                !checkStageCollisionLeft() &&
+                !( this.getX() - playerSpeed <= 0 ) &&
+                !( playerCollision.isCollidingLeft( box,this ) ) ) {
+
             vX += playerSpeed * -1;
             isMovingLeft = true;
-        }
 
-        if(inJumpAnimaion){
-            vY += g;
-        }
-
-        if (up && !inJumpAnimaion){
-
-            vY += -10.0; /* This is also really sensitive, no touchy touchy. */
-            inJumpAnimaion = true;
+        } else if ( isMovingLeft && this.getX() - playerSpeed <= 0 ) {
+            setX(0);
+            isMovingLeft = false;
 
         }
 
-        if(this.getY() + this.getHeight() >= windowSizeY){
-            inJumpAnimaion = false;
-            this.setY(windowSizeY - this.getHeight());
+        // |- Jumping Controls
+
+        if(inJumpAnimation){
+
+            if(!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y ) ) {
+                vY += g;
+            }else if( this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
+                vY = 0;
+                inJumpAnimation = false;
+            }
+
         }
+
+        // Jump
+        if (up && !inJumpAnimation){
+            vY += -10.0;
+            inJumpAnimation = true;
+
+
+        }
+
+        // Set inJumpAnimation false when player collides with stage bottom.
+        if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
+            inJumpAnimation = false;
+            this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
+        }
+
+        // TODO : Update player falling.
+        if( !inJumpAnimation && !playerCollision.isCollidingBottom(MainApplication.box2, this) && !checkStageCollisionBottom()){
+            inJumpAnimation = true;
+
+        }
+        if(playerCollision.isCollidingBottom(MainApplication.box2, this)){
+            vY=0;
+            inJumpAnimation = false;
+        }
+        System.out.println(inJumpAnimation);
+
 
         move();
-
-        // Reset BoundingBox bounds to current position.
-        bbox.setBounds(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight());
 
     }
 

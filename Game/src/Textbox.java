@@ -5,33 +5,33 @@
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.awt.*;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-class BoxPreset {
-    public String text;
-    public String option1;
-    public String option2;
-    public EventHandler<ActionEvent> handler1;
-    public EventHandler<ActionEvent> handler2;
-}
-
 public class Textbox extends Application {
+
+    // Begin Nested BoxPreset Class
+    private class BoxPreset {
+        public String text;
+        public String option1;
+        public String option2;
+        public EventHandler<ActionEvent> handler1;
+        public EventHandler<ActionEvent> handler2;
+    } // End Nested BoxPreset Class
+
+
+
     public static void main ( String[] args ) {
         launch(args);
     }
@@ -40,15 +40,39 @@ public class Textbox extends Application {
     private ImageView img;
     private Text txt;
     private Button[] btns = new Button[2];
-    public static BoxPreset loadtree(String filename) {
+
+    /**
+     *  TODO Add descriptions
+     *
+     * @param filename
+     * @return
+     */
+    public ArrayList<DialogNode> loadtree(String filename) {
+        ArrayList<DialogNode> dialogNodes = new ArrayList<>();
+
         try {
-            Scanner in = new Scanner("/assets/decision_trees/" + filename);
+            File f = new File(filename);
+
+            Scanner in = new Scanner(f);
+
+            while (in.hasNextLine()) {
+                String line = in.nextLine();
+
+            }
         }catch(Exception e) {
             e.printStackTrace();
         }
-        return new BoxPreset();
+        return dialogNodes;
     }
 
+    /**
+     * TODO Add descriptions
+     *
+     * @param text
+     * @param handler
+     * @param pos
+     * @return
+     */
     public static Button makeButton(String text, EventHandler<ActionEvent> handler, double[] pos) {
         Button tmp = new Button();
         tmp.setLayoutX(pos[0]);
@@ -57,9 +81,21 @@ public class Textbox extends Application {
         tmp.setOnAction(handler);
         return tmp;
     }
+
+    /**
+     * TODO Add descriptions
+     *
+     * @param root
+     */
     public void destroy(Pane root) {
         root.getChildren().removeAll(btns[0], btns[1], txt, img);
     }
+
+    /**
+     * TODO Add descriptions
+     *
+     * @param box
+     */
     public void updateBox(BoxPreset box) {
         txt.setText(box.text);
         btns[0].setText(box.option1);
@@ -68,6 +104,17 @@ public class Textbox extends Application {
         btns[1].setOnAction(box.handler2);
 
     }
+
+    /**
+     * TODO Add descriptions
+     *
+     * @param text
+     * @param option1
+     * @param option2
+     * @param handler1
+     * @param handler2
+     * @param root
+     */
     public void createBox(String text,
         String option1,
         String option2,
@@ -80,7 +127,8 @@ public class Textbox extends Application {
         double x = screensize[0] * 0.2;
         double y = screensize[1] - h;
 
-        Image txtbx = new Image("/assets/text-box.png");
+
+        Image txtbx = new Image("/assets/ui/text-box.png");
         img = new ImageView(txtbx);
         img.setX(x);
         img.setY(y);
@@ -101,13 +149,9 @@ public class Textbox extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         Pane root = new Pane();
         BoxPreset preset = new BoxPreset();
         preset.text = "1";
-
-
-
 
 
         createBox("Hello world",
