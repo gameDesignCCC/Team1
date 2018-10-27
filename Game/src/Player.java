@@ -115,7 +115,7 @@ public class Player extends ImageView {
         if (right &&
                 !checkStageCollisionRight() &&
                 !( this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X ) &&
-                !( playerCollision.isCollidingRight( this ) ) ) {
+                playerCollision.isCollidingRight( this ) == null ) {
 
             vX += playerSpeed;
             isMovingRight = true;
@@ -129,7 +129,7 @@ public class Player extends ImageView {
         if (left &&
                 !checkStageCollisionLeft() &&
                 !( this.getX() - playerSpeed <= 0 ) &&
-                !( playerCollision.isCollidingLeft(this ) ) ) {
+                playerCollision.isCollidingLeft(this ) == null ) {
 
             vX += playerSpeed * -1;
             isMovingLeft = true;
@@ -144,13 +144,12 @@ public class Player extends ImageView {
 
         if(inJumpAnimation){
 
-            if(!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y )) {
+            if(!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y ) ) {
                 vY += g;
             }else if( this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y ){
                 vY = 0;
                 inJumpAnimation = false;
             }
-
         }
 
         // Jump
@@ -167,7 +166,7 @@ public class Player extends ImageView {
         }
 
         // TODO : Update player falling.
-        if( !inJumpAnimation && !playerCollision.isCollidingBottom(this) && !checkStageCollisionBottom()){
+        if( !inJumpAnimation && playerCollision.isCollidingBottom(this) != null && !checkStageCollisionBottom()){
             inJumpAnimation = true;
 
         }
@@ -176,19 +175,14 @@ public class Player extends ImageView {
 
         move();
 
-        if(MainApplication.aaa){
+        StaticRect bottom = playerCollision.isCollidingBottom(this);
+        StaticRect top = playerCollision.isCollidingTop(this);
+
+        if(bottom != null){
             inJumpAnimation = false;
             vY = 0.0;
-            this.setY((this.getY() - vY));
-            System.out.println("idk");
+            setY( bottom.getY() - bottom.getHeight());
         }
-
-        if(playerCollision.isCollidingBottom(this)){
-            inJumpAnimation = false;
-            vY = 0.0;
-        }
-
-
 
     }
 

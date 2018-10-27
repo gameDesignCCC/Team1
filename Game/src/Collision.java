@@ -10,14 +10,14 @@ public class Collision{
      * @param player The player.
      * @return The right edge of the player is colliding with any static map object (StaticRect) in mapObjects.
      */
-    public boolean isCollidingRight(Player player){
+    public StaticRect isCollidingRight(Player player){
 
         for( StaticRect staticRect : MainApplication.mapObjects){
             if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Right)){
-                return true;
+                return staticRect;
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -25,14 +25,14 @@ public class Collision{
      * @param player The player.
      * @return The left edge of the player is colliding with any static map object (StaticRect) in mapObjects.
      */
-    public boolean isCollidingLeft(Player player){
+    public StaticRect isCollidingLeft(Player player){
 
         for( StaticRect staticRect : MainApplication.mapObjects){
             if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left)){
-                return true;
+                return staticRect;
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -40,14 +40,14 @@ public class Collision{
      * @param player The player.
      * @return The top edge of the player is colliding with any static map object (StaticRect) in mapObjects.
      */
-    public boolean isCollidingTop(Player player){
+    public StaticRect isCollidingTop(Player player){
 
         for( StaticRect staticRect : MainApplication.mapObjects){
             if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Top)){
-                return true;
+                return staticRect;
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -55,14 +55,14 @@ public class Collision{
      * @param player The player.
      * @return The bottom edge of the player is colliding with any static map object (StaticRect) in mapObjects.
      */
-    public boolean isCollidingBottom(Player player){
+    public StaticRect isCollidingBottom(Player player){
 
         for( StaticRect staticRect : MainApplication.mapObjects){
             if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Bottom)){
-                return true;
+                return staticRect;
             }
         }
-        return false;
+        return null;
     }
 
 }

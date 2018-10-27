@@ -69,8 +69,6 @@ public class MainApplication extends Application {
     static StaticRect box4 = new StaticRect(250, WINDOW_SIZE_Y - 100, 200, 100, new Image("/assets/sprites/pPlayerSprite.png"));
     static StaticRect box5 = new StaticRect(1000, WINDOW_SIZE_Y - 50, 50, 50, new Image("/assets/sprites/pPlayerSprite.png"));
 
-    public static boolean aaa = false;
-
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -86,30 +84,8 @@ public class MainApplication extends Application {
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
                 update();
-
-                // FPS Display
-
-                long oldFrameTime = frameTimes[frameTimeIndex];
-                frameTimes[frameTimeIndex] = now;
-                frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
-                if (frameTimeIndex == 0) {
-                    arrayFilled = true;
-                }
-
-                if (arrayFilled) {
-                    long elapsedNanos = now - oldFrameTime;
-                    long elapsedNanosPerFrame = elapsedNanos / frameTimes.length;
-                    double frameRate = 1000000000.0 / elapsedNanosPerFrame;
-                    fpsCounter.setText(String.format("UPS: %.2f", frameRate));
-
-                    if(frameRate > 70.00 || frameRate < 50.00){
-                        fpsCounter.setTextFill(Color.RED);
-                    }else {
-                        fpsCounter.setTextFill(Color.GREEN);
-                    }
-
-                }
 
             }
         };
@@ -158,6 +134,7 @@ public class MainApplication extends Application {
      * Main Game Loop
      */
     private void update() {
+
         long now = System.currentTimeMillis();
         if (time + MAX_FRAME_RATE <= now ) {
 
@@ -165,7 +142,34 @@ public class MainApplication extends Application {
             if (isPressed(KeyCode.ESCAPE)) {
                 exit();
             }
+
+            // FPS Display
+
+            long oldFrameTime = frameTimes[frameTimeIndex];
+            frameTimes[frameTimeIndex] = now;
+            frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
+            if (frameTimeIndex == 0) {
+                arrayFilled = true;
+            }
+
+            if (arrayFilled) {
+                long elapsedMills = now - oldFrameTime;
+                long elapsedMillsPerFrame = elapsedMills / frameTimes.length;
+                double frameRate = 1000 / elapsedMillsPerFrame;
+                fpsCounter.setText(String.format("UPS: %.2f", frameRate));
+
+                if(frameRate > 70.00 || frameRate < 50.00){
+                    fpsCounter.setTextFill(Color.RED);
+                }else {
+                    fpsCounter.setTextFill(Color.GREEN);
+                }
+
+            }
+
+
             time = System.currentTimeMillis();
+
+
         }
 
     }
