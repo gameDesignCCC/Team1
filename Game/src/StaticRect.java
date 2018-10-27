@@ -81,6 +81,15 @@ public class StaticRect extends StaticObject{
             collisions.add(CollisionType.Bottom);
             collided = true;
         }
+        if(player.getY() + player.getFitHeight() > rSprite.getY() &&
+                !(player.getY() >= rSprite.getY() + rSprite.getFitHeight()) &&
+                !(player.getX() + player.getFitWidth() <= rSprite.getX()) &&
+                !(player.getX() >= rSprite.getX() + rSprite.getFitWidth())){
+            MainApplication.aaa = true;
+            collided = true;
+        }else{
+            MainApplication.aaa = false;
+        }
 
         if ( !collided ) {
             collisions.add(CollisionType.None);

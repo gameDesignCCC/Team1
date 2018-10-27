@@ -29,7 +29,7 @@ public class Player extends ImageView {
     private boolean isMovingLeft = false;
 
     // Gravity
-    static double g = 0.5;
+    static double g = 1;
 
     Collision playerCollision = new Collision();
 
@@ -155,9 +155,8 @@ public class Player extends ImageView {
 
         // Jump
         if (up && !inJumpAnimation){
-            vY += -10.0;
+            vY += -15.0;
             inJumpAnimation = true;
-
 
         }
 
@@ -176,6 +175,20 @@ public class Player extends ImageView {
         // TODO : Fix top & bottom collisions with map objects.
 
         move();
+
+        if(MainApplication.aaa){
+            inJumpAnimation = false;
+            vY = 0.0;
+            this.setY((this.getY() - vY));
+            System.out.println("idk");
+        }
+
+        if(playerCollision.isCollidingBottom(this)){
+            inJumpAnimation = false;
+            vY = 0.0;
+        }
+
+
 
     }
 

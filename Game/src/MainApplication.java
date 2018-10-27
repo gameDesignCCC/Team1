@@ -26,6 +26,9 @@ public class MainApplication extends Application {
 
     private static Stage stage;
 
+    private static final double MAX_FRAME_RATE = 16.67;
+    private static long time = System.currentTimeMillis();
+
     //For FPS Display
     private final long[] frameTimes = new long[100];
     private int frameTimeIndex = 0;
@@ -65,6 +68,8 @@ public class MainApplication extends Application {
     static StaticRect box3 = new StaticRect(800, WINDOW_SIZE_Y - 250, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
     static StaticRect box4 = new StaticRect(250, WINDOW_SIZE_Y - 100, 200, 100, new Image("/assets/sprites/pPlayerSprite.png"));
     static StaticRect box5 = new StaticRect(1000, WINDOW_SIZE_Y - 50, 50, 50, new Image("/assets/sprites/pPlayerSprite.png"));
+
+    public static boolean aaa = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -153,9 +158,14 @@ public class MainApplication extends Application {
      * Main Game Loop
      */
     private void update() {
-        player.onUpdate(isPressed(KeyCode.UP), isPressed(KeyCode.LEFT), isPressed(KeyCode.RIGHT));
-        if(isPressed(KeyCode.ESCAPE)){
-            exit();
+        long now = System.currentTimeMillis();
+        if (time + MAX_FRAME_RATE <= now ) {
+
+            player.onUpdate(isPressed(KeyCode.UP), isPressed(KeyCode.LEFT), isPressed(KeyCode.RIGHT));
+            if (isPressed(KeyCode.ESCAPE)) {
+                exit();
+            }
+            time = System.currentTimeMillis();
         }
 
     }
