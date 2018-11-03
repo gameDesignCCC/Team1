@@ -178,10 +178,30 @@ public class Player extends ImageView {
         StaticRect bottom = playerCollision.isCollidingBottom(this);
         StaticRect top = playerCollision.isCollidingTop(this);
 
-        if(bottom != null){
+
+        if ( top != null && bottom != null ) {
+            double dBot = getY() + getFitHeight() - bottom.getY();
+            double dTop = top.getY() + top.getHeight() - getY();
+
+            if ( dBot < dTop ) {
+                inJumpAnimation = false;
+                vY = 0.0;
+                setY( bottom.getY() - bottom.getHeight());
+                System.out.println( "TOP" );
+            } else {
+                vY = 0;
+                setY(top.getY() + top.getHeight());
+                System.out.println( "BOT" );
+            }
+        } else if(bottom != null){
             inJumpAnimation = false;
             vY = 0.0;
             setY( bottom.getY() - bottom.getHeight());
+            System.out.println( "TOP" );
+        } else if(top != null){
+            vY = 0;
+            setY(top.getY() + top.getHeight());
+            System.out.println( "BOT" );
         }
 
     }

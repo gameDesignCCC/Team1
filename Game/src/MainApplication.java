@@ -67,7 +67,7 @@ public class MainApplication extends Application {
     static StaticRect box2 = new StaticRect(500, WINDOW_SIZE_Y - 100, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
     static StaticRect box3 = new StaticRect(800, WINDOW_SIZE_Y - 250, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
     static StaticRect box4 = new StaticRect(250, WINDOW_SIZE_Y - 100, 200, 100, new Image("/assets/sprites/pPlayerSprite.png"));
-    static StaticRect box5 = new StaticRect(1000, WINDOW_SIZE_Y - 50, 50, 50, new Image("/assets/sprites/pPlayerSprite.png"));
+    static StaticRect box5 = new StaticRect(1000, WINDOW_SIZE_Y - 50, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
 
     @Override
     public void start(Stage primaryStage) throws Exception {
