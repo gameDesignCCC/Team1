@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class DialogNode {
     private int id;             // The ID of the Node
     private int nextNode1;      // The ID of the Node to go to when clicking option 1
@@ -9,6 +11,8 @@ public class DialogNode {
 
     /**
      * Constructor
+     * Example line:
+     * 0:{text:This is a node^option1:Option1 text^option2:Option2 text^nextNode1:1^nextNode2:2}
      * @param param line to parse
      */
     public DialogNode(String param) {
@@ -19,32 +23,35 @@ public class DialogNode {
         int first = param.indexOf('{');
         int last = param.lastIndexOf('}');
         String map = param.substring(first+1,last);
-        String[] splitMap = map.split("^");
+        String[] splitMap = map.split("\\^");
+        System.out.println(Arrays.toString(splitMap));
 
         for(String pair :  splitMap) {
             index = pair.indexOf(':');
             String key = pair.substring( 0, index);
             String value = pair.substring(index + 1, pair.length());
 
-            if (key == "text") {
+            if (key.equals("text")) {
                 text = value;
-            } else if (key == "option1") {
+            } else if (key.equals("option1")) {
                 option1 = value;
-            } else if (key == "option2") {
+            } else if (key.equals("option2")) {
                 option2 = value;
-            } else if (key == "nextNode1") {
+            } else if (key.equals("nextNode1")) {
                 nextNode1 = Integer.parseInt(value);
-            } else if (key == "nextNode2") {
+            } else if (key.equals("nextNode2")) {
                 nextNode2 = Integer.parseInt(value);
-            } else if (key == "twoOptions") {
+            } else if (key.equals("twoOptions")) {
                 twoOptions = value.equals("t");
+            } else {
+                System.out.println("Skipping invalid key: " + key + ".");
             }
         }
     }
 
     /**
      * Gets the Node ID
-     * @return
+     * @return id
      */
     public int getId() {
         return id;
@@ -52,7 +59,7 @@ public class DialogNode {
 
     /**
      * Gets the next node for option 1
-     * @return
+     * @return nextNode1
      */
     public int getNextNode1() {
         return nextNode1;
@@ -60,7 +67,7 @@ public class DialogNode {
 
     /**
      * Gets the next node for option 2
-     * @return
+     * @return nextNode2
      */
     public int getNextNode2() {
         return nextNode2;
@@ -68,7 +75,7 @@ public class DialogNode {
 
     /**
      * Gets option 1
-     * @return
+     * @return option1
      */
     public String getOption1() {
         return option1;
@@ -76,7 +83,7 @@ public class DialogNode {
 
     /**
      * Gets option 2
-     * @return
+     * @return option2
      */
     public String getOption2() {
         return option2;
@@ -84,7 +91,7 @@ public class DialogNode {
 
     /**
      * Gets the text box text
-     * @return
+     * @return text
      */
     public String getText() {
         return text;
@@ -92,7 +99,7 @@ public class DialogNode {
 
     /**
      * Gets whether or not there are 2 options
-     * @return
+     * @return twoOptions
      */
     public boolean isTwoOptions() {
         return twoOptions;

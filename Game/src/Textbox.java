@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -42,9 +43,9 @@ public class Textbox extends Application {
     private Button[] btns = new Button[2];
 
     /**
-     *  TODO Add descriptions
+     * Loads a dialog tree from a file
      *
-     * @param filename
+     * @param filename The path to the dialog file
      * @return
      */
     public ArrayList<DialogNode> loadtree(String filename) {
@@ -57,20 +58,20 @@ public class Textbox extends Application {
 
             while (in.hasNextLine()) {
                 String line = in.nextLine();
-
+                dialogNodes.add(new DialogNode(line));
             }
-        }catch(Exception e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return dialogNodes;
     }
 
     /**
-     * TODO Add descriptions
+     * Creates a button and places it somewhere on the screen
      *
-     * @param text
-     * @param handler
-     * @param pos
+     * @param text The text in the button
+     * @param handler The handler that is called when the button is pressed
+     * @param pos The position of the button on the screen
      * @return
      */
     public static Button makeButton(String text, EventHandler<ActionEvent> handler, double[] pos) {
@@ -83,37 +84,23 @@ public class Textbox extends Application {
     }
 
     /**
-     * TODO Add descriptions
+     * Destroys the dialog box
      *
-     * @param root
+     * @param root The pane where the box is
      */
-    public void destroy(Pane root) {
+    public void destroyBox(Pane root) {
         root.getChildren().removeAll(btns[0], btns[1], txt, img);
     }
 
     /**
-     * TODO Add descriptions
+     * Creates a dialog box
      *
-     * @param box
-     */
-    public void updateBox(BoxPreset box) {
-        txt.setText(box.text);
-        btns[0].setText(box.option1);
-        btns[1].setText(box.option2);
-        btns[0].setOnAction(box.handler1);
-        btns[1].setOnAction(box.handler2);
-
-    }
-
-    /**
-     * TODO Add descriptions
-     *
-     * @param text
-     * @param option1
-     * @param option2
-     * @param handler1
-     * @param handler2
-     * @param root
+     * @param text The text inside the box
+     * @param option1 The text shown as the first option
+     * @param option2 The text shown as the second option
+     * @param handler1 The handler for the first option button
+     * @param handler2 The handler for the second option button
+     * @param root The root pane in which the box is drawn
      */
     public void createBox(String text,
         String option1,
@@ -143,8 +130,37 @@ public class Textbox extends Application {
         double[] pos1 = {x + w - (screensize[0] * 0.05), y + (h - 120)};
 
         btns[0] = makeButton(option1, handler1, pos1);
-        btns[1] = makeButton(option2, handler2, pos2);
-        root.getChildren().addAll(img, txt, btns[0], btns[1]);
+        root.getChildren().addAll(img, txt, btns[0]);
+        if (option2 != null) {
+            btns[1] = makeButton(option2, handler2, pos2);
+            root.getChildren().add(btns[1]);
+        }
+    }
+
+    /**
+     * Shows a dialog tree on screen
+     * @param firstNode The first node to start at in the list
+     * @param nodeList The list of nodes
+     * @param root The root pane to show the dialog boxes on
+     */
+    public void showTree(DialogNode firstNode, ArrayList<DialogNode> nodeList, Pane root) {
+        DialogNode currentNode = firstNode;
+        createBox(currentNode.getText(),
+                currentNode.getOption1(),
+                currentNode.getOption2(),
+                event -> {
+                    destroyBox(root);
+                    if (currentNode.getNextNode1() != 0) {
+                        showTree(nodeList.get(currentNode.getNextNode1() - 1), nodeList, root);
+                    }
+                },
+                event -> {
+                    destroyBox(root);
+                    if (currentNode.getNextNode2() != 0) {
+                        showTree(nodeList.get(currentNode.getNextNode2() - 1), nodeList, root);
+                    }
+                },
+                root);
     }
 
     @Override
@@ -153,13 +169,9 @@ public class Textbox extends Application {
         BoxPreset preset = new BoxPreset();
         preset.text = "1";
 
+        ArrayList<DialogNode> nodes = loadtree("Game/src/assets/dialog_trees/dialog1.txt");
 
-        createBox("Hello world",
-                "Option 1",
-                "Option 2",
-                event -> System.out.println("This loaded the level"),
-                event -> updateBox(preset),
-                root);
+        showTree(nodes.get(0), nodes, root);
 
         primaryStage.setScene(new Scene(root, screensize[0], screensize[1]));
         primaryStage.show();

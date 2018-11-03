@@ -1,1 +1,4 @@
-0:{text:Hello world^option1:^option2:}
+1:{text:Not Navi: "Hey!"^option1:"Hey!"^option2:"What?"^nextNode1:2^nextNode2:3}
+2:{text:Not Navi: "Look, listen!"^option1:"No"^nextNode1:4}
+3:{text:Not Navi: "I said hey!"^option1:"Hey!"^option2:"What?"^nextNode1:2^nextNode2:3}
+4:{text:Not Navi: "Hello world"^option1:Exit}
