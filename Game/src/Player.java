@@ -1,17 +1,16 @@
 /*
  * Author(s): Jacob Dixon @jacobrdixon.com
- * Date: 6/10/2018 - 13/10/2018
+ * Date: 24/10/2018
  */
 
 /*
-KNOW ISSUES:
-player gets stuck when jumping on the box
+ * KNOW ISSUES:
+ * Player does not use top or bottom collision detection.
  */
 
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.Rectangle;
 
 public class Player extends ImageView {
 
@@ -19,22 +18,20 @@ public class Player extends ImageView {
     private static boolean inJumpAnimation = false;
 
     // Player Speed When Moved
-    private static double playerSpeed = 5.0;
+    private static double playerSpeed = 10.0;
 
     // Player Velocity
     private static double vX = 0.0;
     private static double vY = 0.0;
 
+    // Don't rely on these doing anything useful elsewhere in the application.
     private boolean isMovingRight = false;
     private boolean isMovingLeft = false;
 
     // Gravity
-    static double g = 0.5;
+    static double g = 1;
 
     Collision playerCollision = new Collision();
-
-    // Temporary object created fore testing collision.
-    Rectangle box = MainApplication.box;
 
     Player(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
@@ -42,12 +39,10 @@ public class Player extends ImageView {
         this.setFitWidth(width);
         this.setFitHeight(height);
         this.setImage(sprite);
-
     }
 
     /**
-     * TODO Add descriptions
-     * Check Collision Top
+     * Check Stage Collision Top
      * @return
      */
     public boolean checkStageCollisionTop(){
@@ -55,8 +50,7 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO Add descriptions
-     * Check Collision Bottom
+     * Check Stage Collision Bottom
      * @return
      */
     public boolean checkStageCollisionBottom(){
@@ -64,8 +58,7 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO Add descriptions
-     * Check Collision Left
+     * Check Stage Collision Left
      * @return Whether the player is colliding with the left edge of the stage or not.
      */
     public boolean checkStageCollisionLeft() {
@@ -73,8 +66,7 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO Add descriptions
-     * Check Collision Right
+     * Check Stage Collision Right
      * @return Returns whether the player is colliding with the right edge of the stage or not.
      */
     public boolean checkStageCollisionRight(){
@@ -82,7 +74,6 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO update description
      * Player Movement
      * Moves the player every frame.
      */
@@ -92,17 +83,8 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO update description
-     * Player Jump
-     */
-    public void jump() {
-    }
-
-    /**
-     * TODO Add descriptions
-     *
+     * Get Y Velocity
      * Position and size can be called fromm ImageView.
-     *
      * @return Returns value of Y velocity.
      */
     public double getvY() {
@@ -110,7 +92,7 @@ public class Player extends ImageView {
     }
 
     /**
-     * TODO Add descriptions
+     * Get X Velocity
      * @return Returns value of X velocity.
      */
     public double getvX() {
@@ -121,6 +103,7 @@ public class Player extends ImageView {
      * Player update method called every frame.
      */
     public void onUpdate(boolean up, boolean left, boolean right) {
+
         vX = 0;
 
         if(!inJumpAnimation) {
@@ -132,7 +115,7 @@ public class Player extends ImageView {
         if (right &&
                 !checkStageCollisionRight() &&
                 !( this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X ) &&
-                !( playerCollision.isCollidingRight( box,this ) ) ) {
+                playerCollision.isCollidingRight( this ) == null ) {
 
             vX += playerSpeed;
             isMovingRight = true;
@@ -146,7 +129,7 @@ public class Player extends ImageView {
         if (left &&
                 !checkStageCollisionLeft() &&
                 !( this.getX() - playerSpeed <= 0 ) &&
-                !( playerCollision.isCollidingLeft( box,this ) ) ) {
+                playerCollision.isCollidingLeft(this ) == null ) {
 
             vX += playerSpeed * -1;
             isMovingLeft = true;
@@ -163,40 +146,63 @@ public class Player extends ImageView {
 
             if(!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y ) ) {
                 vY += g;
-            }else if( this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
+            }else if( this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y ){
                 vY = 0;
                 inJumpAnimation = false;
             }
-
         }
 
         // Jump
         if (up && !inJumpAnimation){
-            vY += -10.0;
+            vY += -15.0;
             inJumpAnimation = true;
-
 
         }
 
-        // Set inJumpAnimation false when player collides with stage bottom.
+        // Ends jump animation when the player collides with stage bottom.
         if(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y){
             inJumpAnimation = false;
             this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
         }
 
         // TODO : Update player falling.
-        if( !inJumpAnimation && !playerCollision.isCollidingBottom(MainApplication.box2, this) && !checkStageCollisionBottom()){
+        if( !inJumpAnimation && playerCollision.isCollidingBottom(this) != null && !checkStageCollisionBottom()){
             inJumpAnimation = true;
 
         }
-        if(playerCollision.isCollidingBottom(MainApplication.box2, this)){
-            vY=0;
-            inJumpAnimation = false;
-        }
-        System.out.println(inJumpAnimation);
 
+        // TODO : Fix top & bottom collisions with map objects.
 
         move();
+
+        StaticRect bottom = playerCollision.isCollidingBottom(this);
+        StaticRect top = playerCollision.isCollidingTop(this);
+
+
+        if ( top != null && bottom != null ) {
+            double dBot = getY() + getFitHeight() - bottom.getY();
+            double dTop = top.getY() + top.getHeight() - getY();
+
+            if ( dBot < dTop ) {
+                inJumpAnimation = false;
+                vY = 0.0;
+                setY( bottom.getY() - bottom.getHeight());
+                System.out.println( "TOP" );
+            } else {
+                vY = 0;
+                setY(top.getY() + top.getHeight());
+                System.out.println( "BOT" );
+            }
+        } else if(bottom != null){
+            inJumpAnimation = false;
+            vY = 0.0;
+            setY( bottom.getY() - bottom.getHeight());
+            System.out.println( "TOP" );
+        } else if(top != null){
+            vY = 0;
+            setY(top.getY() + top.getHeight());
+            System.out.println( "BOT" );
+        }
 
     }
 

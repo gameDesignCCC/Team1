@@ -1,56 +1,68 @@
 /*
  * Author(s):
- * Date: 13/10/2018
+ * Date: 24/10/2018
  */
 
-import javafx.scene.shape.Rectangle;
-
-public class Collision {
+public class Collision{
 
     /**
-     * TODO : Add descriptions
-     *
-     * @param other Any Rectangle the player could collide with.
+     * Right edge of player is colliding.
      * @param player The player.
-     * @return Returns whether the right edge of the player is colliding with the left edge of the Rectangle or not.
+     * @return The right edge of the player is colliding with any static map object (StaticRect) in mapObjects.
      */
-    public boolean isCollidingRight(Rectangle other, Player player) {
-        return MainApplication.box2.checkCollision(player).contains(StaticObject.CollisionType.Right);
+    public StaticRect isCollidingRight(Player player){
+
+        for( StaticRect staticRect : MainApplication.mapObjects){
+            if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Right)){
+                return staticRect;
+            }
+        }
+        return null;
     }
 
     /**
-     * TODO : Add descriptions
-     *
-     * @param other Any Rectangle the player could collide with.
+     * Left edge of player is colliding.
      * @param player The player.
-     * @return Returns whether the left edge of the player is colliding with the right edge of the Rectangle or not.
+     * @return The left edge of the player is colliding with any static map object (StaticRect) in mapObjects.
      */
-    public boolean isCollidingLeft(Rectangle other, Player player) {
-        return MainApplication.box2.checkCollision(player).contains(StaticObject.CollisionType.Left);
+    public StaticRect isCollidingLeft(Player player){
+
+        for( StaticRect staticRect : MainApplication.mapObjects){
+            if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left)){
+                return staticRect;
+            }
+        }
+        return null;
     }
 
     /**
-     * * TODO : Add descriptions
-     *
-     * @param other Any Rectangle the player could collide with.
+     * Top edge of player is colliding.
      * @param player The player.
-     * @return Returns whether the top edge of the player is colliding with the bottom edge of the Rectangle or not.
+     * @return The top edge of the player is colliding with any static map object (StaticRect) in mapObjects.
      */
-    public boolean isCollidingTop(Rectangle other, Player player){
-        return(player.getY() <= other.getY() + other.getHeight());
+    public StaticRect isCollidingTop(Player player){
+
+        for( StaticRect staticRect : MainApplication.mapObjects){
+            if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Top)){
+                return staticRect;
+            }
+        }
+        return null;
     }
 
     /**
-     * * TODO : Add descriptions
-     *
-     * @param other Any Rectangle the player could collide with.
+     * Bottom edge of player is colliding.
      * @param player The player.
-     * @return Returns whether the bottom edge of the player is colliding with the top edge of the Rectangle or not.
+     * @return The bottom edge of the player is colliding with any static map object (StaticRect) in mapObjects.
      */
-    public boolean isCollidingBottom(StaticRect other, Player player){
-        return MainApplication.box2.checkCollision(player).contains(StaticObject.CollisionType.Bottom);
+    public StaticRect isCollidingBottom(Player player){
+
+        for( StaticRect staticRect : MainApplication.mapObjects){
+            if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Bottom)){
+                return staticRect;
+            }
+        }
+        return null;
     }
-
-
 
 }

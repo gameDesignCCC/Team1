@@ -4,6 +4,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+
+import java.awt.*;
 
 public class Menu {
 
@@ -51,7 +55,7 @@ public class Menu {
 
         Pane root = new Pane();
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
-
+        scene.getStylesheets().add("/assets/ui/style.css");
         return scene;
     }
 
