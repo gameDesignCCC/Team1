@@ -4,6 +4,8 @@
  */
 
 
+import javafx.scene.image.Image;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -11,6 +13,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class MapLoader {
+    Player player;
+    Object[][] arrayB;
 
     public static void main( String args[] ) {
         MapLoader m = new MapLoader();
@@ -32,26 +36,38 @@ public class MapLoader {
             int width = scan.nextInt();
 
             char array[][] = new char[height][width];
+            arrayB = new Object[height][width];
             int i = 0;
             int j = 0;
 
+            // Read File into array
             while (scan.hasNext()) {
-                char nextChar = (char) scan.nextByte();
-
-                if (nextChar != '\n') {
-                    array[i][j] = nextChar;
-                    i++;
-                    j++;
+                String nextChar = scan.next();
+                for ( int k = 0; k < width; k++) {
+                    char n = nextChar.charAt(k);
+                    array[i][k] = n;
                 }
+                i++;
             }
 
-            System.out.println(Arrays.toString(array));
+            // Create Level
+            for ( int y = 0; y < height; y++) {
+                for ( int x = 0; x < width; x++) {
+                    System.out.print(array[y][x] + " ");
+                    if (array[y][x] == 'P'){
+                        //Image playerSprite = new Image("/assets/sprites/playerSprite.png");
+                        //player = new Player(x, y,0, 0, playerSprite );
+                        //arrayB[x][y] = player;
+                    }
+                }
+                System.out.println(" ");
+            }
 
+            //System.out.println( String.format("Player: x:%d  y:%d", player.getX(), player.getY()));
             scan.close();
         }catch(FileNotFoundException e ) {
 
         }
-
       //  return array;
 
     }
