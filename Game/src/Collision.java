@@ -65,4 +65,13 @@ public class Collision{
         return null;
     }
 
+    public boolean enemyCollision(Player player){
+        for(Enemies enemy : MainApplication.enemies){
+            if(enemy.checkCollision(player)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -16,7 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ import java.util.HashMap;
 public class MainApplication extends Application {
 
     private static Stage stage;
+
 
     private static final double MAX_FRAME_RATE = 16.67;
     private static long time = System.currentTimeMillis();
@@ -47,6 +47,7 @@ public class MainApplication extends Application {
     // The Player
     public Player player = new Player(0, WINDOW_SIZE_Y - pPlayerSprite.getHeight(), pPlayerSprite.getWidth(), pPlayerSprite.getHeight(), pPlayerSprite );
 
+
     // Temporary Map Background
     private Image mapBg = new Image("/assets/maps/00/bg.png");
     private ImageView mapBgView = new ImageView(mapBg);
@@ -59,14 +60,15 @@ public class MainApplication extends Application {
 
     // Map Objects - added in StaticRect constructor.
     public static ArrayList<StaticRect> mapObjects = new ArrayList<>();
+    public static ArrayList<Enemies> enemies = new ArrayList<>();
 
     // Game Loop Timer
-    private static AnimationTimer timer;
+    public static AnimationTimer timer;
 
     // Temporary for collision detection.
 
-    static StaticRect box5 = new StaticRect(1000, WINDOW_SIZE_Y - 100, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"), "spike");
-    static StaticRect box4 = new StaticRect(500, WINDOW_SIZE_Y - 100, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"), "enemy");
+    Enemies enemy = new Enemies(500, WINDOW_SIZE_Y - 100, 100,100, new Image("/assets/sprites/pPlayerSprite.png"));
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -88,8 +90,6 @@ public class MainApplication extends Application {
 
             }
         };
-
-        timer.start();
 
         root.getChildren().addAll(mapBgView, fpsCounter, player);
 
@@ -138,13 +138,15 @@ public class MainApplication extends Application {
      * Main Game Loop
      */
     private void update() {
+        enemy.onUpdate();
 
         long now = System.currentTimeMillis();
         if (time + MAX_FRAME_RATE <= now ) {
 
             player.onUpdate(isPressed(KeyCode.UP), isPressed(KeyCode.LEFT), isPressed(KeyCode.RIGHT));
             if (isPressed(KeyCode.ESCAPE)) {
-                exit();
+                MainApplication.getStage().setScene(Menu.pauseMenu());
+                MainApplication.timer.stop();
             }
 
             // FPS Display
@@ -193,3 +195,4 @@ public class MainApplication extends Application {
     }
 
 }
+
