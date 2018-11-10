@@ -18,14 +18,18 @@ import sun.applet.Main;
 public class Player extends ImageView {
 
     // Player is in jump animation
-    private static boolean inJumpAnimation = false;
+    private boolean inJumpAnimation = false;
 
     // Player Speed When Moved
-    private static double playerSpeed = 10.0;
+    private double playerSpeed = 10.0;
+
+    // Player Starting X and Y
+    private double startX;
+    private double startY;
 
     // Player Velocity
-    private static double vX = 0.0;
-    private static double vY = 0.0;
+    private double vX = 0.0;
+    private double vY = 0.0;
 
     // Don't rely on these doing anything useful elsewhere in the application.
     private boolean isMovingRight = false;
@@ -34,8 +38,8 @@ public class Player extends ImageView {
     // Gravity
     static double g = 1;
 
-    private static boolean isDead = false;
-    private static int hp = 100;
+    private boolean isDead = false;
+    private int hp = 100;
 
     Collision playerCollision = new Collision();
 
@@ -43,14 +47,15 @@ public class Player extends ImageView {
 
     Player(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
+        this.startX = x;
         this.setY(y);
+        this.startY = y;
         this.setFitWidth(width);
         this.setFitHeight(height);
         this.setImage(sprite);
         hpBar.setHeight(10);
         hpBar.setWidth(width);
         hpBar.setFill(Color.GREEN);
-        MainApplication.addToRoot(hpBar);
     }
 
     /**
@@ -215,10 +220,12 @@ public class Player extends ImageView {
                 inJumpAnimation = false;
                 vY = 0.0;
                 setY(bottom.getY() - bottom.getHeight());
-                if(bottom.getType() == "spike"){
+                if(bottom.getType() == StaticObject.Type.SPIKE){
                     hp -= 120;
-                }else if(bottom.getType() == "enemy"){
+                }else if(bottom.getType() == StaticObject.Type.ENEMY){
                     hp -= 5;
+                }else if(bottom.getType() == StaticObject.Type.LAVA){
+                    hp -= 120;
                 }
             } else if (top != null) {
                 vY = 0;
@@ -236,14 +243,12 @@ public class Player extends ImageView {
     public void die(){
         isDead = true;
         System.out.println("player died");
-        MainApplication.rmFromRoot(this);
-        MainApplication.rmFromRoot(hpBar);
         MainApplication.getStage().setScene(Menu.deathMenu());
     }
 
     public void reset(){
-        this.setX(0);
-        this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
+        this.setX(startX);
+        this.setY(startY);
         this.hp = 100;
     }
 

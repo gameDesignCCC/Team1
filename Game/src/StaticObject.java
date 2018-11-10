@@ -9,6 +9,10 @@ public abstract class StaticObject {
         None, Left, Right, Top, Bottom
     }
 
+    public static enum Type{
+        BLOCK, GROUND, LAVA, SPIKE, ENEMY, EXIT
+    }
+
     /**
      *
      * list of left, right, bottom, and top collisions
