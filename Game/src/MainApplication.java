@@ -146,7 +146,10 @@ public class MainApplication extends Application {
 
         return gameScene;
     }
-    
+
+    public static Pane getGameRoot(){
+        return root;
+    }
 
     /**
      * Main Game Loop
@@ -183,7 +186,11 @@ public class MainApplication extends Application {
                 }
 
             }
+
+
             time = System.currentTimeMillis();
+
+
         }
 
     }
