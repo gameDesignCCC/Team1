@@ -1,3 +1,4 @@
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -36,10 +37,13 @@ public class StaticRect extends StaticObject{
         rSprite.setFitWidth(width);
         rSprite.setFitHeight(height);
 
+        /**
         MainApplication.addToRoot(rSprite);
-        MainApplication.mapObjects.add(this);
+        MainApplication.sceneObjects.add(this);
+         **/
 
     }
+
 
     /**
      *
@@ -104,13 +108,10 @@ public class StaticRect extends StaticObject{
         return height;
     }
 
-    public Image getSprite() {
-        return sprite;
-    }
-
-    public ImageView getrSprite() {
+    public Node getSprite() {
         return rSprite;
     }
+
 
     /**
      *

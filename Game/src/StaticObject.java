@@ -1,3 +1,4 @@
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -15,6 +16,12 @@ public abstract class StaticObject {
      * @return returns collisions
      */
     public abstract ArrayList<CollisionType> checkCollision(Player player );
+
+    /**
+     * TODO: Add description
+     * @return
+     */
+    public abstract Node getSprite();
 
 
 }

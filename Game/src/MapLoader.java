@@ -8,26 +8,26 @@ import javafx.scene.image.Image;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MapLoader {
-    Player player;
-    Object[][] arrayB;
+    public static final int GRID_SIZE = 30;
+    public int playerX = -1;
+    public int playerY = -1;
 
     public static void main( String args[] ) {
         MapLoader m = new MapLoader();
 
-        File file = new File("/home/campus06/csseat36/IdeaProjects/Team1/Game/src/level-1");
+        File file = new File("./Game/src/level-1");
         System.out.println(file.canRead());
 
 
-        m.load("/home/campus06/csseat36/IdeaProjects/Team1/Game/src/level-1");
+        m.load("./Game/src/level-1");
     }
 
-
-    public void load(String file) {
+    public ArrayList<Object> load(String file) {
+        ArrayList<Object> result = new ArrayList<Object>();
         File f = new File(file);
         try {
             Scanner scan = new Scanner(f);
@@ -36,7 +36,6 @@ public class MapLoader {
             int width = scan.nextInt();
 
             char array[][] = new char[height][width];
-            arrayB = new Object[height][width];
             int i = 0;
             int j = 0;
 
@@ -54,10 +53,43 @@ public class MapLoader {
             for ( int y = 0; y < height; y++) {
                 for ( int x = 0; x < width; x++) {
                     System.out.print(array[y][x] + " ");
-                    if (array[y][x] == 'P'){
-                        //Image playerSprite = new Image("/assets/sprites/playerSprite.png");
-                        //player = new Player(x, y,0, 0, playerSprite );
-                        //arrayB[x][y] = player;
+                    char c = array[y][x];
+
+                    // AIR
+                    if ( c == '.') {
+                        // Do Nothing
+
+                    // Ground
+                    } else if ( c == 'G' ) {
+                        result.add( new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                new Image("/assets/sprites/ground_placeholder.png")));
+                    // Player
+                    } else if ( c == 'P') {
+                        playerX = x * GRID_SIZE;
+                        playerY = y * GRID_SIZE + 2;
+                    // Block
+                    } else if ( c == 'B') {
+                        result.add( new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                new Image("/assets/sprites/block_placeholder.png")));
+                    // Lava
+                    } else if ( c == '~') {
+                        result.add( new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                new Image("/assets/sprites/lava_placeholder.png")));
+                    }
+                    // Spike
+                    else if ( c == '^') {
+                        result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                new Image("/assets/sprites/spike_placeholder.png")));
+
+                    // Enemy
+                    } else if ( c == 'e') {
+                        result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                new Image("/assets/sprites/enemy_placeholder.png")));
+
+                    // Exit
+                    } else if ( c == 'E') {
+                        result.add( new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                new Image("/assets/sprites/exit_placeholder.png")));
                     }
                 }
                 System.out.println(" ");
@@ -68,7 +100,7 @@ public class MapLoader {
         }catch(FileNotFoundException e ) {
 
         }
-      //  return array;
+      return result;
 
     }
 

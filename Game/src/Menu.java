@@ -32,7 +32,7 @@ public class Menu {
 
 
         btnStart.setOnAction(e ->
-            MainApplication.getStage().setScene(MainApplication.getGameScene())
+            MainApplication.getStage().setScene(MainApplication.getGameScene("./Game/src/assets/levels/level-1"))
         );
 
         btnOptions.setOnAction(e ->

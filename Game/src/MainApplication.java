@@ -41,15 +41,15 @@ public class MainApplication extends Application {
     public static final double WINDOW_SIZE_Y = 720.0;
 
     // Temporary Player Sprites
-    private Image playerSprite = new Image("/assets/sprites/playerSprite.png");
-    private Image pPlayerSprite = new Image("/assets/sprites/pPlayerSprite.png");
+    private static Image playerSprite = new Image("/assets/sprites/playerSprite.png");
+    private static Image pPlayerSprite = new Image("/assets/sprites/pPlayerSprite.png");
 
     // The Player
-    public Player player = new Player(0, WINDOW_SIZE_Y - pPlayerSprite.getHeight(), pPlayerSprite.getWidth(), pPlayerSprite.getHeight(), pPlayerSprite );
+    public static Player player = new Player(0, WINDOW_SIZE_Y - pPlayerSprite.getHeight(), pPlayerSprite.getWidth(), pPlayerSprite.getHeight(), pPlayerSprite );
 
     // Temporary Map Background
-    private Image mapBg = new Image("/assets/maps/00/bg.png");
-    private ImageView mapBgView = new ImageView(mapBg);
+    private static Image mapBg = new Image("/assets/maps/00/bg.png");
+    private static ImageView mapBgView = new ImageView(mapBg);
 
     private static Label fpsCounter = new Label();
 
@@ -58,16 +58,10 @@ public class MainApplication extends Application {
     private static Scene gameScene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
     // Map Objects - added in StaticRect constructor.
-    public static ArrayList<StaticRect> mapObjects = new ArrayList<>();
+    public static ArrayList<Object> sceneObjects = new ArrayList<>();
 
     // Game Loop Timer
     private static AnimationTimer timer;
-
-    // Temporary for collision detection.
-    static StaticRect box2 = new StaticRect(500, WINDOW_SIZE_Y - 100, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
-    static StaticRect box3 = new StaticRect(800, WINDOW_SIZE_Y - 250, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
-    static StaticRect box4 = new StaticRect(250, WINDOW_SIZE_Y - 100, 200, 100, new Image("/assets/sprites/pPlayerSprite.png"));
-    static StaticRect box5 = new StaticRect(1000, WINDOW_SIZE_Y - 50, 100, 100, new Image("/assets/sprites/pPlayerSprite.png"));
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -114,21 +108,45 @@ public class MainApplication extends Application {
         return keys.getOrDefault(key, false);
     }
 
-    public static void addToRoot(Node node){
-        root.getChildren().add(node);
-    }
-
-    public static void rmFromRoot(Node node){
-        root.getChildren().remove(node);
-    }
 
     public static Stage getStage(){
         return stage;
     }
 
-    public static Scene getGameScene(){
+    public static Scene getGameScene(String level) {
+
+        //Remove Nodes From Scene
+        Pane root = new Pane();
+        Scene gameScene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+        sceneObjects = new ArrayList<>();
+
+        //Load Next Level
+        MapLoader mapLoader = new MapLoader();
+        for( Object obj: mapLoader.load(level)) {
+            if ( obj instanceof StaticObject ) {
+                StaticObject staticObject = (StaticObject) obj;
+                sceneObjects.add(staticObject);
+                root.getChildren().add(staticObject.getSprite());
+            }
+        }
+
+        // Update Player Location:
+        player = new Player(mapLoader.playerX, mapLoader.playerY, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, pPlayerSprite );
+        sceneObjects.add(player);
+        root.getChildren().add(player);
+
+        gameScene.getStylesheets().add("/assets/ui/style.css");
+
+        // Get key(s) pressed for player movements.
+        gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
+        gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
+
+        root.getChildren().addAll(mapBgView, fpsCounter);
+        mapBgView.toBack();
+
         return gameScene;
     }
+    
 
     /**
      * Main Game Loop
@@ -165,11 +183,7 @@ public class MainApplication extends Application {
                 }
 
             }
-
-
             time = System.currentTimeMillis();
-
-
         }
 
     }

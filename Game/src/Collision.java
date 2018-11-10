@@ -8,13 +8,16 @@ public class Collision{
     /**
      * Right edge of player is colliding.
      * @param player The player.
-     * @return The right edge of the player is colliding with any static map object (StaticRect) in mapObjects.
+     * @return The right edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
     public StaticRect isCollidingRight(Player player){
 
-        for( StaticRect staticRect : MainApplication.mapObjects){
-            if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Right)){
-                return staticRect;
+        for( Object object : MainApplication.sceneObjects){
+            if ( object instanceof StaticRect ) {
+                StaticRect staticRect = (StaticRect) object;
+                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Right)) {
+                    return staticRect;
+                }
             }
         }
         return null;
@@ -23,14 +26,19 @@ public class Collision{
     /**
      * Left edge of player is colliding.
      * @param player The player.
-     * @return The left edge of the player is colliding with any static map object (StaticRect) in mapObjects.
+     * @return The left edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
     public StaticRect isCollidingLeft(Player player){
 
-        for( StaticRect staticRect : MainApplication.mapObjects){
-            if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left)){
-                return staticRect;
+        for( Object object: MainApplication.sceneObjects){
+            if ( object instanceof StaticRect ) {
+                StaticRect staticRect = (StaticRect) object;
+
+                if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left)){
+                    return staticRect;
+                }
             }
+
         }
         return null;
     }
@@ -38,13 +46,17 @@ public class Collision{
     /**
      * Top edge of player is colliding.
      * @param player The player.
-     * @return The top edge of the player is colliding with any static map object (StaticRect) in mapObjects.
+     * @return The top edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
     public StaticRect isCollidingTop(Player player){
 
-        for( StaticRect staticRect : MainApplication.mapObjects){
-            if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Top)){
-                return staticRect;
+        for( Object object: MainApplication.sceneObjects){
+            if ( object instanceof StaticRect ) {
+                StaticRect staticRect = (StaticRect) object;
+
+                if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Top)) {
+                    return staticRect;
+                }
             }
         }
         return null;
@@ -53,13 +65,17 @@ public class Collision{
     /**
      * Bottom edge of player is colliding.
      * @param player The player.
-     * @return The bottom edge of the player is colliding with any static map object (StaticRect) in mapObjects.
+     * @return The bottom edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
     public StaticRect isCollidingBottom(Player player){
 
-        for( StaticRect staticRect : MainApplication.mapObjects){
-            if(staticRect.checkCollision(player).contains(StaticRect.CollisionType.Bottom)){
-                return staticRect;
+        for( Object object : MainApplication.sceneObjects){
+            if( object instanceof  StaticRect) {
+                StaticRect staticRect = (StaticRect) object;
+
+                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Bottom)) {
+                    return staticRect;
+                }
             }
         }
         return null;
