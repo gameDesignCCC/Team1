@@ -11,6 +11,7 @@ public class StaticRect extends StaticObject{
     double width;
     double height;
     Image sprite;
+    String type;
 
     ImageView rSprite = new ImageView();
 
@@ -22,13 +23,14 @@ public class StaticRect extends StaticObject{
      * @param height height of rectangle
      * @param sprite sprite of rectangle
      */
-    public StaticRect(double x, double y, double width, double height, Image sprite){
+    public StaticRect(double x, double y, double width, double height, Image sprite, String type){
 
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.sprite = sprite;
+        this.type = type;
 
         rSprite.setImage(sprite);
         rSprite.setX(x);
@@ -111,6 +113,8 @@ public class StaticRect extends StaticObject{
     public ImageView getrSprite() {
         return rSprite;
     }
+
+    public String getType(){ return type; }
 
     /**
      *
