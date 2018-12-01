@@ -137,6 +137,9 @@ public class Player extends ImageView {
 
             // Player Controls
             //  |- L&R Controls
+
+            System.out.println(checkStageCollisionBottom());
+
             if (right &&
                     !checkStageCollisionRight() &&
                     !(this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X) &&

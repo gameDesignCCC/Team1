@@ -23,6 +23,7 @@ import java.util.HashMap;
 public class MainApplication extends Application {
 
     private static Stage stage;
+    private static double currentStageLeft;
 
 
     private static final double MAX_FRAME_RATE = 16.67;
@@ -100,6 +101,7 @@ public class MainApplication extends Application {
         gameScene.getStylesheets().add("/assets/ui/style.css");
         sceneObjects = new ArrayList<>();
         keys = new HashMap<>();
+        currentStageLeft = 0.0;
 
         //Load Next Level
         MapLoader mapLoader = new MapLoader();
@@ -199,6 +201,24 @@ public class MainApplication extends Application {
             time = System.currentTimeMillis();
 
         }
+
+
+        if ( isPressed(KeyCode.LEFT) ) {
+
+        } else if ( isPressed(KeyCode.RIGHT) ) {
+            currentStageLeft += player.getX();
+        }
+
+        for(Object obj : sceneObjects) {
+            if ( obj instanceof StaticRect ) {
+                StaticRect staticRect = (StaticRect) obj;
+                if(isPressed(KeyCode.RIGHT)) {
+                    staticRect.setX(staticRect.getX() + currentStageLeft * -1);
+                }
+            }
+        }
+        player.setX(0);
+
     }
 
     /**
