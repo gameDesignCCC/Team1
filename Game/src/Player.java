@@ -121,6 +121,10 @@ public class Player extends ImageView {
      */
     public void onUpdate(boolean up, boolean left, boolean right) {
 
+        if(playerCollision.enemyCollision(this)){
+            hp -= 5;
+        }
+
         if (!isDead) {
 
             vX = 0;
