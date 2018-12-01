@@ -52,13 +52,15 @@ public class MainApplication extends Application {
     private static Image mapBg = new Image("/assets/maps/00/bg.png");
     private static ImageView mapBgView = new ImageView(mapBg);
 
+    // timer
+    private static AnimationTimer timer;
+
 
     // Map Objects - added in StaticRect constructor.
-    public static ArrayList<Enemies> enemies = new ArrayList<>();
+    public static ArrayList<Enemies> enemies;
 
     // Temporary for collision detection.
-
-    Enemies enemy = new Enemies(500, WINDOW_SIZE_Y - 100, 100,100, new Image("/assets/sprites/pPlayerSprite.png"));
+    private static Enemies enemy;
 
     public static ArrayList<Object> sceneObjects = new ArrayList<>();
 
@@ -115,6 +117,18 @@ public class MainApplication extends Application {
         root.getChildren().add(player);
         root.getChildren().add(player.hpBar);
 
+        // Update Enemy location
+        // TMP
+        enemy = new Enemies(500, WINDOW_SIZE_Y - 100, 100,100,
+                new Image("/assets/sprites/enemy_placeholder.png"));
+        
+        enemies = new ArrayList<>();
+        enemies.add(enemy);
+        for ( Enemies e : enemies ) {
+            root.getChildren().add(e);
+            root.getChildren().add(e.hpBar);
+        }
+
 
         // Get key(s) pressed for player movements.
         gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
@@ -130,7 +144,7 @@ public class MainApplication extends Application {
         }
 
         // Timer for game loop. / Should stay at ~60 UPS unless something went wrong, which happens often.
-        AnimationTimer timer = new AnimationTimer() {
+        MainApplication.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -139,7 +153,7 @@ public class MainApplication extends Application {
             }
         };
 
-        timer.start();
+        MainApplication.timer.start();
 
         return gameScene;
     }

@@ -27,19 +27,10 @@ public class Enemies extends ImageView {
         this.setFitWidth(width);
         this.setFitHeight(height);
         this.setImage(sprite);
-        this.velocity = velocity;
-        this.isDead = isDead;
-
-        MainApplication.enemies.add(this);
 
         hpBar.setWidth(width);
         hpBar.setHeight(10);
         hpBar.setFill(Color.GREEN);
-        MainApplication.addToRoot(hpBar);
-
-        // temp
-        MainApplication.addToRoot(this);
-
     }
 
     public void onUpdate(){
@@ -88,10 +79,9 @@ public class Enemies extends ImageView {
 
     }
 
+    // TODO: Needs to be implemented
     public void die(){
         isDead  = true;
-        MainApplication.rmFromRoot(this);
-        MainApplication.rmFromRoot(hpBar);
         System.out.println("enemy killed");
     }
 
