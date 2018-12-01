@@ -30,11 +30,9 @@ public class Menu {
         btnStart.setTranslateY(-80);
         btnExit.setTranslateY(80);
 
-
-        btnStart.setOnAction(e -> {
-            MainApplication.getStage().setScene(MainApplication.getGameScene());
-            MainApplication.timer.start();
-        });
+        btnStart.setOnAction(e ->
+            MainApplication.getStage().setScene(MainApplication.getGameScene("./Game/src/assets/levels/level-1"))
+        );
 
         btnHelp.setOnAction(e ->
             MainApplication.getStage().setScene(helpMenu())

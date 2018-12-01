@@ -8,7 +8,6 @@
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -30,71 +29,43 @@ public class MainApplication extends Application {
     private static long time = System.currentTimeMillis();
 
     //For FPS Display
-    private final long[] frameTimes = new long[100];
-    private int frameTimeIndex = 0;
-    private boolean arrayFilled = false;
+    private static final long[] frameTimes = new long[100];
+    private static int frameTimeIndex = 0;
+    private static boolean arrayFilled = false;
+    private static Label fpsCounter = new Label();
+    private static final boolean DISPLAY_FPS = true;
 
     // Key(s) pressed for player movement. I don't know if this is better than using separate booleans, I just wanted to try this out.
-    private static HashMap<KeyCode, Boolean> keys = new HashMap<>();
+    private static HashMap<KeyCode, Boolean> keys;
 
     public static final double WINDOW_SIZE_X = 1280.0;
     public static final double WINDOW_SIZE_Y = 720.0;
 
     // Temporary Player Sprites
-    private Image playerSprite = new Image("/assets/sprites/playerSprite.png");
-    private Image pPlayerSprite = new Image("/assets/sprites/pPlayerSprite.png");
+    private static Image playerSprite = new Image("/assets/sprites/pPlayerSprite.png");
 
     // The Player
-    public Player player = new Player(0, WINDOW_SIZE_Y - pPlayerSprite.getHeight(), pPlayerSprite.getWidth(), pPlayerSprite.getHeight(), pPlayerSprite );
+    public static Player player;
 
 
     // Temporary Map Background
-    private Image mapBg = new Image("/assets/maps/00/bg.png");
-    private ImageView mapBgView = new ImageView(mapBg);
+    private static Image mapBg = new Image("/assets/maps/00/bg.png");
+    private static ImageView mapBgView = new ImageView(mapBg);
 
-    private static Label fpsCounter = new Label();
-
-    // Root and Scene
-    private static Pane root = new Pane();
-    private static Scene gameScene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
     // Map Objects - added in StaticRect constructor.
-    public static ArrayList<StaticRect> mapObjects = new ArrayList<>();
     public static ArrayList<Enemies> enemies = new ArrayList<>();
-
-    // Game Loop Timer
-    public static AnimationTimer timer;
 
     // Temporary for collision detection.
 
     Enemies enemy = new Enemies(500, WINDOW_SIZE_Y - 100, 100,100, new Image("/assets/sprites/pPlayerSprite.png"));
 
+    public static ArrayList<Object> sceneObjects = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         stage = primaryStage;
-
-        gameScene.getStylesheets().add("/assets/ui/style.css");
-
-        // Get key(s) pressed for player movements.
-        gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
-        gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
-
-        // Timer for game loop. / Should stay at ~60 UPS unless something went wrong, which happens often.
-        timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                update();
-
-            }
-        };
-
-        root.getChildren().addAll(mapBgView, fpsCounter, player);
-
-        mapBgView.toBack();
-
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         primaryStage.setOnCloseRequest(e -> exit());
@@ -105,7 +76,6 @@ public class MainApplication extends Application {
 
         // Load Main Menu
         primaryStage.setScene(Menu.menu());
-        //primaryStage.setScene(getGameScene());
         primaryStage.show();
 
     }
@@ -114,70 +84,107 @@ public class MainApplication extends Application {
         return keys.getOrDefault(key, false);
     }
 
-    public static void addToRoot(Node node){
-        root.getChildren().add(node);
-    }
-
-    public static void rmFromRoot(Node node){
-        root.getChildren().remove(node);
-    }
 
     public static Stage getStage(){
         return stage;
     }
 
-    public static Scene getGameScene(){
-        return gameScene;
-    }
 
-    public static Pane getGameRoot(){
-        return root;
+    public static Scene getGameScene(String level) {
+
+        //Reset Scene
+        Pane root = new Pane();
+        Scene gameScene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+        gameScene.getStylesheets().add("/assets/ui/style.css");
+        sceneObjects = new ArrayList<>();
+        keys = new HashMap<>();
+
+        //Load Next Level
+        MapLoader mapLoader = new MapLoader();
+        for( Object obj: mapLoader.load(level)) {
+            if ( obj instanceof StaticObject ) {
+                StaticObject staticObject = (StaticObject) obj;
+                sceneObjects.add(staticObject);
+                root.getChildren().add(staticObject.getSprite());
+            }
+        }
+
+        // Update Player Location:
+        player = new Player(mapLoader.playerX, mapLoader.playerY, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, playerSprite);
+        sceneObjects.add(player);
+        root.getChildren().add(player);
+        root.getChildren().add(player.hpBar);
+
+
+        // Get key(s) pressed for player movements.
+        gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
+        gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
+
+        // Add Background
+        root.getChildren().add(mapBgView);
+        mapBgView.toBack();
+
+        // Add FPS Counter
+        if ( DISPLAY_FPS ) {
+            root.getChildren().add(fpsCounter);
+        }
+
+        // Timer for game loop. / Should stay at ~60 UPS unless something went wrong, which happens often.
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+                update();
+
+            }
+        };
+
+        timer.start();
+
+        return gameScene;
     }
 
     /**
      * Main Game Loop
      */
-    private void update() {
-        enemy.onUpdate();
-
+    private static void update() {
         long now = System.currentTimeMillis();
         if (time + MAX_FRAME_RATE <= now ) {
 
             player.onUpdate(isPressed(KeyCode.UP), isPressed(KeyCode.LEFT), isPressed(KeyCode.RIGHT));
+            enemy.onUpdate();
             if (isPressed(KeyCode.ESCAPE)) {
                 MainApplication.getStage().setScene(Menu.pauseMenu());
                 MainApplication.timer.stop();
             }
 
-            // FPS Display
-
-            long oldFrameTime = frameTimes[frameTimeIndex];
-            frameTimes[frameTimeIndex] = now;
-            frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
-            if (frameTimeIndex == 0) {
-                arrayFilled = true;
-            }
-
-            if (arrayFilled) {
-                long elapsedMills = now - oldFrameTime;
-                long elapsedMillsPerFrame = elapsedMills / frameTimes.length;
-                double frameRate = 1000 / elapsedMillsPerFrame;
-                fpsCounter.setText(String.format("UPS: %.2f", frameRate));
-
-                if(frameRate > 70.00 || frameRate < 50.00){
-                    fpsCounter.setTextFill(Color.RED);
-                }else {
-                    fpsCounter.setTextFill(Color.GREEN);
+            if (DISPLAY_FPS) {
+                // FPS Display
+                long oldFrameTime = frameTimes[frameTimeIndex];
+                frameTimes[frameTimeIndex] = now;
+                frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
+                if (frameTimeIndex == 0) {
+                    arrayFilled = true;
                 }
 
-            }
+                if (arrayFilled) {
+                    long elapsedMills = now - oldFrameTime;
+                    long elapsedMillsPerFrame = elapsedMills / frameTimes.length;
+                    double frameRate = 1000 / elapsedMillsPerFrame;
+                    fpsCounter.setText(String.format("FPS: %.2f", frameRate));
 
+                    if (frameRate > 70.00 || frameRate < 50.00) {
+                        fpsCounter.setTextFill(Color.RED);
+                    } else {
+                        fpsCounter.setTextFill(Color.GREEN);
+                    }
+
+                }
+            }
 
             time = System.currentTimeMillis();
 
-
         }
-
     }
 
     /**

@@ -1,3 +1,4 @@
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -11,7 +12,7 @@ public class StaticRect extends StaticObject{
     double width;
     double height;
     Image sprite;
-    String type;
+    Type type;
 
     ImageView rSprite = new ImageView();
 
@@ -23,7 +24,7 @@ public class StaticRect extends StaticObject{
      * @param height height of rectangle
      * @param sprite sprite of rectangle
      */
-    public StaticRect(double x, double y, double width, double height, Image sprite, String type){
+    public StaticRect(double x, double y, double width, double height, Image sprite, Type type){
 
         this.x = x;
         this.y = y;
@@ -38,10 +39,13 @@ public class StaticRect extends StaticObject{
         rSprite.setFitWidth(width);
         rSprite.setFitHeight(height);
 
+        /**
         MainApplication.addToRoot(rSprite);
-        MainApplication.mapObjects.add(this);
+        MainApplication.sceneObjects.add(this);
+         **/
 
     }
+
 
     /**
      *
@@ -106,15 +110,11 @@ public class StaticRect extends StaticObject{
         return height;
     }
 
-    public Image getSprite() {
-        return sprite;
-    }
-
-    public ImageView getrSprite() {
+    public Node getSprite() {
         return rSprite;
     }
 
-    public String getType(){ return type; }
+    public Type getType(){ return type; }
 
     /**
      *
