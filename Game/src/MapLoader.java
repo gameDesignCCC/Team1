@@ -61,7 +61,7 @@ public class MapLoader {
                     // Ground
                     } else if ( c == 'G' ) {
                         result.add( new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/ground_placeholder.png"), StaticObject.Type.GROUND));
+                                new Image("/assets/sprites/Ground.png"), StaticObject.Type.GROUND));
                     // Player
                     } else if ( c == 'P') {
                         playerX = x * GRID_SIZE;
@@ -78,7 +78,7 @@ public class MapLoader {
                     // Spike
                     else if ( c == '^') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/spike_placeholder.png"), StaticObject.Type.SPIKE));
+                                new Image("/assets/sprites/Spikes.png"), StaticObject.Type.SPIKE));
 
                     // Enemy
                     } else if ( c == 'e') {
