@@ -202,24 +202,20 @@ public class MainApplication extends Application {
 
         }
 
+        currentStageLeft += player.getX();
 
-        if ( isPressed(KeyCode.LEFT) ) {
-
-        } else if ( isPressed(KeyCode.RIGHT) ) {
-            currentStageLeft += player.getX();
-        }
-
-        for(Object obj : sceneObjects) {
-            if ( obj instanceof StaticRect ) {
+        for (Object obj : sceneObjects) {
+            if (obj instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) obj;
-                if(isPressed(KeyCode.RIGHT)) {
-                    staticRect.setX(staticRect.getX() + currentStageLeft * -1);
-                }
+                staticRect.setX(staticRect.getX() + currentStageLeft * -1);
             }
         }
+
         player.setX(0);
+        player.hpBar.setX(player.getX());
 
     }
+
 
     /**
      * Exit Application
