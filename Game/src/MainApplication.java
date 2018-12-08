@@ -15,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ import java.util.HashMap;
 public class MainApplication extends Application {
 
     private static Stage stage;
+
 
     private static final double MAX_FRAME_RATE = 16.67;
     private static long time = System.currentTimeMillis();
@@ -47,20 +47,27 @@ public class MainApplication extends Application {
     // The Player
     public static Player player;
 
+
     // Temporary Map Background
     private static Image mapBg = new Image("/assets/maps/00/bg.png");
     private static ImageView mapBgView = new ImageView(mapBg);
 
+    // timer
+    private static AnimationTimer timer;
+
 
     // Map Objects - added in StaticRect constructor.
-    public static ArrayList<Object> sceneObjects = new ArrayList<>();
+    public static ArrayList<Enemies> enemies;
 
+    // Temporary for collision detection.
+    private static Enemies enemy;
+
+    public static ArrayList<Object> sceneObjects = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         stage = primaryStage;
-
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         primaryStage.setOnCloseRequest(e -> exit());
@@ -110,6 +117,18 @@ public class MainApplication extends Application {
         root.getChildren().add(player);
         root.getChildren().add(player.hpBar);
 
+        // Update Enemy location
+        // TMP
+        enemy = new Enemies(500, WINDOW_SIZE_Y - 100, 100,100,
+                new Image("/assets/sprites/enemy_placeholder.png"));
+        
+        enemies = new ArrayList<>();
+        enemies.add(enemy);
+        for ( Enemies e : enemies ) {
+            root.getChildren().add(e);
+            root.getChildren().add(e.hpBar);
+        }
+
 
         // Get key(s) pressed for player movements.
         gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
@@ -125,7 +144,7 @@ public class MainApplication extends Application {
         }
 
         // Timer for game loop. / Should stay at ~60 UPS unless something went wrong, which happens often.
-        AnimationTimer timer = new AnimationTimer() {
+        MainApplication.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -134,7 +153,7 @@ public class MainApplication extends Application {
             }
         };
 
-        timer.start();
+        MainApplication.timer.start();
 
         return gameScene;
     }
@@ -143,13 +162,14 @@ public class MainApplication extends Application {
      * Main Game Loop
      */
     private static void update() {
-
         long now = System.currentTimeMillis();
         if (time + MAX_FRAME_RATE <= now ) {
 
             player.onUpdate(isPressed(KeyCode.UP), isPressed(KeyCode.LEFT), isPressed(KeyCode.RIGHT));
+            enemy.onUpdate();
             if (isPressed(KeyCode.ESCAPE)) {
-                exit();
+                MainApplication.getStage().setScene(Menu.pauseMenu());
+                MainApplication.timer.stop();
             }
 
             if (DISPLAY_FPS) {
@@ -196,3 +216,4 @@ public class MainApplication extends Application {
     }
 
 }
+

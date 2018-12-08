@@ -19,24 +19,23 @@ public class Menu {
         scene.getStylesheets().add("/assets/ui/style.css");
 
         Button btnStart = new Button();
-        Button btnOptions = new Button();
+        Button btnHelp = new Button();
         Button btnExit = new Button();
         ImageView title = new ImageView(new Image("/assets/ui/pTitleArt.png"));
 
         btnStart.setText("Start");
-        btnOptions.setText("Options");
+        btnHelp.setText("Help");
         btnExit.setText("Exit");
 
         btnStart.setTranslateY(-80);
         btnExit.setTranslateY(80);
 
-
         btnStart.setOnAction(e ->
             MainApplication.getStage().setScene(MainApplication.getGameScene("./Game/src/assets/levels/level-1"))
         );
 
-        btnOptions.setOnAction(e ->
-            MainApplication.getStage().setScene(optionsMenu())
+        btnHelp.setOnAction(e ->
+            MainApplication.getStage().setScene(helpMenu())
         );
 
         btnExit.setOnAction(e ->
@@ -45,17 +44,25 @@ public class Menu {
 
         title.setTranslateY(-200);
 
-        root.getChildren().addAll(title, btnStart, btnOptions, btnExit);
+        root.getChildren().addAll(title, btnStart, btnHelp, btnExit);
 
         return scene;
 
     }
 
-    public static Scene optionsMenu(){
+    public static Scene helpMenu(){
 
         Pane root = new Pane();
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
         scene.getStylesheets().add("/assets/ui/style.css");
+
+        Text txt = new Text("placeholder text");
+        txt.setFill(Color.WHITE);
+        txt.setY(MainApplication.WINDOW_SIZE_Y / 2 - 10);
+        txt.setX(MainApplication.WINDOW_SIZE_X / 2 - 100);
+
+        root.getChildren().add(txt);
+
         return scene;
     }
 
@@ -80,6 +87,32 @@ public class Menu {
         btn.setOnAction(e -> MainApplication.getStage().setScene(Menu.menu()));
 
         root.getChildren().addAll(label, btn);
+
+        return scene;
+
+    }
+
+    public static Scene pauseMenu(){
+
+        Pane root = new Pane();
+        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+
+        scene.getStylesheets().add("/assets/ui/style.css");
+
+        Button btnResume = new Button();
+        Button btnBack = new Button();
+        Button btnHelp = new Button();
+
+        btnResume.setText("Resume");
+        btnResume.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 80);
+        btnResume.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - 30);
+        btnBack.setText("Back To Menu");
+        btnBack.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 80);
+        btnBack.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - 30);
+        btnHelp.setText("Help");
+        btnHelp.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 80);
+        btnHelp.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - 30);
+        root.getChildren().addAll(btnResume, btnBack, btnHelp);
 
         return scene;
 
