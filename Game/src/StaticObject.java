@@ -10,7 +10,7 @@ public abstract class StaticObject {
     }
 
     public static enum Type{
-        BLOCK, GROUND, LAVA, SPIKE, ENEMY, EXIT
+        BLOCK, GROUND, LAVA, SPIKE, ENEMY, EXIT, ITEM
     }
 
     /**

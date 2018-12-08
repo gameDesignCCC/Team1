@@ -121,6 +121,12 @@ public class Player extends ImageView {
      */
     public void onUpdate(boolean up, boolean left, boolean right) {
 
+        if(playerCollision.itemCollision(this) != null){
+            StaticRect s = playerCollision.itemCollision(this);
+            s.setX(10);
+            s.setY(10);
+        }
+
         if(playerCollision.enemyCollision(this)){
             hp -= 5;
         }
