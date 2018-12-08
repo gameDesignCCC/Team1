@@ -69,7 +69,7 @@ public class MapLoader {
                     // Block
                     } else if ( c == 'B') {
                         result.add( new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/block_placeholder.png"), StaticObject.Type.BLOCK));
+                                new Image("/assets/sprites/block.png"), StaticObject.Type.BLOCK));
                     // Lava
                     } else if ( c == '~') {
                         result.add( new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
