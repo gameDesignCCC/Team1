@@ -186,7 +186,7 @@ public class MainApplication extends Application {
                 if (arrayFilled) {
                     long elapsedMills = now - oldFrameTime;
                     long elapsedMillsPerFrame = elapsedMills / frameTimes.length;
-                    double frameRate = 1000 / elapsedMillsPerFrame;
+                    double frameRate = 1000.0 / elapsedMillsPerFrame;
                     fpsCounter.setText(String.format("FPS: %.2f", frameRate));
 
                     if (frameRate > 70.00 || frameRate < 50.00) {
@@ -202,18 +202,29 @@ public class MainApplication extends Application {
 
         }
 
-        currentStageLeft += player.getX();
+        currentStageLeft += player.getvX();
 
-        for (Object obj : sceneObjects) {
-            if (obj instanceof StaticRect) {
-                StaticRect staticRect = (StaticRect) obj;
-                staticRect.setX(staticRect.getX() + currentStageLeft * -1);
+
+        if(player.getX() < (WINDOW_SIZE_X / 2) - 100) {
+            for (Object obj : sceneObjects) {
+                if (obj instanceof StaticRect) {
+                    StaticRect staticRect = (StaticRect) obj;
+                    staticRect.setX(staticRect.getX() + player.getvX() * -1);
+                }
             }
+            player.setX(WINDOW_SIZE_X / 2 - 100);
+            player.hpBar.setX(player.getX());
+
+        }else if(player.getX() > (WINDOW_SIZE_X / 2) + 100){
+            for (Object obj : sceneObjects) {
+                if (obj instanceof StaticRect) {
+                    StaticRect staticRect = (StaticRect) obj;
+                    staticRect.setX(staticRect.getX() + player.getvX() * -1);
+                }
+            }
+            player.setX(WINDOW_SIZE_X / 2 + 100);
+            player.hpBar.setX(player.getX());
         }
-
-        player.setX(0);
-        player.hpBar.setX(player.getX());
-
     }
 
 

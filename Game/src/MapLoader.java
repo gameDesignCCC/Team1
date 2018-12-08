@@ -19,11 +19,11 @@ public class MapLoader {
     public static void main( String args[] ) {
         MapLoader m = new MapLoader();
 
-        File file = new File("./Game/src/level-1");
+        File file = new File("");
         System.out.println(file.canRead());
 
 
-        m.load("./Game/src/level-1");
+        m.load("");
     }
 
     public ArrayList<Object> load(String file) {

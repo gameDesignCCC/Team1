@@ -95,11 +95,11 @@ public class StaticRect extends StaticObject{
     }
 
     public double getX(){
-        return x;
+        return rSprite.getX();
     }
 
     public double getY() {
-        return y;
+        return rSprite.getY();
     }
 
     public double getWidth() {
@@ -118,8 +118,9 @@ public class StaticRect extends StaticObject{
 
     public void setX(double x){
         rSprite.setX(x);
-        /*this.x = x;*/
+        this.x = x;
     }
+
     public void setY(double y){
         rSprite.setY(y);
         this.y = y;

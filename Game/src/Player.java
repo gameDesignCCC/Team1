@@ -139,7 +139,6 @@ public class Player extends ImageView {
             //  |- L&R Controls
 
             if (right &&
-                    !checkStageCollisionRight() &&
                     !(this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X) &&
                     playerCollision.isCollidingRight(this) == null) {
 
@@ -147,8 +146,6 @@ public class Player extends ImageView {
                 isMovingRight = true;
 
             } else if (isMovingRight && this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X) {
-                setX(MainApplication.WINDOW_SIZE_X - this.getFitWidth());
-                isMovingRight = false;
 
             }
 
@@ -161,8 +158,6 @@ public class Player extends ImageView {
                 isMovingLeft = true;
 
             } else if (isMovingLeft && this.getX() - playerSpeed <= 0) {
-                setX(0);
-                isMovingLeft = false;
 
             }
 
