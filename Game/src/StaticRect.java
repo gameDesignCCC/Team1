@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 public class StaticRect extends StaticObject{
 
-    double x;
-    double y;
-    double width;
-    double height;
-    Image sprite;
-    Type type;
+    private double x;
+    private double y;
+    private double width;
+    private double height;
+    private Image sprite;
+    private Type type;
 
     ImageView rSprite = new ImageView();
 
@@ -115,6 +115,15 @@ public class StaticRect extends StaticObject{
     }
 
     public Type getType(){ return type; }
+
+    public void setX(double x){
+        rSprite.setX(x);
+        /*this.x = x;*/
+    }
+    public void setY(double y){
+        rSprite.setY(y);
+        this.y = y;
+    }
 
     /**
      *

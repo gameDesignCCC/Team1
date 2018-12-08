@@ -53,7 +53,7 @@ public class Player extends ImageView {
         this.setFitWidth(width);
         this.setFitHeight(height);
         this.setImage(sprite);
-        hpBar.setHeight(10);
+        hpBar.setHeight(4);
         hpBar.setWidth(width);
         hpBar.setFill(Color.GREEN);
     }
@@ -133,10 +133,11 @@ public class Player extends ImageView {
                 vY = 0;
             }
 
-            hpBar.setWidth(hp);
+            hpBar.setWidth( ((float) hp) / 3.34 );
 
             // Player Controls
             //  |- L&R Controls
+
             if (right &&
                     !checkStageCollisionRight() &&
                     !(this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X) &&
@@ -152,8 +153,8 @@ public class Player extends ImageView {
             }
 
             if (left &&
-                    !checkStageCollisionLeft() &&
-                    !(this.getX() - playerSpeed <= 0) &&
+                    /*!checkStageCollisionLeft() &&       - Removed for scrolling.
+                    !(this.getX() - playerSpeed <= 0) &&*/
                     playerCollision.isCollidingLeft(this) == null) {
 
                 vX += playerSpeed * -1;
@@ -201,7 +202,7 @@ public class Player extends ImageView {
             move();
 
             hpBar.setX(this.getX());
-            hpBar.setY(this.getY() - 20);
+            hpBar.setY(this.getY() - 8);
 
             StaticRect bottom = playerCollision.isCollidingBottom(this);
             StaticRect top = playerCollision.isCollidingTop(this);
