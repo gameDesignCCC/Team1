@@ -88,7 +88,7 @@ public class MapLoader {
                         // Item
                     } else if (c == 'I') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/pItem.png"), StaticObject.Type.ITEM));
+                                new Image("/assets/sprites/pItem.png"), StaticObject.Type.ITEM, "Star :)"));
                         // Exit
                     } else if (c == 'E') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,

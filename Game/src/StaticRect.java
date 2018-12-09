@@ -11,6 +11,7 @@ public class StaticRect extends StaticObject{
     private double y;
     private double width;
     private double height;
+    private String itemID;
     private Image sprite;
     private Type type;
 
@@ -42,6 +43,29 @@ public class StaticRect extends StaticObject{
         /**
         MainApplication.addToRoot(rSprite);
         MainApplication.sceneObjects.add(this);
+         **/
+
+    }
+
+    public StaticRect(double x, double y, double width, double height, Image sprite, Type type, String itemID){
+
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.sprite = sprite;
+        this.type = type;
+        this.itemID = itemID;
+
+        rSprite.setImage(sprite);
+        rSprite.setX(x);
+        rSprite.setY(y);
+        rSprite.setFitWidth(width);
+        rSprite.setFitHeight(height);
+
+        /**
+         MainApplication.addToRoot(rSprite);
+         MainApplication.sceneObjects.add(this);
          **/
 
     }
@@ -95,15 +119,19 @@ public class StaticRect extends StaticObject{
     }
 
     public double getX(){
-        return rSprite.getX();
+        return x;
     }
 
     public double getY() {
-        return rSprite.getY();
+        return y;
     }
 
     public double getWidth() {
         return width;
+    }
+
+    public String getItemID(){
+        return itemID;
     }
 
     public double getHeight() {
@@ -124,6 +152,16 @@ public class StaticRect extends StaticObject{
     public void setY(double y){
         rSprite.setY(y);
         this.y = y;
+    }
+
+    public void setWidth(double w){
+        width = w;
+        rSprite.setFitWidth(w);
+    }
+
+    public void setHeight(double h){
+        width = h;
+        rSprite.setFitHeight(h);
     }
 
     /**

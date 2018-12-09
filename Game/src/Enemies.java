@@ -13,13 +13,19 @@ public class Enemies extends ImageView {
     double y;
     double width;
     double height;
-    double velocity = 2.0;
+    double velocity = 0.0;
     int hp = 100;
     boolean isDead = true;
 
     Image sprite;
 
     Rectangle hpBar = new Rectangle();
+
+    Collision enemyCollision = new Collision();
+
+    private double startX = 500.0;
+    private double endX = 600.0;
+    private boolean moving = false;
 
     Enemies(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
@@ -29,20 +35,19 @@ public class Enemies extends ImageView {
         this.setImage(sprite);
 
         hpBar.setWidth(width);
-        hpBar.setHeight(10);
+        hpBar.setHeight(4);
         hpBar.setFill(Color.GREEN);
+
+        // Temporary
+        MainApplication.sceneObjects.add(this);
     }
 
     public void onUpdate(){
-       if(this.getX() + this.getFitWidth() >= MainApplication.WINDOW_SIZE_X){
-           velocity *= -1.0;
-       }else if(this.getX() <= 0){
-           velocity *= -1.0;
-       }
+
         this.setX(this.getX() + velocity);
 
        hpBar.setX(this.getX());
-       hpBar.setY(this.getY() - 20);
+       hpBar.setY(this.getY() - 8);
 
     }
 

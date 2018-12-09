@@ -1,3 +1,7 @@
+@font-face {
+    src: url("/assets/ui/RussoOne-Regular.ttf");
+}
+
 .root{
     -fx-background-color: #000000;
 }
@@ -5,6 +9,7 @@
 .button {
     -fx-background-color: #a9e6e0;
     -fx-background-radius: 2;
+    -fx-font-family: 'Russo One';
     -fx-text-fill: #2d2d2d;
     -fx-font-size: 20pt;
     -fx-min-width: 160px;
@@ -21,5 +26,8 @@
     -fx-background-color: #83b7b2;
 }
 
-#mainMenuBtn{
+#deathscreen-label {
+    -fx-font-family: 'Russo One';
+    -fx-font-size: 50px;
+    -fx-text-fill: #FF0000;
 }

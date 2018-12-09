@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -67,6 +68,8 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+       loadResources();
 
         stage = primaryStage;
         primaryStage.setResizable(false);
@@ -121,7 +124,7 @@ public class MainApplication extends Application {
 
         // Update Enemy location
         // TMP
-        enemy = new Enemies(500, WINDOW_SIZE_Y - 100, 100,100,
+        enemy = new Enemies(500, WINDOW_SIZE_Y - 180, 30,30,
                 new Image("/assets/sprites/enemy_placeholder.png"));
         
         enemies = new ArrayList<>();
@@ -202,14 +205,14 @@ public class MainApplication extends Application {
 
         }
 
-        currentStageLeft += player.getvX();
-
-
         if(player.getX() < (WINDOW_SIZE_X / 2) - 100) {
             for (Object obj : sceneObjects) {
                 if (obj instanceof StaticRect) {
                     StaticRect staticRect = (StaticRect) obj;
                     staticRect.setX(staticRect.getX() + player.getvX() * -1);
+                }else if(obj instanceof Enemies){
+                    Enemies enemies = ((Enemies) obj);
+                    enemies.setX(enemies.getX() + player.getvX() * -1);
                 }
             }
             player.setX(WINDOW_SIZE_X / 2 - 100);
@@ -220,13 +223,21 @@ public class MainApplication extends Application {
                 if (obj instanceof StaticRect) {
                     StaticRect staticRect = (StaticRect) obj;
                     staticRect.setX(staticRect.getX() + player.getvX() * -1);
+                }else if(obj instanceof Enemies){
+                    Enemies enemies = ((Enemies) obj);
+                    enemies.setX(enemies.getX() + player.getvX() * -1);
                 }
             }
             player.setX(WINDOW_SIZE_X / 2 + 100);
             player.hpBar.setX(player.getX());
         }
+
     }
 
+    public static void loadResources(){
+        // https://fonts.google.com/specimen/Russo+One
+        Font.loadFont(MainApplication.class.getResource("/assets/ui/RussoOne-Regular.ttf").toExternalForm(), 10);
+    }
 
     /**
      * Exit Application

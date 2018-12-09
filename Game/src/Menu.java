@@ -73,16 +73,16 @@ public class Menu {
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
         scene.getStylesheets().add("/assets/ui/style.css");
 
-        Label label = new Label("YOU DIED");
-        label.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 100);
+        Label label = new Label("You Died");
+        label.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 110);
         label.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - 100);
         label.setTextFill(Color.RED);
-        label.setFont(Font.font("Arial", 50));
+        label.setId("deathscreen-label");
 
         Button btn = new Button();
         btn.setText("Back");
         btn.setId("mainMenuBtn");
-        btn.setLayoutX(MainApplication.WINDOW_SIZE_X/2);
+        btn.setLayoutX(MainApplication.WINDOW_SIZE_X/2 - 80);
         btn.setLayoutY(MainApplication.WINDOW_SIZE_Y/2);
         btn.setOnAction(e -> MainApplication.getStage().setScene(Menu.menu()));
 

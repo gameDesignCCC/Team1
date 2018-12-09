@@ -15,6 +15,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import sun.applet.Main;
 
+import java.util.ArrayList;
+
 public class Player extends ImageView {
 
     // Player is in jump animation
@@ -41,9 +43,11 @@ public class Player extends ImageView {
     private boolean isDead = false;
     private int hp = 100;
 
-    Collision playerCollision = new Collision();
+    public ArrayList<StaticRect> collectedParts = new ArrayList<>();
 
-    Rectangle hpBar = new Rectangle();
+    private Collision playerCollision = new Collision();
+
+    public Rectangle hpBar = new Rectangle();
 
     Player(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
@@ -123,8 +127,12 @@ public class Player extends ImageView {
 
         if(playerCollision.itemCollision(this) != null){
             StaticRect s = playerCollision.itemCollision(this);
-            s.setX(10);
+            s.setX(10 + (collectedParts.size() * 100));
             s.setY(10);
+            s.setWidth(90);
+            s.setHeight(90);
+            collectedParts.add(s);
+            MainApplication.sceneObjects.remove(s);
         }
 
         if(playerCollision.enemyCollision(this)){
@@ -151,8 +159,6 @@ public class Player extends ImageView {
                 vX += playerSpeed;
                 isMovingRight = true;
 
-            } else if (isMovingRight && this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X) {
-
             }
 
             if (left &&
@@ -162,8 +168,6 @@ public class Player extends ImageView {
 
                 vX += playerSpeed * -1;
                 isMovingLeft = true;
-
-            } else if (isMovingLeft && this.getX() - playerSpeed <= 0) {
 
             }
 
@@ -222,6 +226,7 @@ public class Player extends ImageView {
                     vY = 0;
                     setY(top.getY() + top.getHeight());
                 }
+
             } else if (bottom != null) {
                 inJumpAnimation = false;
                 vY = 0.0;
@@ -250,12 +255,6 @@ public class Player extends ImageView {
         isDead = true;
         System.out.println("player died");
         MainApplication.getStage().setScene(Menu.deathMenu());
-    }
-
-    public void reset(){
-        this.setX(startX);
-        this.setY(startY);
-        this.hp = 100;
     }
 
 }
