@@ -19,8 +19,4 @@ public class Controller implements Initializable {
         MainApplication.getStage().setScene(prevScene);
     }
 
-    public void setPrevScene(Scene prevScene){
-     this.prevScene = prevScene;
-    }
-
 }

@@ -27,10 +27,11 @@ public class Menu {
 
         ImageView ivBG = new ImageView(new Image("/assets/ui/menus/backgrounds/main_menu_bg_placeholder.png"));
 
+        ivBG.setTranslateY(-200);
+
         Button btnStart = new Button();
         Button btnHelp = new Button();
         Button btnExit = new Button();
-
 
         btnStart.setText("Start");
         btnStart.setTranslateY(-80);
@@ -38,13 +39,9 @@ public class Menu {
 
         btnHelp.setText("Help");
         btnHelp.setTranslateY(0);
-
+        btnHelp.setOnAction(e -> MainApplication.getStage().setScene(helpMenu(scene)));
         btnExit.setText("Exit");
         btnExit.setTranslateY(80);
-
-        ivBG.setTranslateY(-200);
-
-        btnHelp.setOnAction(e -> MainApplication.getStage().setScene(helpMenu(scene)));
         btnExit.setOnAction(e -> MainApplication.exit());
 
         root.getChildren().addAll(ivBG, btnStart, btnHelp, btnExit);
