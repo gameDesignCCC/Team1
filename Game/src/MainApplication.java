@@ -124,7 +124,7 @@ public class MainApplication extends Application {
 
         // Update Enemy location
         // TMP
-        enemy = new Enemies(500, WINDOW_SIZE_Y - 180, 30,30,
+        enemy = new Enemies(500, WINDOW_SIZE_Y - 180, 30, 30,
                 new Image("/assets/sprites/enemies/enemy_placeholder.png"));
         
         enemies = new ArrayList<>();
