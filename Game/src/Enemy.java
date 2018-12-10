@@ -8,23 +8,24 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Enemies extends ImageView {
-    double x;
-    double y;
-    double width;
-    double height;
-    double velocity = 0.0;
-    int hp = 100;
-    boolean isDead = true;
+// NOTE: Renamed class from "Enemies" to "Enemy" because I'm assuming that all the enemies will be instantiated and therefore the singular form makes more sense but idk.
+public class Enemy extends ImageView {
+    private double x;
+    private double y;
+    private double width;
+    private double height;
+    private double velocity = 0.0;
+    private int hp = 100;
+    private boolean isDead = true;
 
-    Image sprite;
+    private Image sprite;
 
-    Rectangle hpBar = new Rectangle();
+    public Rectangle hpBar = new Rectangle();
 
     private double startX = 500.0;
     private double endX = 600.0;
 
-    Enemies(double x, double y, double width, double height, Image sprite) {
+    Enemy(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
         this.setY(y);
         this.setFitWidth(width);
@@ -34,9 +35,6 @@ public class Enemies extends ImageView {
         hpBar.setWidth(width);
         hpBar.setHeight(4);
         hpBar.setFill(Color.GREEN);
-
-        // Temporary
-        MainApplication.sceneObjects.add(this);
     }
 
     public void onUpdate(){

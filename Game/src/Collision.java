@@ -16,7 +16,8 @@ public class Collision {
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
-                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Right)) {
+
+                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Right)  && staticRect.getCollisionEnabled()) {
                     return staticRect;
                 }
             }
@@ -36,7 +37,7 @@ public class Collision {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
-                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left)) {
+                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left)  && staticRect.getCollisionEnabled()) {
                     return staticRect;
                 }
             }
@@ -56,7 +57,7 @@ public class Collision {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
-                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Top)) {
+                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Top)  && staticRect.getCollisionEnabled()) {
                     return staticRect;
                 }
             }
@@ -76,7 +77,7 @@ public class Collision {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
-                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Bottom)) {
+                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Bottom) && staticRect.getCollisionEnabled()) {
                     return staticRect;
                 }
             }
@@ -85,13 +86,13 @@ public class Collision {
     }
 
     /**
-     * Player Collision Enemies
+     * Player Collision Enemy
      *
      * @param player The player.
-     * @return Any Enemies in enemies the player is colliding with.
+     * @return Any Enemy in enemies the player is colliding with.
      */
     public boolean enemyCollision(Player player) {
-        for (Enemies enemy : MainApplication.enemies) {
+        for (Enemy enemy : MainApplication.enemies) {
             if (enemy.checkCollision(player)) {
                 return true;
             }

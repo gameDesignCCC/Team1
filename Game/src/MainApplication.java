@@ -24,8 +24,6 @@ import java.util.HashMap;
 public class MainApplication extends Application {
 
     private static Stage stage;
-    private static double currentStageLeft;
-
 
     private static final double MAX_FRAME_RATE = 16.67;
     private static long time = System.currentTimeMillis();
@@ -37,7 +35,7 @@ public class MainApplication extends Application {
     private static Label fpsCounter = new Label();
     private static final boolean DISPLAY_FPS = true;
 
-    // Key(s) pressed for player movement. I don't know if this is better than using separate booleans, I just wanted to try this out.
+    // Key(s) pressed for player movement.
     private static HashMap<KeyCode, Boolean> keys;
 
     public static final double WINDOW_SIZE_X = 1280.0;
@@ -49,64 +47,69 @@ public class MainApplication extends Application {
     // The Player
     public static Player player;
 
+    // Placeholder Map Background
+    private static ImageView levelBG = new ImageView("/assets/levels/level_bg.png");
 
-    // Temporary Map Background
-    private static Image mapBg = new Image("/assets/levels/level_bg.png");
-    private static ImageView mapBgView = new ImageView(mapBg);
-
-    // timer
+    // Game Loop Timer
     private static AnimationTimer timer;
 
-
-    // Map Objects - added in StaticRect constructor.
-    public static ArrayList<Enemies> enemies;
-
-    // Temporary for collision detection.
-    private static Enemies enemy;
-
+    // Map Objects
     public static ArrayList<Object> sceneObjects = new ArrayList<>();
+
+    // Enemy
+    public static ArrayList<Enemy> enemies;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-       loadResources();
+        loadResources();
 
         stage = primaryStage;
-        primaryStage.setResizable(false);
-        primaryStage.sizeToScene();
-        primaryStage.setOnCloseRequest(e -> exit());
 
-
-        primaryStage.getIcons().add(new Image("/assets/application/favicon_placeholder128.png"));
-        primaryStage.setTitle("Placeholder Title");
-
-        // Load Main Menu
-        primaryStage.setScene(Menu.mainMenu());
-        primaryStage.show();
+        stage.getIcons().add(new Image("/assets/application/favicon_placeholder128.png"));
+        stage.setTitle("Placeholder Title");
+        stage.setResizable(false);
+        stage.sizeToScene();
+        stage.setOnCloseRequest(e -> exit());
+        stage.setScene(Menu.mainMenu()); // Load Main Menu
+        stage.show();
 
     }
 
-    private static boolean isPressed(KeyCode key){
+    public static boolean isPressed(KeyCode key){
         return keys.getOrDefault(key, false);
     }
-
 
     public static Stage getStage(){
         return stage;
     }
 
-
     public static Scene getGameScene(String level) {
+        // Reset Scene
 
-        //Reset Scene
         Pane root = new Pane();
         Scene gameScene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
-        gameScene.getStylesheets().add("/assets/ui/style.css");
-        sceneObjects = new ArrayList<>();
-        keys = new HashMap<>();
-        currentStageLeft = 0.0;
 
-        //Load Next Level
+        gameScene.getStylesheets().add("/assets/ui/style.css");
+
+        keys = new HashMap<>();
+        sceneObjects = new ArrayList<>();
+        enemies = new ArrayList<>();
+
+        // TEMP
+        Enemy enemy = new Enemy(500, WINDOW_SIZE_Y - 180, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, new Image("/assets/sprites/enemies/enemy_placeholder.png"));
+        enemies.add(enemy);
+
+        // Timer for game loop. / Should stay at ~60 UPS
+        MainApplication.timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+                update();
+            }
+        };
+
+        // Load Next Level
         MapLoader mapLoader = new MapLoader();
         for( Object obj: mapLoader.load(level)) {
             if ( obj instanceof StaticObject ) {
@@ -116,47 +119,38 @@ public class MainApplication extends Application {
             }
         }
 
-        // Update Player Location:
+        // Spawn Player
         player = new Player(mapLoader.playerX, mapLoader.playerY, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, playerSprite);
-        sceneObjects.add(player);
         root.getChildren().add(player);
         root.getChildren().add(player.hpBar);
+        sceneObjects.add(player);
 
-        // Update Enemy location
-        // TMP
-        enemy = new Enemies(500, WINDOW_SIZE_Y - 180, 30, 30,
-                new Image("/assets/sprites/enemies/enemy_placeholder.png"));
-        
-        enemies = new ArrayList<>();
-        enemies.add(enemy);
-        for ( Enemies e : enemies ) {
+
+        // Spawn Enemies
+        for ( Enemy e : enemies ) {
             root.getChildren().add(e);
             root.getChildren().add(e.hpBar);
+            sceneObjects.add(enemy);
         }
 
-
         // Get key(s) pressed for player movements.
-        gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
+        gameScene.setOnKeyPressed(e -> {
+            keys.put(e.getCode(), true);
+            if(e.getCode() == KeyCode.ESCAPE){
+                stopTimer();
+                stage.setScene(Menu.pauseMenu(stage.getScene()));
+            }
+        });
         gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
 
         // Add Background
-        root.getChildren().add(mapBgView);
-        mapBgView.toBack();
+        root.getChildren().add(levelBG);
+        levelBG.toBack();
 
         // Add FPS Counter
         if ( DISPLAY_FPS ) {
             root.getChildren().add(fpsCounter);
         }
-
-        // Timer for game loop. / Should stay at ~60 UPS unless something went wrong, which happens often.
-        MainApplication.timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                update();
-
-            }
-        };
 
         MainApplication.timer.start();
 
@@ -170,14 +164,8 @@ public class MainApplication extends Application {
         long now = System.currentTimeMillis();
         if (time + MAX_FRAME_RATE <= now ) {
 
-            player.onUpdate(isPressed(KeyCode.UP), isPressed(KeyCode.LEFT), isPressed(KeyCode.RIGHT));
-            enemy.onUpdate();
-            if (isPressed(KeyCode.ESCAPE)) {
-                MainApplication.getStage().setScene(Menu.pauseMenu());
-                MainApplication.timer.stop();
-            }
-
             if (DISPLAY_FPS) {
+
                 // FPS Display
                 long oldFrameTime = frameTimes[frameTimeIndex];
                 frameTimes[frameTimeIndex] = now;
@@ -203,33 +191,43 @@ public class MainApplication extends Application {
 
             time = System.currentTimeMillis();
 
+            if(player.getX() < (WINDOW_SIZE_X / 2) - 100) {
+                scrollScene();
+                player.setX(WINDOW_SIZE_X / 2 - 100);
+
+            }else if(player.getX() > (WINDOW_SIZE_X / 2) + 100){
+                scrollScene();
+                player.setX(WINDOW_SIZE_X / 2 + 100);
+            }
+
+            player.onUpdate();
+
+            for(Enemy enemy : enemies){
+                enemy.onUpdate();
+            }
+
         }
 
-        if(player.getX() < (WINDOW_SIZE_X / 2) - 100) {
-            for (Object obj : sceneObjects) {
-                if (obj instanceof StaticRect) {
-                    StaticRect staticRect = (StaticRect) obj;
-                    staticRect.setX(staticRect.getX() + player.getVX() * -1);
-                }else if(obj instanceof Enemies){
-                    Enemies enemies = ((Enemies) obj);
-                    enemies.setX(enemies.getX() + player.getVX() * -1);
-                }
-            }
-            player.setX(WINDOW_SIZE_X / 2 - 100);
+    }
 
-        }else if(player.getX() > (WINDOW_SIZE_X / 2) + 100){
-            for (Object obj : sceneObjects) {
-                if (obj instanceof StaticRect) {
-                    StaticRect staticRect = (StaticRect) obj;
-                    staticRect.setX(staticRect.getX() + player.getVX() * -1);
-                }else if(obj instanceof Enemies){
-                    Enemies enemies = ((Enemies) obj);
-                    enemies.setX(enemies.getX() + player.getVX() * -1);
-                }
+    public static void startTimer(){
+        timer.start();
+    }
+
+    public static void stopTimer(){
+        timer.stop();
+    }
+
+    private static void scrollScene(){
+        for (Object obj : sceneObjects) {
+            if (obj instanceof StaticRect) {
+                StaticRect staticRect = (StaticRect) obj;
+                staticRect.setX(staticRect.getX() + player.getVX() * -1);
+            }else if(obj instanceof Enemy){
+                Enemy enemies = ((Enemy) obj);
+                enemies.setX(enemies.getX() + player.getVX() * -1);
             }
-            player.setX(WINDOW_SIZE_X / 2 + 100);
         }
-
     }
 
     public static void loadResources(){

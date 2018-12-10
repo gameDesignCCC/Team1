@@ -3,14 +3,9 @@
  * Date: 24/10/2018
  */
 
-/*
- * KNOW ISSUES:
- * Player does not use top or bottom collision detection.
- */
-
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -132,11 +127,16 @@ public class Player extends ImageView {
     /**
      * Player update method called every frame.
      */
-    public void onUpdate(boolean up, boolean left, boolean right) {
+    public void onUpdate() {
 
         if (isDead) {
             return;
         }
+
+        boolean keyUp = MainApplication.isPressed(KeyCode.UP) || MainApplication.isPressed(KeyCode.W) || MainApplication.isPressed(KeyCode.SPACE);
+        boolean keyDown = MainApplication.isPressed(KeyCode.DOWN) || MainApplication.isPressed(KeyCode.S);
+        boolean keyLeft = MainApplication.isPressed(KeyCode.LEFT) || MainApplication.isPressed(KeyCode.A);
+        boolean keyRight = MainApplication.isPressed(KeyCode.RIGHT) || MainApplication.isPressed(KeyCode.D);
 
         // Reset Velocities
         vX = 0.0;
@@ -146,14 +146,12 @@ public class Player extends ImageView {
         hpBar.setFill(Color.GREEN);
 
         // Move Left Controls
-        if (right && playerCollision.isCollidingRight(this) == null) {
-
+        if (keyRight && playerCollision.isCollidingRight(this) == null) {
             vX += playerSpeed;
         }
 
         // Move Right Controls
-        if (left && playerCollision.isCollidingLeft(this) == null) {
-
+        if (keyLeft && playerCollision.isCollidingLeft(this) == null) {
             vX += playerSpeed * -1;
         }
 
@@ -169,10 +167,9 @@ public class Player extends ImageView {
         }
 
         // Jump
-        if (up && !inJumpAnimation) {
+        if (keyUp && !inJumpAnimation) {
             vY += -15.0;
             inJumpAnimation = true;
-
         }
 
         // End jump animation when player collides with stage bottom
@@ -265,6 +262,7 @@ public class Player extends ImageView {
      */
     public void die() {
         isDead = true;
+        MainApplication.stopTimer();
         MainApplication.getStage().setScene(Menu.deathMenu());
     }
 
