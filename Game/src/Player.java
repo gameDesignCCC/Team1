@@ -3,6 +3,7 @@
  * Date: 24/10/2018
  */
 
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -43,7 +44,8 @@ public class Player extends ImageView {
     private Collision playerCollision = new Collision();
 
     // Player Health Bar
-    public Rectangle hpBar = new Rectangle();
+    public Rectangle hpBar = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, 0, 20);
+    public Rectangle hpBarBG = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, hp * 4, 20);
 
     Player(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
@@ -53,11 +55,9 @@ public class Player extends ImageView {
         this.setFitWidth(width);
         this.setFitHeight(height);
         this.setImage(sprite);
-        hpBar.setHeight(20);
-        hpBar.setWidth(0);
-        hpBar.setX((MainApplication.WINDOW_SIZE_X / 2) - 200);
         hpBar.setY(10);
         hpBar.setFill(Color.GREEN);
+        hpBarBG.setFill(Color.color(0.0, 0.0, 0.0, 0.2));
     }
 
     /**
@@ -142,9 +142,6 @@ public class Player extends ImageView {
         vX = 0.0;
         vY = inJumpAnimation ? vY : 0.0;
 
-        // Reset HP Bar
-        hpBar.setFill(Color.GREEN);
-
         // Move Left Controls
         if (keyRight && playerCollision.isCollidingRight(this) == null) {
             vX += playerSpeed;
@@ -189,7 +186,9 @@ public class Player extends ImageView {
 
         // Set HP bar width to match the player's HP
         hpBar.setWidth(((float) hp) * 4);
-
+        // Reset HP bar color
+        hpBar.setFill(Color.GREEN);
+        hpBar.setEffect(null);
 
         // Preventing intersections with scene objects
         StaticRect bottom = playerCollision.isCollidingBottom(this);
@@ -255,6 +254,8 @@ public class Player extends ImageView {
     public void damage(int damage) {
         hp -= damage;
         hpBar.setFill(Color.RED);
+        hpBar.setEffect(new GaussianBlur(5));
+
     }
 
     /**

@@ -122,6 +122,7 @@ public class MainApplication extends Application {
         // Spawn Player
         player = new Player(mapLoader.playerX, mapLoader.playerY, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, playerSprite);
         root.getChildren().add(player);
+        root.getChildren().add(player.hpBarBG);
         root.getChildren().add(player.hpBar);
         sceneObjects.add(player);
 

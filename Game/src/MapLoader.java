@@ -22,12 +22,11 @@ public class MapLoader {
         File file = new File("");
         System.out.println(file.canRead());
 
-
         m.load("");
     }
 
     public ArrayList<Object> load(String file) {
-        ArrayList<Object> result = new ArrayList<Object>();
+        ArrayList<Object> result = new ArrayList<>();
         File f = new File(file);
         try {
             Scanner scan = new Scanner(f);
@@ -35,7 +34,7 @@ public class MapLoader {
             int height = scan.nextInt();
             int width = scan.nextInt();
 
-            char array[][] = new char[height][width];
+            char[][] array = new char[height][width];
             int i = 0;
             int j = 0;
 
