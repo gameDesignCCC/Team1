@@ -1,5 +1,7 @@
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +13,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import java.io.IOException;
+
 public class Menu {
 
     @SuppressWarnings("Duplicates")
@@ -19,9 +23,9 @@ public class Menu {
         StackPane root = new StackPane();
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
 
-        scene.getStylesheets().add("/assets/ui/style.css");
+        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
-        ImageView ivBG = new ImageView(new Image("/assets/ui/main_menu_bg_placeholder.png"));
+        ImageView ivBG = new ImageView(new Image("/assets/ui/overlays/main_menu_bg_placeholder.png"));
 
         Button btnStart = new Button();
         Button btnHelp = new Button();
@@ -51,21 +55,22 @@ public class Menu {
     @SuppressWarnings("Duplicates")
     public static Scene helpMenu(Scene prevScene) {
 
-        Pane root = new Pane();
-        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+        Parent root;
 
-        scene.getStylesheets().add("/assets/ui/style.css");
+        try {
+            root = FXMLLoader.load(Menu.class.getResource("/assets/ui/menus/help_menu.fxml"));
+            Controller.prevScene = prevScene;
+            Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+            scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
-        Button btnBack = new Button();
+            return scene;
+        }catch (IOException e) {
+            System.out.println("CmonBruh");
+            e.printStackTrace();
+            System.exit(-1);
+        }
 
-        btnBack.setText("Back");
-        btnBack.setLayoutX((MainApplication.WINDOW_SIZE_X / 2) - 80);
-        btnBack.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - 30);
-        btnBack.setOnAction(e -> MainApplication.getStage().setScene(prevScene));
-
-        root.getChildren().add(btnBack);
-
-        return scene;
+        return null;
     }
 
     @SuppressWarnings("Duplicates")
@@ -74,7 +79,7 @@ public class Menu {
         Pane root = new Pane();
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
 
-        scene.getStylesheets().add("/assets/ui/style.css");
+        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
         Label lblHeader = new Label("You Died");
 
@@ -102,7 +107,7 @@ public class Menu {
 
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
 
-        scene.getStylesheets().add("/assets/ui/style.css");
+        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
         Label lblHeader = new Label();
 

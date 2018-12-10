@@ -48,7 +48,7 @@ public class MainApplication extends Application {
     public static Player player;
 
     // Placeholder Map Background
-    private static ImageView levelBG = new ImageView("/assets/levels/level_bg.png");
+    private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/level_bg.png");
 
     // Game Loop Timer
     private static AnimationTimer timer;
@@ -90,7 +90,7 @@ public class MainApplication extends Application {
         Pane root = new Pane();
         Scene gameScene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
-        gameScene.getStylesheets().add("/assets/ui/style.css");
+        gameScene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
         keys = new HashMap<>();
         sceneObjects = new ArrayList<>();
@@ -232,7 +232,7 @@ public class MainApplication extends Application {
 
     public static void loadResources(){
         // https://fonts.google.com/specimen/Russo+One
-        Font.loadFont(MainApplication.class.getResource("/assets/ui/font_russo_one_regular.ttf").toExternalForm(), 10);
+        Font.loadFont(MainApplication.class.getResource("/assets/ui/fonts/font_russo_one_regular.ttf").toExternalForm(), 10);
     }
 
     /**

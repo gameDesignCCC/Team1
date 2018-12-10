@@ -128,7 +128,7 @@ public class TextBox extends Application {
         double y = screensize[1] - h;
 
 
-        Image txtbx = new Image("/assets/ui/text_box_placeholder.png");
+        Image txtbx = new Image("/assets/ui/overlays/text_box_placeholder.png");
         img = new ImageView(txtbx);
         img.setX(x);
         img.setY(y);
