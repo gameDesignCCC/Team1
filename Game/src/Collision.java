@@ -6,7 +6,7 @@
 public class Collision {
 
     /**
-     * Right edge of player is colliding.
+     * Player Collision Right
      *
      * @param player The player.
      * @return The right edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
@@ -25,7 +25,7 @@ public class Collision {
     }
 
     /**
-     * Left edge of player is colliding.
+     * Player Collision Left
      *
      * @param player The player.
      * @return The left edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
@@ -40,13 +40,12 @@ public class Collision {
                     return staticRect;
                 }
             }
-
         }
         return null;
     }
 
     /**
-     * Top edge of player is colliding.
+     * Player Collision Top
      *
      * @param player The player.
      * @return The top edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
@@ -66,7 +65,7 @@ public class Collision {
     }
 
     /**
-     * Bottom edge of player is colliding.
+     * Player Collision Bottom
      *
      * @param player The player.
      * @return The bottom edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
@@ -85,6 +84,12 @@ public class Collision {
         return null;
     }
 
+    /**
+     * Player Collision Enemies
+     *
+     * @param player The player.
+     * @return Any Enemies in enemies the player is colliding with.
+     */
     public boolean enemyCollision(Player player) {
         for (Enemies enemy : MainApplication.enemies) {
             if (enemy.checkCollision(player)) {
@@ -94,6 +99,12 @@ public class Collision {
         return false;
     }
 
+    /**
+     * Player Collision Items
+     *
+     * @param player The player.
+     * @return Any StaticRect with the type ITEM in sceneObjects the player is colliding with.
+     */
     public StaticRect itemCollision(Player player) {
         for (Object obj : MainApplication.sceneObjects) {
             if (obj instanceof StaticRect) {

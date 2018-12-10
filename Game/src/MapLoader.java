@@ -16,7 +16,7 @@ public class MapLoader {
     public int playerX = -1;
     public int playerY = -1;
 
-    public static void main(String args[]) {
+    public static void main( String args[] ) {
         MapLoader m = new MapLoader();
 
         File file = new File("");
@@ -42,7 +42,7 @@ public class MapLoader {
             // Read File into array
             while (scan.hasNext()) {
                 String nextChar = scan.next();
-                for (int k = 0; k < width; k++) {
+                for ( int k = 0; k < width; k++) {
                     char n = nextChar.charAt(k);
                     array[i][k] = n;
                 }
@@ -50,57 +50,61 @@ public class MapLoader {
             }
 
             // Create Level
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
+            for ( int y = 0; y < height; y++) {
+                for ( int x = 0; x < width; x++) {
                     char c = array[y][x];
 
-                    // AIR
-                    if (c == '.') {
+                    // Air
+                    if ( c == '.') {
                         // Do Nothing
 
                         // Ground
-                    } else if (c == 'G') {
+                    } else if ( c == 'G' ) {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/Ground.png"), StaticObject.Type.GROUND));
+                                new Image("/assets/sprites/blocks/ground.png"), StaticObject.Type.GROUND));
+
                         // Player
-                    } else if (c == 'P') {
+                    } else if ( c == 'P') {
                         playerX = x * GRID_SIZE;
                         playerY = y * GRID_SIZE;
+
                         // Block
-                    } else if (c == 'B') {
+                    } else if ( c == 'B') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/block_placeholder.png"), StaticObject.Type.BLOCK));
+                                new Image("/assets/sprites/blocks/block_placeholder.png"), StaticObject.Type.BLOCK));
+
                         // Lava
-                    } else if (c == '~') {
+                    } else if ( c == '~') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/lava_placeholder.png"), StaticObject.Type.LAVA));
-                    }
-                    // Spike
-                    else if (c == '^') {
+                                new Image("/assets/sprites/blocks/lava_placeholder.png"), StaticObject.Type.LAVA));
+
+                        // Spike
+                    } else if ( c == '^') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/Spikes.png"), StaticObject.Type.SPIKE));
+                                new Image("/assets/sprites/blocks/spikes.png"), StaticObject.Type.SPIKE));
 
                         // Enemy
-                    } else if (c == 'e') {
+                    } else if ( c == 'e') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/enemy_placeholder.png"), StaticObject.Type.ENEMY));
+                                new Image("/assets/sprites/enemies/enemy_placeholder.png"), StaticObject.Type.ENEMY));
 
                         // Item
-                    } else if (c == 'I') {
+                    } else if ( c == 'I') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/pItem.png"), StaticObject.Type.ITEM, "Star :)"));
+                                new Image("/assets/sprites/blocks/item_placeholder.png"), StaticObject.Type.ITEM, "Star :)"));
+
                         // Exit
-                    } else if (c == 'E') {
+                    } else if ( c == 'E') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/exit_placeholder.png"), StaticObject.Type.EXIT));
+                                new Image("/assets/sprites/blocks/exit_placeholder.png"), StaticObject.Type.EXIT));
                     }
                 }
             }
 
             //System.out.println( String.format("Player: x:%d  y:%d", player.getX(), player.getY()));
             scan.close();
-        } catch (FileNotFoundException e) {
-
+        } catch (FileNotFoundException e ) {
+            e.printStackTrace();
         }
         return result;
 

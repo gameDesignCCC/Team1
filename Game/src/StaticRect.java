@@ -12,10 +12,9 @@ public class StaticRect extends StaticObject{
     private double width;
     private double height;
     private String itemID;
-    private Image sprite;
     private Type type;
 
-    ImageView rSprite = new ImageView();
+    private ImageView ivSprite;
 
     /**
      * constructor
@@ -31,20 +30,13 @@ public class StaticRect extends StaticObject{
         this.y = y;
         this.width = width;
         this.height = height;
-        this.sprite = sprite;
         this.type = type;
 
-        rSprite.setImage(sprite);
-        rSprite.setX(x);
-        rSprite.setY(y);
-        rSprite.setFitWidth(width);
-        rSprite.setFitHeight(height);
-
-        /**
-        MainApplication.addToRoot(rSprite);
-        MainApplication.sceneObjects.add(this);
-         **/
-
+        ivSprite = new ImageView(sprite);
+        ivSprite.setX(x);
+        ivSprite.setY(y);
+        ivSprite.setFitWidth(width);
+        ivSprite.setFitHeight(height);
     }
 
     public StaticRect(double x, double y, double width, double height, Image sprite, Type type, String itemID){
@@ -53,29 +45,22 @@ public class StaticRect extends StaticObject{
         this.y = y;
         this.width = width;
         this.height = height;
-        this.sprite = sprite;
         this.type = type;
         this.itemID = itemID;
 
-        rSprite.setImage(sprite);
-        rSprite.setX(x);
-        rSprite.setY(y);
-        rSprite.setFitWidth(width);
-        rSprite.setFitHeight(height);
-
-        /**
-         MainApplication.addToRoot(rSprite);
-         MainApplication.sceneObjects.add(this);
-         **/
-
+        ivSprite = new ImageView(sprite);
+        ivSprite.setX(x);
+        ivSprite.setY(y);
+        ivSprite.setFitWidth(width);
+        ivSprite.setFitHeight(height);
     }
 
 
     /**
-     *
+     * Collision Detection
      *
      * @param player the player
-     * @return returns colliding on left,right,top and bottom
+     * @return returns colliding on left, right, top, and bottom
      */
     @Override
     public ArrayList<CollisionType> checkCollision(Player player) {
@@ -83,31 +68,31 @@ public class StaticRect extends StaticObject{
 
         boolean collided = false;
 
-        if(player.getX() + player.getFitWidth() >= rSprite.getX() &&
-                !(player.getX() >= rSprite.getX() + rSprite.getFitWidth()) &&
-                !(player.getY() + player.getFitHeight() <= rSprite.getY()) &&
-                !(player.getY() >= rSprite.getY() + rSprite.getFitHeight())){
+        if(player.getX() + player.getFitWidth() >= ivSprite.getX() &&
+                !(player.getX() >= ivSprite.getX() + ivSprite.getFitWidth()) &&
+                !(player.getY() + player.getFitHeight() <= ivSprite.getY()) &&
+                !(player.getY() >= ivSprite.getY() + ivSprite.getFitHeight())){
             collisions.add(CollisionType.Right);
             collided = true;
         }
-        if (player.getX() <= rSprite.getX() + rSprite.getFitWidth() &&
-                !(player.getX() + player.getFitWidth() <= rSprite.getX()) &&
-                !(player.getY() + player.getFitHeight() <= rSprite.getY()) &&
-                !(player.getY() >= rSprite.getY() + rSprite.getFitHeight())){
+        if (player.getX() <= ivSprite.getX() + ivSprite.getFitWidth() &&
+                !(player.getX() + player.getFitWidth() <= ivSprite.getX()) &&
+                !(player.getY() + player.getFitHeight() <= ivSprite.getY()) &&
+                !(player.getY() >= ivSprite.getY() + ivSprite.getFitHeight())){
             collisions.add(CollisionType.Left);
             collided = true;
         }
-        if(player.getY() <= rSprite.getY() + rSprite.getFitHeight() &&
-                !(player.getY() + player.getFitHeight() <= rSprite.getY()) &&
-                !(player.getX() + player.getFitWidth() <= rSprite.getX()) &&
-                !(player.getX() >= rSprite.getX() + rSprite.getFitWidth())){
+        if(player.getY() <= ivSprite.getY() + ivSprite.getFitHeight() &&
+                !(player.getY() + player.getFitHeight() <= ivSprite.getY()) &&
+                !(player.getX() + player.getFitWidth() <= ivSprite.getX()) &&
+                !(player.getX() >= ivSprite.getX() + ivSprite.getFitWidth())){
             collisions.add(CollisionType.Top);
             collided = true;
         }
-        if (player.getY() + player.getFitHeight() >= rSprite.getY() &&
-                !(player.getY() >= rSprite.getY() + rSprite.getFitHeight()) &&
-                !(player.getX() + player.getFitWidth() <= rSprite.getX()) &&
-                !(player.getX() >= rSprite.getX() + rSprite.getFitWidth())){
+        if (player.getY() + player.getFitHeight() >= ivSprite.getY() &&
+                !(player.getY() >= ivSprite.getY() + ivSprite.getFitHeight()) &&
+                !(player.getX() + player.getFitWidth() <= ivSprite.getX()) &&
+                !(player.getX() >= ivSprite.getX() + ivSprite.getFitWidth())){
             collisions.add(CollisionType.Bottom);
             collided = true;
         }
@@ -130,46 +115,45 @@ public class StaticRect extends StaticObject{
         return width;
     }
 
-    public String getItemID(){
-        return itemID;
-    }
-
     public double getHeight() {
         return height;
     }
 
+    public String getItemID(){
+        return itemID;
+    }
+
     public Node getSprite() {
-        return rSprite;
+        return ivSprite;
     }
 
     public Type getType(){ return type; }
 
     public void setX(double x){
-        rSprite.setX(x);
+        ivSprite.setX(x);
         this.x = x;
     }
 
     public void setY(double y){
-        rSprite.setY(y);
+        ivSprite.setY(y);
         this.y = y;
     }
 
     public void setWidth(double w){
         width = w;
-        rSprite.setFitWidth(w);
+        ivSprite.setFitWidth(w);
     }
 
     public void setHeight(double h){
         width = h;
-        rSprite.setFitHeight(h);
+        ivSprite.setFitHeight(h);
     }
 
     /**
-     *
-     * moves rectangle to the front of stage
+     * Move ivSprite to the front of the stage
      */
     public void toFront(){
-        this.rSprite.toFront();
+        this.ivSprite.toFront();
     }
 
 }

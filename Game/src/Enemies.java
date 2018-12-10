@@ -21,11 +21,8 @@ public class Enemies extends ImageView {
 
     Rectangle hpBar = new Rectangle();
 
-    Collision enemyCollision = new Collision();
-
     private double startX = 500.0;
     private double endX = 600.0;
-    private boolean moving = false;
 
     Enemies(double x, double y, double width, double height, Image sprite) {
         this.setX(x);

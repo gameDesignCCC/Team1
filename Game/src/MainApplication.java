@@ -44,14 +44,14 @@ public class MainApplication extends Application {
     public static final double WINDOW_SIZE_Y = 720.0;
 
     // Temporary Player Sprites
-    private static Image playerSprite = new Image("/assets/sprites/pPlayerSprite.png");
+    private static Image playerSprite = new Image("/assets/sprites/player/player_placeholder.png");
 
     // The Player
     public static Player player;
 
 
     // Temporary Map Background
-    private static Image mapBg = new Image("/assets/maps/00/bg.png");
+    private static Image mapBg = new Image("/assets/levels/level_bg.png");
     private static ImageView mapBgView = new ImageView(mapBg);
 
     // timer
@@ -77,11 +77,11 @@ public class MainApplication extends Application {
         primaryStage.setOnCloseRequest(e -> exit());
 
 
-        primaryStage.getIcons().add(new Image("/assets/application/favicon128.png"));
+        primaryStage.getIcons().add(new Image("/assets/application/favicon_placeholder128.png"));
         primaryStage.setTitle("Placeholder Title");
 
         // Load Main Menu
-        primaryStage.setScene(Menu.menu());
+        primaryStage.setScene(Menu.mainMenu());
         primaryStage.show();
 
     }
@@ -125,7 +125,7 @@ public class MainApplication extends Application {
         // Update Enemy location
         // TMP
         enemy = new Enemies(500, WINDOW_SIZE_Y - 180, 30,30,
-                new Image("/assets/sprites/enemy_placeholder.png"));
+                new Image("/assets/sprites/enemies/enemy_placeholder.png"));
         
         enemies = new ArrayList<>();
         enemies.add(enemy);
@@ -209,34 +209,32 @@ public class MainApplication extends Application {
             for (Object obj : sceneObjects) {
                 if (obj instanceof StaticRect) {
                     StaticRect staticRect = (StaticRect) obj;
-                    staticRect.setX(staticRect.getX() + player.getvX() * -1);
+                    staticRect.setX(staticRect.getX() + player.getVX() * -1);
                 }else if(obj instanceof Enemies){
                     Enemies enemies = ((Enemies) obj);
-                    enemies.setX(enemies.getX() + player.getvX() * -1);
+                    enemies.setX(enemies.getX() + player.getVX() * -1);
                 }
             }
             player.setX(WINDOW_SIZE_X / 2 - 100);
-            player.hpBar.setX(player.getX());
 
         }else if(player.getX() > (WINDOW_SIZE_X / 2) + 100){
             for (Object obj : sceneObjects) {
                 if (obj instanceof StaticRect) {
                     StaticRect staticRect = (StaticRect) obj;
-                    staticRect.setX(staticRect.getX() + player.getvX() * -1);
+                    staticRect.setX(staticRect.getX() + player.getVX() * -1);
                 }else if(obj instanceof Enemies){
                     Enemies enemies = ((Enemies) obj);
-                    enemies.setX(enemies.getX() + player.getvX() * -1);
+                    enemies.setX(enemies.getX() + player.getVX() * -1);
                 }
             }
             player.setX(WINDOW_SIZE_X / 2 + 100);
-            player.hpBar.setX(player.getX());
         }
 
     }
 
     public static void loadResources(){
         // https://fonts.google.com/specimen/Russo+One
-        Font.loadFont(MainApplication.class.getResource("/assets/ui/RussoOne-Regular.ttf").toExternalForm(), 10);
+        Font.loadFont(MainApplication.class.getResource("/assets/ui/font_russo_one_regular.ttf").toExternalForm(), 10);
     }
 
     /**
