@@ -7,7 +7,6 @@ public class Collision {
 
     /**
      * Player Collision Right
-     *
      * @param player The player.
      * @return The right edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
@@ -27,7 +26,6 @@ public class Collision {
 
     /**
      * Player Collision Left
-     *
      * @param player The player.
      * @return The left edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
@@ -47,7 +45,6 @@ public class Collision {
 
     /**
      * Player Collision Top
-     *
      * @param player The player.
      * @return The top edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
@@ -67,7 +64,6 @@ public class Collision {
 
     /**
      * Player Collision Bottom
-     *
      * @param player The player.
      * @return The bottom edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
@@ -87,7 +83,6 @@ public class Collision {
 
     /**
      * Player Collision Enemy
-     *
      * @param player The player.
      * @return Any Enemy in enemies the player is colliding with.
      */
@@ -102,7 +97,6 @@ public class Collision {
 
     /**
      * Player Collision Items
-     *
      * @param player The player.
      * @return Any StaticRect with the type ITEM in sceneObjects the player is colliding with.
      */

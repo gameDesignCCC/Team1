@@ -60,7 +60,7 @@ public class MapLoader {
                         // Ground
                     } else if ( c == 'G' ) {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/blocks/ground.png"), StaticObject.Type.GROUND));
+                                new Image("/assets/sprites_textures/blocks/ground.png"), StaticObject.Type.GROUND));
 
                         // Player
                     } else if ( c == 'P') {
@@ -70,32 +70,32 @@ public class MapLoader {
                         // Block
                     } else if ( c == 'B') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/blocks/block_placeholder.png"), StaticObject.Type.BLOCK));
+                                new Image("/assets/sprites_textures/blocks/block_placeholder.png"), StaticObject.Type.BLOCK));
 
                         // Lava
                     } else if ( c == '~') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/blocks/lava_placeholder.png"), StaticObject.Type.LAVA));
+                                new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA));
 
                         // Spike
                     } else if ( c == '^') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/blocks/spikes.png"), StaticObject.Type.SPIKE));
+                                new Image("/assets/sprites_textures/blocks/spikes.png"), StaticObject.Type.SPIKE));
 
                         // Enemy
                     } else if ( c == 'e') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/enemies/enemy_placeholder.png"), StaticObject.Type.ENEMY));
+                                new Image("/assets/sprites_textures/enemies/enemy_placeholder.png"), StaticObject.Type.ENEMY));
 
                         // Item
                     } else if ( c == 'I') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/blocks/item_placeholder.png"), StaticObject.Type.ITEM, "Star :)"));
+                                new Image("/assets/sprites_textures/blocks/item_placeholder.png"), StaticObject.Type.ITEM, "Star :)"));
 
                         // Exit
                     } else if ( c == 'E') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/blocks/exit_placeholder.png"), StaticObject.Type.EXIT));
+                                new Image("/assets/sprites_textures/blocks/exit_placeholder.png"), StaticObject.Type.EXIT));
                     }
                 }
             }

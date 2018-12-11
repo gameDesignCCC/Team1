@@ -62,7 +62,6 @@ public class Player extends ImageView {
 
     /**
      * Check Stage Collision Top
-     *
      * @return
      */
     public boolean checkStageCollisionTop() {
@@ -71,7 +70,6 @@ public class Player extends ImageView {
 
     /**
      * Check Stage Collision Bottom
-     *
      * @return
      */
     public boolean checkStageCollisionBottom() {
@@ -80,7 +78,6 @@ public class Player extends ImageView {
 
     /**
      * Check Stage Collision Left
-     *
      * @return Whether the player is colliding with the left edge of the stage or not.
      */
     public boolean checkStageCollisionLeft() {
@@ -89,7 +86,6 @@ public class Player extends ImageView {
 
     /**
      * Check Stage Collision Right
-     *
      * @return Returns whether the player is colliding with the right edge of the stage or not.
      */
     public boolean checkStageCollisionRight() {
@@ -108,7 +104,6 @@ public class Player extends ImageView {
     /**
      * Get Y Velocity
      * Position and size can be called from ImageView.
-     *
      * @return Returns value of Y velocity.
      */
     public double getVY() {
@@ -117,7 +112,6 @@ public class Player extends ImageView {
 
     /**
      * Get X Velocity
-     *
      * @return Returns value of X velocity.
      */
     public double getVX() {
@@ -248,7 +242,6 @@ public class Player extends ImageView {
 
     /**
      * Player Damage
-     *
      * @param damage Damage dealt to the player
      */
     public void damage(int damage) {

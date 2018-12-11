@@ -43,7 +43,7 @@ public class MainApplication extends Application {
     public static final double WINDOW_SIZE_Y = 720.0;
 
     // Temporary Player Sprites
-    private static Image playerSprite = new Image("/assets/sprites/player/player_placeholder.png");
+    private static Image playerSprite = new Image("/assets/sprites_textures/player/player_placeholder.png");
 
     // The Player
     public static Player player;
@@ -100,10 +100,6 @@ public class MainApplication extends Application {
         sceneObjects = new ArrayList<>();
         enemies = new ArrayList<>();
 
-        // TEMP
-        Enemy enemy = new Enemy(500, WINDOW_SIZE_Y - 180, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, new Image("/assets/sprites/enemies/enemy_placeholder.png"));
-        enemies.add(enemy);
-
         // Timer for game loop. / Should stay at ~60 UPS
         MainApplication.timer = new AnimationTimer() {
             @Override
@@ -115,11 +111,19 @@ public class MainApplication extends Application {
 
         // Load Next Level
         MapLoader mapLoader = new MapLoader();
-        for( Object obj: mapLoader.load(level)) {
-            if ( obj instanceof StaticObject ) {
+
+        for (Object obj : mapLoader.load(level)) {
+            if (obj instanceof StaticObject) {
                 StaticObject staticObject = (StaticObject) obj;
+
                 sceneObjects.add(staticObject);
                 root.getChildren().add(staticObject.getSprite());
+
+            } else if (obj instanceof Enemy) {
+                Enemy enemy = ((Enemy) obj);
+
+                sceneObjects.add(enemy);
+                root.getChildren().addAll(enemy, enemy.hpBar);
             }
         }
 
@@ -130,21 +134,13 @@ public class MainApplication extends Application {
         root.getChildren().add(player.hpBar);
         sceneObjects.add(player);
 
-
-        // Spawn Enemies
-        for ( Enemy e : enemies ) {
-            root.getChildren().add(e);
-            root.getChildren().add(e.hpBar);
-            sceneObjects.add(enemy);
-        }
-
         // Get key(s) pressed for player movements.
         gameScene.setOnKeyPressed(e -> {
             keys.put(e.getCode(), true);
             if(e.getCode() == KeyCode.ESCAPE){
                 stopTimer();
                 keys.clear();
-                stage.setScene(Menu.pauseMenu(stage.getScene()));
+                stage.setScene(Menu.pauseMenuTransparent(stage.getScene()));
             }
         });
         gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
@@ -195,7 +191,6 @@ public class MainApplication extends Application {
                 }
             }
 
-            time = System.currentTimeMillis();
 
             if(player.getX() < (WINDOW_SIZE_X / 2) - 100) {
                 scrollScene();
@@ -211,6 +206,8 @@ public class MainApplication extends Application {
             for(Enemy enemy : enemies){
                 enemy.onUpdate();
             }
+
+            time = System.currentTimeMillis();
 
         }
 

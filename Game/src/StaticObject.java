@@ -14,7 +14,6 @@ public abstract class StaticObject {
     }
 
     /**
-     *
      * list of left, right, bottom, and top collisions
      * @param player the player
      * @return returns collisions
@@ -22,8 +21,8 @@ public abstract class StaticObject {
     public abstract ArrayList<CollisionType> checkCollision(Player player );
 
     /**
-     * TODO: Add description
-     * @return
+     * Get Sprite
+     * @return Object's texture/sprite
      */
     public abstract Node getSprite();
 
