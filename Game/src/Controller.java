@@ -15,8 +15,18 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void helpMenuBack(ActionEvent event){
+    private void btnEventBack(ActionEvent event){
         MainApplication.getStage().setScene(prevScene);
+    }
+
+    @FXML
+    private void btnEventRestart(ActionEvent event){
+        MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.currentLevel));
+    }
+
+    @FXML
+    private void btnEventMainMenu(ActionEvent event){
+        MainApplication.getStage().setScene(Menu.mainMenu());
     }
 
 }

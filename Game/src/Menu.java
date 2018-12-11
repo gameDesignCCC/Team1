@@ -8,10 +8,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
@@ -35,11 +33,12 @@ public class Menu {
 
         btnStart.setText("Start");
         btnStart.setTranslateY(-80);
-        btnStart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene("./Game/src/assets/levels/level_1")));
+        btnStart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.currentLevel)));
 
         btnHelp.setText("Help");
         btnHelp.setTranslateY(0);
         btnHelp.setOnAction(e -> MainApplication.getStage().setScene(helpMenu(scene)));
+
         btnExit.setText("Exit");
         btnExit.setTranslateY(80);
         btnExit.setOnAction(e -> MainApplication.exit());
@@ -62,7 +61,6 @@ public class Menu {
 
             return scene;
         }catch (IOException e) {
-            System.out.println("CmonBruh");
             e.printStackTrace();
             System.exit(-1);
         }
@@ -73,7 +71,20 @@ public class Menu {
     @SuppressWarnings("Duplicates")
     public static Scene deathMenu() {
 
-        Pane root = new Pane();
+        try {
+            Parent root = FXMLLoader.load(Menu.class.getResource("/assets/ui/menus/death_menu.fxml"));
+            Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+            scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
+
+            return scene;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        return null;
+
+        /*Pane root = new Pane();
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
 
         scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
@@ -94,7 +105,7 @@ public class Menu {
 
         root.getChildren().addAll(lblHeader, btnBack);
 
-        return scene;
+        return scene;*/
     }
 
     @SuppressWarnings("Duplicates")
@@ -130,9 +141,7 @@ public class Menu {
         btnResume.setId("button-wide");
 
         btnRestart.setText("Restart");
-        btnRestart.setOnAction(e -> {
-            MainApplication.getStage().setScene(MainApplication.getGameScene("./Game/src/assets/levels/level_1"));
-        });
+        btnRestart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.currentLevel)));
         btnRestart.setId("button-wide");
 
         btnHelp.setText("Help");

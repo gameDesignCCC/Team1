@@ -38,6 +38,7 @@ public class MainApplication extends Application {
     // Key(s) pressed for player movement.
     private static HashMap<KeyCode, Boolean> keys;
 
+    // Stage Size
     public static final double WINDOW_SIZE_X = 1280.0;
     public static final double WINDOW_SIZE_Y = 720.0;
 
@@ -58,6 +59,9 @@ public class MainApplication extends Application {
 
     // Enemy
     public static ArrayList<Enemy> enemies;
+
+    // Current Level
+    public static String currentLevel = "./Game/src/assets/levels/level_1";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -139,6 +143,7 @@ public class MainApplication extends Application {
             keys.put(e.getCode(), true);
             if(e.getCode() == KeyCode.ESCAPE){
                 stopTimer();
+                keys.clear();
                 stage.setScene(Menu.pauseMenu(stage.getScene()));
             }
         });
