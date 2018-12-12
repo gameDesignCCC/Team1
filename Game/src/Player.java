@@ -49,15 +49,15 @@ public class Player extends ImageView {
 
     Player(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
-        this.startX = x;
         this.setY(y);
+        this.startX = x;
         this.startY = y;
         this.setFitWidth(width);
         this.setFitHeight(height);
         this.setImage(sprite);
         hpBar.setY(10);
         hpBar.setFill(Color.GREEN);
-        hpBarBG.setFill(Color.color(0.0, 0.0, 0.0, 0.2));
+        hpBarBG.setFill(Color.color(1.0, 1.0, 1.0, 0.2));
     }
 
     /**
@@ -184,19 +184,26 @@ public class Player extends ImageView {
         // Move the player
         move();
 
+        // Player dies if hp drops to zero
+        if (hp <= 0 && !isDead) {
+            die();
+        }
+
         // Preventing intersections with scene objects
         StaticRect bottom = playerCollision.isCollidingBottom(this);
         StaticRect top = playerCollision.isCollidingTop(this);
 
         if (top != null && bottom != null) {
-            double dBot = getY() + getFitHeight() - bottom.getY();
-            double dTop = top.getY() + top.getHeight() - getY();
+            double diffBottom = getY() + getFitHeight() - bottom.getY();
+            double diffTop = top.getY() + top.getHeight() - getY();
 
-            if (dBot < dTop) {
+            if (diffBottom < diffTop) {
                 inJumpAnimation = false;
                 vY = 0.0;
-                setY(bottom.getY() - bottom.getHeight());
-            } else {
+                setY(top.getY() - top.getHeight());
+                collisionEffect(bottom);
+
+            } else if (diffBottom > diffTop) {
                 vY = 0.0;
                 setY(top.getY() + top.getHeight());
             }
@@ -205,15 +212,8 @@ public class Player extends ImageView {
             inJumpAnimation = false;
             vY = 0.0;
             setY(bottom.getY() - bottom.getHeight());
+            collisionEffect(bottom);
 
-            // Scene object collision effects
-            if (bottom.getType() == StaticObject.Type.SPIKE) {
-                damage(120);
-            } else if (bottom.getType() == StaticObject.Type.ENEMY) {
-                damage(5);
-            } else if (bottom.getType() == StaticObject.Type.LAVA) {
-                damage(120);
-            }
         } else if (top != null) {
             vY = 0.0;
             setY(top.getY() + top.getHeight());
@@ -236,11 +236,20 @@ public class Player extends ImageView {
             inJumpAnimation = true;
         }
 
-        // Player dies when hp drops to zero
-        if (hp <= 0 && !isDead) {
-            die();
-        }
+    }
 
+    private void collisionEffect(StaticRect sr){
+
+        // Scene object collision effects
+        if (sr.getType() == StaticObject.Type.SPIKE) {
+            damage(120);
+        } else if (sr.getType() == StaticObject.Type.ENEMY) {
+            damage(5);
+        } else if (sr.getType() == StaticObject.Type.LAVA) {
+            damage(120);
+        } else if(sr.getType() == StaticObject.Type.EXIT) {
+            // Load Next Level
+        }
     }
 
     /**

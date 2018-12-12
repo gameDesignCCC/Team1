@@ -52,7 +52,7 @@ public class MainApplication extends Application {
     private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg.png");
 
     // Level Decoration (fog)
-    private static boolean levelDecoration = true;
+    private static final boolean LEVEL_DECORATION = true;
 
     // Game Loop Timer
     private static AnimationTimer timer;
@@ -155,7 +155,7 @@ public class MainApplication extends Application {
         levelBG.toBack();
 
         // Add Fog
-        if (levelDecoration) root.getChildren().add(new ImageView(new Image("/assets/ui/overlays/fog_overlay.png")));
+        if (LEVEL_DECORATION) root.getChildren().add(new ImageView(new Image("/assets/ui/overlays/fog_overlay.png")));
 
         // Add FPS Display
         if ( DISPLAY_FPS ) {
@@ -214,7 +214,6 @@ public class MainApplication extends Application {
                 player.setX(WINDOW_SIZE_X / 2 + 100);
             }
 
-
             time = System.currentTimeMillis();
 
         }
@@ -251,7 +250,6 @@ public class MainApplication extends Application {
      */
 
     public static void exit(){
-
         // Save something or whatever.
         stage.close();
     }

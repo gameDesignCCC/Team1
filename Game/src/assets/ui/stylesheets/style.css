@@ -7,7 +7,7 @@
 }
 
 .button {
-    -fx-background-color: #a9e6e0;
+    -fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 50%, center 50% 50%, radius 75%, reflect, #a9e6e0, #85b2ae);
     -fx-background-radius: 2;
     -fx-font-family: 'Russo One';
     -fx-text-fill: #2d2d2d;
@@ -16,6 +16,7 @@
     -fx-max-width: 160px;
     -fx-min-height: 60;
     -fx-max-height: 60;
+    -fx-effect: DropShadow(gaussian, #00000090, 10, 0, 2, 2);
 }
 
 .button:focused{

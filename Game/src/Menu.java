@@ -28,9 +28,7 @@ public class Menu {
 
         scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
-        ImageView ivBG = new ImageView(new Image("/assets/ui/menus/backgrounds/main_menu_bg_placeholder.png"));
-
-        ivBG.setTranslateY(-200);
+        ImageView ivBG = new ImageView(new Image("/assets/ui/menus/backgrounds/alt_main_menu_bg_placeholder.png"));
 
         Button btnStart = new Button();
         Button btnHelp = new Button();
