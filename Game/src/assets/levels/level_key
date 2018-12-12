@@ -1,3 +1,5 @@
+All level names MUST be in the form of "level_#"  (e.g. level_1, level_23).
+
 . = Air
 G = Ground
 P = Player

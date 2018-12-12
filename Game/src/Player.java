@@ -235,6 +235,12 @@ public class Player extends ImageView {
             inJumpAnimation = true;
         }
 
+        if(playerCollision.exitCollision(this) != null){
+            // Load Next Level
+            MainApplication.stopTimer();
+            MainApplication.getStage().setScene(Menu.levelCompleted());
+        }
+
     }
 
     private void collisionEffect(StaticRect sr){

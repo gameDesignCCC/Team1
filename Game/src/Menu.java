@@ -36,7 +36,7 @@ public class Menu {
 
         btnStart.setText("Start");
         btnStart.setTranslateY(-80);
-        btnStart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.currentLevel)));
+        btnStart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.peek())));
 
         btnHelp.setText("Help");
         btnHelp.setTranslateY(0);
@@ -65,6 +65,7 @@ public class Menu {
             return scene;
         }catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Failed to load menu.");
             System.exit(-1);
         }
 
@@ -82,6 +83,7 @@ public class Menu {
             return scene;
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Failed to load menu.");
             System.exit(-1);
         }
 
@@ -121,6 +123,7 @@ public class Menu {
             return scene;
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Failed to load menu.");
             System.exit(-1);
         }
 
@@ -161,7 +164,7 @@ public class Menu {
         btnResume.setId("button-wide");
 
         btnRestart.setText("Restart");
-        btnRestart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.currentLevel)));
+        btnRestart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.peek())));
         btnRestart.setId("button-wide");
 
         btnHelp.setText("Help");
@@ -247,7 +250,7 @@ public class Menu {
         btnResume.setEffect(dropShadow);
 
         btnRestart.setText("Restart");
-        btnRestart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.currentLevel)));
+        btnRestart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.peek())));
         btnRestart.setId("button-wide");
         btnRestart.setEffect(dropShadow);
 

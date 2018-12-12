@@ -19,8 +19,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.File;
+import java.util.*;
 
 public class MainApplication extends Application {
 
@@ -64,13 +64,14 @@ public class MainApplication extends Application {
     // Enemy
     public static ArrayList<Enemy> enemies;
 
-    // Current Level
-    public static String currentLevel = "./Game/src/assets/levels/level_1";
+    // Levels
+    public static Queue<String> levels = new LinkedList<>();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         loadResources();
+        queueLevels();
 
         stage = primaryStage;
 
@@ -251,9 +252,40 @@ public class MainApplication extends Application {
         }
     }
 
+    /**
+     * Load Fonts and stuff and things maybe possibly
+     */
     public static void loadResources(){
         // https://fonts.google.com/specimen/Russo+One
         Font.loadFont(MainApplication.class.getResource("/assets/ui/fonts/font_russo_one_regular.ttf").toExternalForm(), 10);
+    }
+
+    /**
+     * Load levels in /assets/levels into level queue
+     */
+    public static void queueLevels(){
+        levels.clear();
+
+        try {
+            File levelsDIR = new File(MainApplication.class.getResource("/assets/levels").getFile());
+            File[] files = levelsDIR.listFiles();
+
+            // Ensures files are sorted by alphabetical/numerical order because apparently the File.getName func doesn't automatically do that according to the doc.
+            Arrays.sort(files);
+
+            for (File file : files) {
+                if (file.getName().matches("^level_(?:\\d+)$")) {
+                    levels.add(file.getPath());
+                    System.out.println("Added Level: " + file.getPath());
+                }
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("Failed to load levels.");
+            System.exit(-1);
+        }
+
     }
 
     /**

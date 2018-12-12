@@ -33,7 +33,7 @@ public class StaticRect extends StaticObject{
         this.width = width;
         this.height = height;
         this.type = type;
-        collisionEnabled = type != Type.ITEM;
+        collisionEnabled = type != Type.ITEM && type != Type.EXIT;
 
         ivSprite = new ImageView(sprite);
         ivSprite.setX(x);
@@ -59,7 +59,7 @@ public class StaticRect extends StaticObject{
         this.height = height;
         this.type = type;
         this.itemID = itemID;
-        collisionEnabled = type != Type.ITEM;
+        collisionEnabled = type != Type.ITEM && type != Type.EXIT;
 
         ivSprite = new ImageView(sprite);
         ivSprite.setX(x);

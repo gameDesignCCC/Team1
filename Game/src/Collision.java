@@ -81,6 +81,13 @@ public class Collision {
         return null;
     }
 
+    public boolean isColliding(StaticRect staticRect, Player player){
+        return (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Right) ||
+                staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left) ||
+                staticRect.checkCollision(player).contains(StaticRect.CollisionType.Top) ||
+                staticRect.checkCollision(player).contains(StaticRect.CollisionType.Bottom));
+    }
+
     /**
      * Player Collision Enemy
      * @param player The player.
@@ -105,8 +112,21 @@ public class Collision {
             if (obj instanceof StaticRect) {
                 StaticRect s = ((StaticRect) obj);
                 if (s.getType() == StaticObject.Type.ITEM) {
-                    if (s.checkCollision(player).contains(StaticRect.CollisionType.Right) || s.checkCollision(player).contains(StaticRect.CollisionType.Left) ||
-                            s.checkCollision(player).contains(StaticRect.CollisionType.Top) || s.checkCollision(player).contains(StaticRect.CollisionType.Bottom)) {
+                    if (isColliding(s, player)) {
+                        return s;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public StaticRect exitCollision(Player player) {
+        for (Object obj : MainApplication.sceneObjects) {
+            if (obj instanceof StaticRect) {
+                StaticRect s = ((StaticRect) obj);
+                if (s.getType() == StaticObject.Type.EXIT) {
+                    if (isColliding(s, player)) {
                         return s;
                     }
                 }
