@@ -199,6 +199,11 @@ public class MainApplication extends Application {
                 }
             }
 
+            player.onUpdate();
+
+            for(Enemy enemy : enemies){
+                enemy.onUpdate();
+            }
 
             if(player.getX() < (WINDOW_SIZE_X / 2) - 100) {
                 scrollScene();
@@ -209,11 +214,6 @@ public class MainApplication extends Application {
                 player.setX(WINDOW_SIZE_X / 2 + 100);
             }
 
-            player.onUpdate();
-
-            for(Enemy enemy : enemies){
-                enemy.onUpdate();
-            }
 
             time = System.currentTimeMillis();
 
