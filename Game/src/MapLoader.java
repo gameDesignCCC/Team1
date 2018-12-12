@@ -4,7 +4,11 @@
  */
 
 
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -73,8 +77,18 @@ public class MapLoader {
 
                         // Lava
                     } else if ( c == '~') {
-                        result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA));
+                        /*result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA));*/
+
+                        StaticRect staticRect = new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA);
+
+                        Rectangle staticRectEffect = new Rectangle(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
+                        staticRectEffect.setFill(Color.valueOf("f85d12"));
+                        staticRectEffect.setEffect(new GaussianBlur(40));
+
+                        if(MainApplication.LEVEL_DECORATION) result.add(staticRectEffect);
+                        result.add(staticRect);
 
                         // Spike
                     } else if ( c == '^') {

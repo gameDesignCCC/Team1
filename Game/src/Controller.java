@@ -29,4 +29,10 @@ public class Controller implements Initializable {
         MainApplication.getStage().setScene(Menu.mainMenu());
     }
 
+    @FXML
+    private void btnEventNextLevel(ActionEvent event){
+        MainApplication.currentLevel = "./Game/src/assets/levels/level_2";
+        MainApplication.getStage().setScene(MainApplication.getGameScene("./Game/src/assets/levels/level_2"));
+    }
+
 }

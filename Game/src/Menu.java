@@ -111,6 +111,23 @@ public class Menu {
         return scene;*/
     }
 
+    public static Scene levelCompleted(){
+
+        try {
+            Parent root = FXMLLoader.load(Menu.class.getResource("/assets/ui/menus/level_completed_menu.fxml"));
+            Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+            scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
+
+            return scene;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        return null;
+
+    }
+
     @SuppressWarnings("Duplicates")
     public static Scene pauseMenu(Scene prevScene) {
 

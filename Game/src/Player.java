@@ -176,9 +176,8 @@ public class Player extends ImageView {
         }
 
         // Falling
-        if (!inJumpAnimation && playerCollision.isCollidingBottom(this) != null && !checkStageCollisionBottom()) {
+        if (!inJumpAnimation && playerCollision.isCollidingBottom(this) == null && !checkStageCollisionBottom()) {
             inJumpAnimation = true;
-
         }
 
         // Move the player
@@ -249,6 +248,8 @@ public class Player extends ImageView {
             damage(120);
         } else if(sr.getType() == StaticObject.Type.EXIT) {
             // Load Next Level
+            MainApplication.stopTimer();
+            MainApplication.getStage().setScene(Menu.levelCompleted());
         }
     }
 

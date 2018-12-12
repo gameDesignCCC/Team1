@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -52,7 +53,7 @@ public class MainApplication extends Application {
     private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg.png");
 
     // Level Decoration (fog)
-    private static final boolean LEVEL_DECORATION = true;
+    public static final boolean LEVEL_DECORATION = true;
 
     // Game Loop Timer
     private static AnimationTimer timer;
@@ -122,6 +123,13 @@ public class MainApplication extends Application {
 
                 sceneObjects.add(staticObject);
                 root.getChildren().add(staticObject.getSprite());
+
+            } else if (obj instanceof Rectangle) {
+                Rectangle rectangle = ((Rectangle) obj);
+
+                sceneObjects.add(rectangle);
+                root.getChildren().add(rectangle);
+                rectangle.toBack();
 
             } else if (obj instanceof Enemy) {
                 Enemy enemy = ((Enemy) obj);
@@ -224,16 +232,19 @@ public class MainApplication extends Application {
         timer.start();
     }
 
-    public static void stopTimer(){
+    public static void stopTimer() {
         timer.stop();
     }
 
-    private static void scrollScene(){
+    private static void scrollScene() {
         for (Object obj : sceneObjects) {
             if (obj instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) obj;
                 staticRect.setX(staticRect.getX() + player.getVX() * -1);
-            }else if(obj instanceof Enemy){
+            } else if (obj instanceof Rectangle){
+                Rectangle rectangle = ((Rectangle) obj);
+                rectangle.setX(rectangle.getX() + player.getVX() * -1 );
+            } else if (obj instanceof Enemy) {
                 Enemy enemies = ((Enemy) obj);
                 enemies.setX(enemies.getX() + player.getVX() * -1);
             }
