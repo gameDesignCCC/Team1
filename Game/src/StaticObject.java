@@ -1,5 +1,4 @@
 import javafx.scene.Node;
-import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 
@@ -9,7 +8,7 @@ public abstract class StaticObject {
         None, Left, Right, Top, Bottom
     }
 
-    public static enum Type{
+    public enum Type{
         BLOCK, GROUND, LAVA, SPIKE, ENEMY, EXIT, ITEM
     }
 

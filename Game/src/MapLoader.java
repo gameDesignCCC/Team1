@@ -5,7 +5,6 @@
 
 
 import javafx.scene.image.Image;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class MapLoader {
                         // Block
                     } else if ( c == 'B') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites_textures/blocks/block_placeholder.png"), StaticObject.Type.BLOCK));
+                                new Image("/assets/sprites_textures/blocks/alt_block_placeholder.png"), StaticObject.Type.BLOCK));
 
                         // Lava
                     } else if ( c == '~') {

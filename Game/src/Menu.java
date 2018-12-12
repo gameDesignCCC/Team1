@@ -218,7 +218,7 @@ public class Menu {
         Button btnBack = new Button();
         Button btnHelp = new Button();
 
-        subRoot.setPadding(new Insets(20, 20, 20, 20));
+        /*subRoot.setPadding(new Insets(20, 20, 20, 20));*/
         subRoot.setSpacing(20);
 
         subRoot.setAlignment(Pos.CENTER);

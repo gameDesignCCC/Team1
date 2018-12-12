@@ -136,6 +136,12 @@ public class Player extends ImageView {
         vX = 0.0;
         vY = inJumpAnimation ? vY : 0.0;
 
+        // Reset Sprite
+
+        // Reset HP bar color & effects
+        hpBar.setFill(Color.GREEN);
+        hpBar.setEffect(null);
+
         // Move Left Controls
         if (keyRight && playerCollision.isCollidingRight(this) == null) {
             vX += playerSpeed;
@@ -166,7 +172,7 @@ public class Player extends ImageView {
         // End jump animation when player collides with stage bottom
         if (this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y) {
             inJumpAnimation = false;
-            this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
+            setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
         }
 
         // Falling
@@ -177,12 +183,6 @@ public class Player extends ImageView {
 
         // Move the player
         move();
-
-        // Set HP bar width to match the player's HP
-        hpBar.setWidth(((float) hp) * 4);
-        // Reset HP bar color
-        hpBar.setFill(Color.GREEN);
-        hpBar.setEffect(null);
 
         // Preventing intersections with scene objects
         StaticRect bottom = playerCollision.isCollidingBottom(this);
@@ -218,6 +218,9 @@ public class Player extends ImageView {
             vY = 0.0;
             setY(top.getY() + top.getHeight());
         }
+
+        // Reset HP bar width to match the player's HP
+        hpBar.setWidth(((float) hp) * 4);
 
         // Item Collision
         if (playerCollision.itemCollision(this) != null) {

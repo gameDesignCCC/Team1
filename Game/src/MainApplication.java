@@ -49,7 +49,10 @@ public class MainApplication extends Application {
     public static Player player;
 
     // Placeholder Map Background
-    private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/level_bg.png");
+    private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg.png");
+
+    // Level Decoration (fog)
+    private static boolean levelDecoration = true;
 
     // Game Loop Timer
     private static AnimationTimer timer;
@@ -73,6 +76,7 @@ public class MainApplication extends Application {
         stage.getIcons().add(new Image("/assets/application/favicon_placeholder128.png"));
         stage.setTitle("Placeholder Title");
         stage.setResizable(false);
+        stage.setFullScreen(false);
         stage.sizeToScene();
         stage.setOnCloseRequest(e -> exit());
         stage.setScene(Menu.mainMenu()); // Load Main Menu
@@ -146,10 +150,14 @@ public class MainApplication extends Application {
         gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
 
         // Add Background
+        levelBG.setX(-100);
         root.getChildren().add(levelBG);
         levelBG.toBack();
 
-        // Add FPS Counter
+        // Add Fog
+        if (levelDecoration) root.getChildren().add(new ImageView(new Image("/assets/ui/overlays/fog_overlay.png")));
+
+        // Add FPS Display
         if ( DISPLAY_FPS ) {
             root.getChildren().add(fpsCounter);
         }
