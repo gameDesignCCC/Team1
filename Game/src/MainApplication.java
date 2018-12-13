@@ -61,8 +61,11 @@ public class MainApplication extends Application {
     // Map Objects
     public static ArrayList<Object> sceneObjects = new ArrayList<>();
 
-    // Enemy
+    // Enemies
     public static ArrayList<Enemy> enemies;
+
+    // Player Inventory - Can't be in Player class or it'll get reset every time the level is loaded.
+    public static ArrayList<StaticRect> collectedParts = new ArrayList<>();
 
     // Levels
     public static Queue<String> levelQueue = new LinkedList<>();
@@ -148,6 +151,10 @@ public class MainApplication extends Application {
         root.getChildren().add(player.hpBarBG);
         root.getChildren().add(player.hpBar);
         sceneObjects.add(player);
+
+        for(StaticObject sr : collectedParts){
+            root.getChildren().add(sr.getSprite());
+        }
 
         // Get key(s) pressed for player movements.
         gameScene.setOnKeyPressed(e -> {
@@ -267,12 +274,12 @@ public class MainApplication extends Application {
      */
     public static void queueLevels(){
         levelQueue.clear();
+        collectedParts.clear();
 
         try {
             File levelsDIR = new File(MainApplication.class.getResource("/assets/levels").getFile());
             File[] files = levelsDIR.listFiles();
 
-            // Ensures files are sorted by alphabetical/numerical order because apparently the File.getName func doesn't automatically do that according to the doc.
             Arrays.sort(files);
 
             for (File file : files) {

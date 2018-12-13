@@ -10,8 +10,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.util.ArrayList;
-
 public class Player extends ImageView {
 
     // Player is in Jump Animation
@@ -36,9 +34,6 @@ public class Player extends ImageView {
 
     // Player Health Points
     private int hp = 100;
-
-    // Collected Items
-    public ArrayList<StaticRect> collectedParts = new ArrayList<>();
 
     // Player Collision with Scene Objects
     private Collision playerCollision = new Collision();
@@ -236,12 +231,12 @@ public class Player extends ImageView {
         if (playerCollision.itemCollision(this) != null) {
             StaticRect s = playerCollision.itemCollision(this);
 
-            s.setX(10 + (collectedParts.size() * 100));
+            s.setX(10 + (MainApplication.collectedParts.size() * 100));
             s.setY(10);
             s.setWidth(90);
             s.setHeight(90);
 
-            collectedParts.add(s);
+            MainApplication.collectedParts.add(s);
             MainApplication.sceneObjects.remove(s);
             inJumpAnimation = true;
         }
