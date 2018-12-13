@@ -52,7 +52,7 @@ public class MainApplication extends Application {
     // Placeholder Map Background
     private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg.png");
 
-    // Level Decoration (fog)
+    // Level Decoration (fog, lava glow)
     public static final boolean LEVEL_DECORATION = true;
 
     // Game Loop Timer
@@ -65,7 +65,7 @@ public class MainApplication extends Application {
     public static ArrayList<Enemy> enemies;
 
     // Levels
-    public static Queue<String> levels = new LinkedList<>();
+    public static Queue<String> levelQueue = new LinkedList<>();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -130,7 +130,9 @@ public class MainApplication extends Application {
 
                 sceneObjects.add(rectangle);
                 root.getChildren().add(rectangle);
-                rectangle.toBack();
+                if(rectangle.getId().equals("effect-lava-glow")){
+                    rectangle.toBack();
+                }
 
             } else if (obj instanceof Enemy) {
                 Enemy enemy = ((Enemy) obj);
@@ -163,7 +165,7 @@ public class MainApplication extends Application {
         root.getChildren().add(levelBG);
         levelBG.toBack();
 
-        // Add Fog
+        // Add Level Decoration (fog, lava glow)
         if (LEVEL_DECORATION) root.getChildren().add(new ImageView(new Image("/assets/ui/overlays/fog_overlay.png")));
 
         // Add FPS Display
@@ -264,7 +266,7 @@ public class MainApplication extends Application {
      * Load levels in /assets/levels into level queue
      */
     public static void queueLevels(){
-        levels.clear();
+        levelQueue.clear();
 
         try {
             File levelsDIR = new File(MainApplication.class.getResource("/assets/levels").getFile());
@@ -275,7 +277,7 @@ public class MainApplication extends Application {
 
             for (File file : files) {
                 if (file.getName().matches("^level_(?:\\d+)$")) {
-                    levels.add(file.getPath());
+                    levelQueue.add(file.getPath());
                     System.out.println("Added Level: " + file.getPath());
                 }
             }

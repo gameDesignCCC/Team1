@@ -56,7 +56,67 @@ public class MapLoader {
                 for (int x = 0; x < width; x++) {
                     char c = array[y][x];
 
-                    // Air
+                    switch (c) {
+
+                        case 'P': // Player
+                            playerX = x * GRID_SIZE;
+                            playerY = y * GRID_SIZE;
+                            break;
+
+                        case 'G': // Ground
+                            result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/blocks/ground.png"), StaticObject.Type.GROUND));
+                            break;
+
+                        case 'B': // Block
+                            result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/blocks/alt_block_placeholder.png"), StaticObject.Type.BLOCK));
+                            break;
+
+                        case '~': // Lava
+                            StaticRect staticRect = new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA);
+
+                            if (MainApplication.LEVEL_DECORATION) {
+                                Rectangle staticRectEffect = new Rectangle(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
+                                staticRectEffect.setFill(Color.valueOf("f85d12"));
+                                staticRectEffect.setEffect(new GaussianBlur(40));
+                                staticRectEffect.setId("effect-lava-glow");
+
+                                result.add(staticRectEffect);
+                            }
+
+                            result.add(staticRect);
+                            break;
+
+                        case '^': // Spikes
+                            result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/blocks/spikes.png"), StaticObject.Type.SPIKE));
+                            break;
+
+                        case 'H': // Ladder
+                            result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/blocks/ladder_placeholder.png"), StaticObject.Type.LADDER));
+                            break;
+
+                        case 'I': // Item
+                            result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/blocks/item_placeholder.png"), StaticObject.Type.ITEM));
+                            break;
+
+                        case 'e': // Enemy
+                            result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/enemies/enemy_placeholder.png"), StaticObject.Type.ENEMY));
+                            break;
+
+                        case 'E': // Exit
+                            result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/blocks/block_translucent.png"), StaticObject.Type.EXIT));
+                            break;
+
+                    }
+
+                    /*// Air
                     if (c == '.') {
                         // Do Nothing
 
@@ -77,19 +137,11 @@ public class MapLoader {
 
                         // Lava
                     } else if (c == '~') {
-                        /*result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA));*/
+                        result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA));
 
                         StaticRect staticRect = new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
                                 new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA);
-                        if (MainApplication.LEVEL_DECORATION) {
-                            Rectangle staticRectEffect = new Rectangle(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
-                            staticRectEffect.setFill(Color.valueOf("f85d12"));
-                            staticRectEffect.setEffect(new GaussianBlur(40));
-
-                            result.add(staticRectEffect);
-                        }
-                        result.add(staticRect);
 
                         // Spike
                     } else if (c == '^') {
@@ -110,7 +162,7 @@ public class MapLoader {
                     } else if (c == 'E') {
                         result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
                                 new Image("/assets/sprites_textures/blocks/block_translucent.png"), StaticObject.Type.EXIT));
-                    }
+                    }*/
 
                 }
             }
@@ -119,6 +171,7 @@ public class MapLoader {
             scan.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            System.out.println("Failed to load level \"" + file + "\", file not found.");
         }
         return result;
 

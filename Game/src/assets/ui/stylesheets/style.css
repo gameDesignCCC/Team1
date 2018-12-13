@@ -45,5 +45,6 @@
 #death-screen-header {
     -fx-font-family: "Russo One";
     -fx-font-size: 50px;
-    -fx-text-fill: #FF0000;
+    -fx-text-fill: #e90000;
+    -fx-effect: DropShadow(gaussian, #00000090, 10, 0, 2, 2);
 }

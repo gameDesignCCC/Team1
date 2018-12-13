@@ -21,7 +21,7 @@ public class Controller implements Initializable {
 
     @FXML
     private void btnEventRestart(ActionEvent event){
-        MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.peek()));
+        MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek()));
     }
 
     @FXML
@@ -31,9 +31,9 @@ public class Controller implements Initializable {
 
     @FXML
     private void btnEventNextLevel(ActionEvent event) {
-        MainApplication.levels.remove();
-        if (MainApplication.levels.peek() != null) {
-            MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.peek()));
+        MainApplication.levelQueue.remove();
+        if (MainApplication.levelQueue.peek() != null) {
+            MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek()));
         } else {
             System.out.println("No next level.");
             MainApplication.queueLevels();

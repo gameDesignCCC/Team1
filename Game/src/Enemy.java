@@ -22,9 +22,6 @@ public class Enemy extends ImageView {
 
     public Rectangle hpBar = new Rectangle();
 
-    private double startX = 500.0;
-    private double endX = 600.0;
-
     Enemy(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
         this.setY(y);
