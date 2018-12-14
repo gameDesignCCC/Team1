@@ -93,28 +93,23 @@ public class Enemy extends ImageView {
 
         boolean collided = false;
 
-        if(player.getX() + player.getFitWidth() >= this.getX() &&
-                !(player.getX() >= this.getX() + this.getFitWidth()) &&
-                !(player.getY() + player.getFitHeight() <= this.getY()) &&
-                !(player.getY() >= this.getY() + this.getFitHeight())){
+        if (player.getX() + player.getFitWidth() >= getX() && player.getX() < getX() + getWidth()
+                && player.getY() + player.getFitHeight() > getY() && player.getY() < getY() + getHeight()) {
             collided = true;
         }
-        if (player.getX() <= this.getX() + this.getFitWidth() &&
-                !(player.getX() + player.getFitWidth() <= this.getX()) &&
-                !(player.getY() + player.getFitHeight() <= this.getY()) &&
-                !(player.getY() >= this.getY() + this.getFitHeight())){
+
+        if (player.getX() <= getX() + getWidth() && player.getX() + player.getFitWidth() > getX()
+                && player.getY() + player.getFitHeight() > getY() && player.getY() < getY() + getHeight()) {
             collided = true;
         }
-        if(player.getY() <= this.getY() + this.getFitHeight() &&
-                !(player.getY() + player.getFitHeight() <= this.getY()) &&
-                !(player.getX() + player.getFitWidth() <= this.getX()) &&
-                !(player.getX() >= this.getX() + this.getFitWidth())){
+
+        if (player.getY() <= getY() + getHeight() && player.getY() + player.getFitHeight() > getY()
+                && player.getX() + player.getFitWidth() > getX() && player.getX() < getX() + getWidth()) {
             collided = true;
         }
-        if (player.getY() + player.getFitHeight() >= this.getY() &&
-                !(player.getY() >= this.getY() + this.getFitHeight()) &&
-                !(player.getX() + player.getFitWidth() <= this.getX()) &&
-                !(player.getX() >= this.getX() + this.getFitWidth())){
+
+        if (player.getY() + player.getFitHeight() >= getY() && player.getY() < getY() + getHeight()
+                && player.getX() + player.getFitWidth() > getX() && player.getX() < getX() + getWidth()) {
             collided = true;
         }
 

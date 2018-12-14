@@ -81,35 +81,31 @@ public class StaticRect extends StaticObject{
 
         boolean collided = false;
 
-        if(player.getX() + player.getFitWidth() >= ivSprite.getX() &&
-                !(player.getX() >= ivSprite.getX() + ivSprite.getFitWidth()) &&
-                !(player.getY() + player.getFitHeight() <= ivSprite.getY()) &&
-                !(player.getY() >= ivSprite.getY() + ivSprite.getFitHeight())){
+        if (player.getX() + player.getFitWidth() >= x && player.getX() < x + width
+                && player.getY() + player.getFitHeight() > y && player.getY() < y + height) {
             collisions.add(CollisionType.Right);
             collided = true;
         }
 
-        if (player.getX() <= ivSprite.getX() + ivSprite.getFitWidth() &&
-                !(player.getX() + player.getFitWidth() <= ivSprite.getX()) &&
-                !(player.getY() + player.getFitHeight() <= ivSprite.getY()) &&
-                !(player.getY() >= ivSprite.getY() + ivSprite.getFitHeight())){
+        if (player.getX() <= x + width && player.getX() + player.getFitWidth() > x
+                && player.getY() + player.getFitHeight() > y && player.getY() < y + height) {
             collisions.add(CollisionType.Left);
             collided = true;
         }
 
-        if(player.getY() <= y + height && player.getY() + player.getFitHeight() > y
-                && player.getX() + player.getFitWidth() > x && player.getX() < x + width){
+        if (player.getY() <= y + height && player.getY() + player.getFitHeight() > y
+                && player.getX() + player.getFitWidth() > x && player.getX() < x + width) {
             collisions.add(CollisionType.Top);
             collided = true;
         }
 
-        if(player.getY() + player.getFitHeight() >= y && player.getY() < y + height
-                && player.getX() + player.getFitWidth() > x && player.getX() < x + width){
+        if (player.getY() + player.getFitHeight() >= y && player.getY() < y + height
+                && player.getX() + player.getFitWidth() > x && player.getX() < x + width) {
             collisions.add(CollisionType.Bottom);
             collided = true;
         }
 
-        if ( !collided ) {
+        if (!collided) {
             collisions.add(CollisionType.None);
         }
         return collisions;
