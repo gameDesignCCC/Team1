@@ -109,7 +109,7 @@ public class MapLoader {
                                     new Image("/assets/sprites_textures/enemies/enemy_placeholder.png"), StaticObject.Type.ENEMY));*/
 
                             Enemy enemy = new Enemy(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                    new Image("/assets/sprites_textures/enemies/pogPls.gif"), Enemy.LogicMode.POINT_AB);
+                                    new Image("/assets/sprites_textures/enemies/enemy_placeholder.png"), Enemy.LogicMode.POINT_AB);
                             enemy.setPointAB(x * GRID_SIZE, x * GRID_SIZE + 3 * GRID_SIZE);
 
                             result.add(enemy);
