@@ -75,7 +75,7 @@ public class MapLoader {
 
                         case '~': // Lava
                             StaticRect staticRect = new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                    new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA);
+                                    new Image("/assets/sprites_textures/blocks/alt_lava_placeholder.png"), StaticObject.Type.LAVA);
 
                             if (MainApplication.LEVEL_DECORATION) {
                                 Rectangle staticRectEffect = new Rectangle(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
@@ -105,8 +105,15 @@ public class MapLoader {
                             break;
 
                         case 'e': // Enemy
-                            result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                    new Image("/assets/sprites_textures/enemies/enemy_placeholder.png"), StaticObject.Type.ENEMY));
+                            /*result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/enemies/enemy_placeholder.png"), StaticObject.Type.ENEMY));*/
+
+                            Enemy enemy = new Enemy(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/enemies/pogPls.gif"), Enemy.LogicMode.POINT_AB);
+                            enemy.setPointAB(x * GRID_SIZE, x * GRID_SIZE + 3 * GRID_SIZE);
+
+                            result.add(enemy);
+
                             break;
 
                         case 'E': // Exit

@@ -10,19 +10,33 @@ import javafx.scene.shape.Rectangle;
 
 // NOTE: Renamed class from "Enemies" to "Enemy" because I'm assuming that all the enemies will be instantiated and therefore the singular form makes more sense but idk.
 public class Enemy extends ImageView {
-    private double x;
-    private double y;
-    private double width;
-    private double height;
-    private double velocity = 0.0;
+
+    public enum LogicMode{
+        NONE, POINT_AB, FOLLOW
+    }
+
+    // Velocities
+    private double vX, vY;
+
+    // Health Points
     private int hp = 100;
-    private boolean isDead = true;
 
-    private Image sprite;
+    // Enemy is dead
+    private boolean isDead = false;
 
+    // HP Display
     public Rectangle hpBar = new Rectangle();
 
-    Enemy(double x, double y, double width, double height, Image sprite) {
+    // Enemy Logic
+    private LogicMode logicMode;
+
+    // Point A-B
+    private double pointA, pointB, oPointA, oPointB;
+    private boolean flag;
+
+    Enemy(double x, double y, double width, double height, Image sprite, LogicMode logicMode) {
+        this.logicMode = logicMode;
+
         this.setX(x);
         this.setY(y);
         this.setFitWidth(width);
@@ -34,12 +48,44 @@ public class Enemy extends ImageView {
         hpBar.setFill(Color.GREEN);
     }
 
-    public void onUpdate(){
+    Enemy(double x, double y, Image sprite, LogicMode logicMode) {
+        this(x, y, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, sprite, logicMode);
+    }
 
-        this.setX(this.getX() + velocity);
+    Enemy(double x, double y, Image sprite) {
+        this(x, y, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, sprite, LogicMode.NONE);
+    }
 
-       hpBar.setX(this.getX());
-       hpBar.setY(this.getY() - 8);
+    public void onUpdate() {
+
+        vX = 0.0;
+        vY = 0.0;
+
+        pointA = oPointA - MainApplication.vStart;
+        pointB = oPointB - MainApplication.vStart;
+
+        if (logicMode == LogicMode.POINT_AB) {
+            if (getX() >= pointB) {
+                flag = false;
+            } else if (getX() <= pointA) {
+                flag = true;
+            }
+
+            vX += flag ? 2.0 : -2.0;
+
+        } else if (logicMode == LogicMode.FOLLOW) {
+            if (getX() < MainApplication.player.getX()) {
+                vX += 2.0;
+            } else if (getX() > MainApplication.player.getX()) {
+                vX -= 2.0;
+            }
+        }
+
+        setX(getX() + vX);
+        setY(getY() + vY);
+
+        hpBar.setX(getX());
+        hpBar.setY(getY() - 8);
 
     }
 
@@ -76,10 +122,27 @@ public class Enemy extends ImageView {
 
     }
 
-    // TODO: Needs to be implemented
-    public void die(){
-        isDead  = true;
-        System.out.println("enemy killed");
+    public double getWidth(){
+        return getFitWidth();
+    }
+
+    public double getHeight(){
+        return getFitHeight();
+    }
+
+    public LogicMode getLogicMode(){
+        return logicMode;
+    }
+
+    public void setLogicMode(LogicMode logicMode){
+        this.logicMode = logicMode;
+    }
+
+    public void setPointAB(double a, double b){
+        this.pointA = a;
+        this.pointB = b;
+        this.oPointA = a;
+        this.oPointB = b;
     }
 
 }

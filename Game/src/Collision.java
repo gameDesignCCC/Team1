@@ -35,7 +35,7 @@ public class Collision {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
-                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left)  && staticRect.getCollisionEnabled()) {
+                if (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left) && staticRect.getCollisionEnabled()) {
                     return staticRect;
                 }
             }

@@ -18,16 +18,11 @@ public class Player extends ImageView {
     // Player Speed When Moved
     private double playerSpeed = 10.0;
 
-    // Player Starting X and Y
-    private double startX;
-    private double startY;
-
     // Player Velocity
-    private double vX = 0.0;
-    private double vY = 0.0;
+    private double vX, vY = 0.0;
 
     // Gravity
-    static final double G = 1;
+    private static final double G = 1;
 
     // Player is Dead
     private boolean isDead = false;
@@ -45,8 +40,6 @@ public class Player extends ImageView {
     Player(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
         this.setY(y);
-        this.startX = x;
-        this.startY = y;
         this.setFitWidth(width);
         this.setFitHeight(height);
         this.setImage(sprite);
@@ -186,7 +179,7 @@ public class Player extends ImageView {
         move();
 
         // Player dies if hp drops to zero
-        if (hp <= 0 && !isDead) {
+        if (hp <= 0) {
             die();
         }
 
@@ -226,6 +219,11 @@ public class Player extends ImageView {
 
         // Reset HP bar width to match the player's HP
         hpBar.setWidth(((float) hp) * 4);
+
+        // Enemy Collision
+        if(playerCollision.enemyCollision(this)){
+            damage(5);
+        }
 
         // Item Collision
         if (playerCollision.itemCollision(this) != null) {
@@ -289,6 +287,7 @@ public class Player extends ImageView {
     public void die() {
         isDead = true;
         hp = 0;
+        MainApplication.collectedParts.clear();
         MainApplication.stopTimer();
         MainApplication.getStage().setScene(Menu.deathMenu());
     }

@@ -44,10 +44,13 @@ public class MainApplication extends Application {
     public static final double WINDOW_SIZE_Y = 720.0;
 
     // Temporary Player Sprites
-    private static Image playerSprite = new Image("/assets/sprites_textures/player/player_placeholder.png");
+    private static Image playerSprite = new Image("/assets/sprites_textures/player/pepePls.gif");
 
     // The Player
     public static Player player;
+
+    // Distance Traveled From Level Start
+    public static double vStart;
 
     // Placeholder Map Background
     private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg.png");
@@ -89,7 +92,7 @@ public class MainApplication extends Application {
 
     }
 
-    public static boolean isPressed(KeyCode key){
+    public static boolean isPressed(KeyCode key) {
         return keys.getOrDefault(key, false);
     }
 
@@ -108,6 +111,8 @@ public class MainApplication extends Application {
         keys = new HashMap<>();
         sceneObjects = new ArrayList<>();
         enemies = new ArrayList<>();
+
+        vStart = 0.0;
 
         // Timer for game loop. / Should stay at ~60 UPS
         MainApplication.timer = new AnimationTimer() {
@@ -141,6 +146,7 @@ public class MainApplication extends Application {
                 Enemy enemy = ((Enemy) obj);
 
                 sceneObjects.add(enemy);
+                enemies.add(enemy);
                 root.getChildren().addAll(enemy, enemy.hpBar);
             }
         }
@@ -219,10 +225,6 @@ public class MainApplication extends Application {
 
             player.onUpdate();
 
-            for(Enemy enemy : enemies){
-                enemy.onUpdate();
-            }
-
             if(player.getX() < (WINDOW_SIZE_X / 2) - 100) {
                 scrollScene();
                 player.setX(WINDOW_SIZE_X / 2 - 100);
@@ -232,10 +234,31 @@ public class MainApplication extends Application {
                 player.setX(WINDOW_SIZE_X / 2 + 100);
             }
 
+            for(Enemy enemy : enemies){
+                enemy.onUpdate();
+            }
+
             time = System.currentTimeMillis();
 
         }
 
+    }
+
+    private static void scrollScene() {
+        for (Object obj : sceneObjects) {
+            if (obj instanceof StaticRect) {
+                StaticRect staticRect = (StaticRect) obj;
+                staticRect.setX(staticRect.getX() + player.getVX() * -1);
+            } else if (obj instanceof Rectangle) {
+                Rectangle rectangle = ((Rectangle) obj);
+                rectangle.setX(rectangle.getX() + player.getVX() * -1);
+            } else if (obj instanceof Enemy) {
+                Enemy enemies = ((Enemy) obj);
+                enemies.setX(enemies.getX() + player.getVX() * -1);
+            }
+        }
+
+        vStart += player.getVX();
     }
 
     public static void startTimer(){
@@ -244,21 +267,6 @@ public class MainApplication extends Application {
 
     public static void stopTimer() {
         timer.stop();
-    }
-
-    private static void scrollScene() {
-        for (Object obj : sceneObjects) {
-            if (obj instanceof StaticRect) {
-                StaticRect staticRect = (StaticRect) obj;
-                staticRect.setX(staticRect.getX() + player.getVX() * -1);
-            } else if (obj instanceof Rectangle){
-                Rectangle rectangle = ((Rectangle) obj);
-                rectangle.setX(rectangle.getX() + player.getVX() * -1 );
-            } else if (obj instanceof Enemy) {
-                Enemy enemies = ((Enemy) obj);
-                enemies.setX(enemies.getX() + player.getVX() * -1);
-            }
-        }
     }
 
     /**
