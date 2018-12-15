@@ -81,6 +81,12 @@ public class Collision {
         return null;
     }
 
+    /**
+     *
+     * @param staticRect Any StaticRect.
+     * @param player The player.
+     * @return Player is colliding with staticRect.
+     */
     public boolean isColliding(StaticRect staticRect, Player player){
         return (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Right) ||
                 staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left) ||
@@ -121,6 +127,11 @@ public class Collision {
         return null;
     }
 
+    /**
+     * Player Collision Exit
+     * @param player The player.
+     * @return Any StaticRect with the type EXIT in sceneObjects the player is colliding with.
+     */
     public StaticRect exitCollision(Player player) {
         for (Object obj : MainApplication.sceneObjects) {
             if (obj instanceof StaticRect) {

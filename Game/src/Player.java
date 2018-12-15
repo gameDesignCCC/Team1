@@ -90,23 +90,6 @@ public class Player extends ImageView {
     }
 
     /**
-     * Get Y Velocity
-     * Position and size can be called from ImageView.
-     * @return Returns value of Y velocity.
-     */
-    public double getVY() {
-        return vY;
-    }
-
-    /**
-     * Get X Velocity
-     * @return Returns value of X velocity.
-     */
-    public double getVX() {
-        return vX;
-    }
-
-    /**
      * Player update method called every frame.
      */
     public void onUpdate() {
@@ -248,24 +231,28 @@ public class Player extends ImageView {
 
     }
 
-    // Scene Object Collision Effects
-    private void collisionEffect(StaticRect sr, StaticObject.CollisionType type){
+    /**
+     * Scene Object Collision Effects
+     * @param staticRect Any StaticRect.
+     * @param type Type of collision. (Left, Right, Top, Bottom)
+     */
+    private void collisionEffect(StaticRect staticRect, StaticObject.CollisionType type){
 
         if(type == StaticObject.CollisionType.Bottom) {
 
-            if (sr.getType() == StaticObject.Type.SPIKE) {
+            if (staticRect.getType() == StaticObject.Type.SPIKE) {
                 damage(120);
-            } else if (sr.getType() == StaticObject.Type.ENEMY) {
+            } else if (staticRect.getType() == StaticObject.Type.ENEMY) {
                 damage(5);
-            } else if (sr.getType() == StaticObject.Type.LAVA) {
+            } else if (staticRect.getType() == StaticObject.Type.LAVA) {
                 damage(120);
             }
 
         } else if(type == StaticObject.CollisionType.Left || type == StaticObject.CollisionType.Right){
 
-            if (sr.getType() == StaticObject.Type.LAVA) {
+            if (staticRect.getType() == StaticObject.Type.LAVA) {
                 damage(120);
-            } else if(sr.getType() == StaticObject.Type.LADDER){
+            } else if(staticRect.getType() == StaticObject.Type.LADDER){
             }
         }
     }
@@ -290,6 +277,23 @@ public class Player extends ImageView {
         MainApplication.collectedParts.clear();
         MainApplication.stopTimer();
         MainApplication.getStage().setScene(Menu.deathMenu());
+    }
+
+
+    /**
+     * Get Y Velocity
+     * @return Returns value of Y velocity.
+     */
+    public double getVY() {
+        return vY;
+    }
+
+    /**
+     * Get X Velocity
+     * @return Returns value of X velocity.
+     */
+    public double getVX() {
+        return vX;
     }
 
 }

@@ -151,16 +151,16 @@ public class MainApplication extends Application {
             }
         }
 
+        for(StaticObject sr : collectedParts){
+            root.getChildren().add(sr.getSprite());
+        }
+
         // Spawn Player
         player = new Player(mapLoader.playerX, mapLoader.playerY, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, playerSprite);
         root.getChildren().add(player);
         root.getChildren().add(player.hpBarBG);
         root.getChildren().add(player.hpBar);
         sceneObjects.add(player);
-
-        for(StaticObject sr : collectedParts){
-            root.getChildren().add(sr.getSprite());
-        }
 
         // Get key(s) pressed for player movements.
         gameScene.setOnKeyPressed(e -> {
@@ -244,6 +244,9 @@ public class MainApplication extends Application {
 
     }
 
+    /**
+     * Scrolling
+     */
     private static void scrollScene() {
         for (Object obj : sceneObjects) {
             if (obj instanceof StaticRect) {
@@ -261,16 +264,22 @@ public class MainApplication extends Application {
         vStart += player.getVX();
     }
 
+    /**
+     * Start Game Loop Timer
+     */
     public static void startTimer(){
         timer.start();
     }
 
+    /**
+     * Stop Game Loop Timer
+     */
     public static void stopTimer() {
         timer.stop();
     }
 
     /**
-     * Load Fonts and stuff and things maybe possibly
+     * Load Fonts and stuff and things
      */
     public static void loadResources(){
         // https://fonts.google.com/specimen/Russo+One
@@ -289,9 +298,10 @@ public class MainApplication extends Application {
             File[] files = levelsDIR.listFiles();
 
             Arrays.sort(files);
+            /*Arrays.sort(files, (f0, f1) -> Integer.compare(f0.getPath().length(), f1.getPath().length()));*/
 
             for (File file : files) {
-                if (file.getName().matches("^level_(?:\\d+)$")) {
+                if(file.getName().matches("^level_\\d{2}$")){
                     levelQueue.add(file.getPath());
                     System.out.println("Added Level: " + file.getPath());
                 }
@@ -308,7 +318,6 @@ public class MainApplication extends Application {
     /**
      * Exit Application
      */
-
     public static void exit(){
         // Save something or whatever.
         stage.close();

@@ -12,8 +12,11 @@ import javafx.scene.shape.Rectangle;
 public class Enemy extends ImageView {
 
     public enum LogicMode{
-        NONE, POINT_AB, FOLLOW
+        NONE, POINT_AB, FOLLOW, PATROL_AB
     }
+
+    // Speed
+    private double speed = 2.0;
 
     // Velocities
     private double vX, vY;
@@ -30,9 +33,11 @@ public class Enemy extends ImageView {
     // Enemy Logic
     private LogicMode logicMode;
 
-    // Point A-B
+    // Logic Options
     private double pointA, pointB, oPointA, oPointB;
     private boolean flag;
+    private double patrolDistance;
+    private boolean patrolTriggered = false;
 
     Enemy(double x, double y, double width, double height, Image sprite, LogicMode logicMode) {
         this.logicMode = logicMode;
@@ -70,15 +75,35 @@ public class Enemy extends ImageView {
             } else if (getX() <= pointA) {
                 flag = true;
             }
-
-            vX += flag ? 2.0 : -2.0;
+            vX += flag ? speed : -speed;
 
         } else if (logicMode == LogicMode.FOLLOW) {
             if (getX() < MainApplication.player.getX()) {
-                vX += 2.0;
+                vX += speed;
             } else if (getX() > MainApplication.player.getX()) {
-                vX -= 2.0;
+                vX -= speed;
             }
+        } else if (logicMode == LogicMode.PATROL_AB){
+
+            if (getX() + patrolDistance > MainApplication.player.getX() && getX() - patrolDistance < MainApplication.player.getX()) {
+                patrolTriggered = true;
+            }
+
+            if (!patrolTriggered) {
+                if (getX() >= pointB) {
+                    flag = false;
+                } else if (getX() <= pointA) {
+                    flag = true;
+                }
+                vX += flag ? speed : -speed;
+            } else {
+                if (getX() < MainApplication.player.getX()) {
+                    vX += speed;
+                } else if (getX() > MainApplication.player.getX()) {
+                    vX -= speed;
+                }
+            }
+
         }
 
         setX(getX() + vX);
@@ -138,6 +163,10 @@ public class Enemy extends ImageView {
         this.pointB = b;
         this.oPointA = a;
         this.oPointB = b;
+    }
+
+    public void setPatrolDistance(double distance){
+        this.patrolDistance = distance;
     }
 
 }

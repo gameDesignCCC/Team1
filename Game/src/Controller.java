@@ -15,17 +15,17 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void btnEventBack(ActionEvent event){
+    private void btnEventBack(ActionEvent event) {
         MainApplication.getStage().setScene(prevScene);
     }
 
     @FXML
-    private void btnEventRestart(ActionEvent event){
+    private void btnEventRestart(ActionEvent event) {
         MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek()));
     }
 
     @FXML
-    private void btnEventMainMenu(ActionEvent event){
+    private void btnEventMainMenu(ActionEvent event) {
         MainApplication.getStage().setScene(Menu.mainMenu());
     }
 
