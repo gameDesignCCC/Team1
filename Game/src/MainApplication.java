@@ -165,6 +165,7 @@ public class MainApplication extends Application {
         long now = System.currentTimeMillis();
         if (time + MAX_FRAME_RATE <= now ) {
 
+            // Player
             player.onUpdate(isPressed(KeyCode.UP), isPressed(KeyCode.LEFT), isPressed(KeyCode.RIGHT));
             enemy.onUpdate();
             if (isPressed(KeyCode.ESCAPE)) {
@@ -172,6 +173,15 @@ public class MainApplication extends Application {
                 MainApplication.timer.stop();
             }
 
+            // Animations:
+            for ( Object obj : sceneObjects) {
+                if ( obj instanceof AnimatedRect ) {
+                    AnimatedRect animatedRect = (AnimatedRect) obj;
+                    animatedRect.onUpdate();
+                }
+            }
+
+            // FPS
             if (DISPLAY_FPS) {
                 // FPS Display
                 long oldFrameTime = frameTimes[frameTimeIndex];

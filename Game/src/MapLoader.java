@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -72,8 +74,11 @@ public class MapLoader {
                                 new Image("/assets/sprites/block_placeholder.png"), StaticObject.Type.BLOCK));
                     // Lava
                     } else if ( c == '~') {
-                        result.add( new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites/lava_placeholder.png"), StaticObject.Type.LAVA));
+
+
+
+                        result.add( new AnimatedRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                loadLava(), StaticObject.Type.LAVA));
                     }
                     // Spike
                     else if ( c == '^') {
@@ -102,4 +107,19 @@ public class MapLoader {
 
     }
 
+    private Image[] loadLava() {
+        File folder = new File("./Game/src/assets/sprites/Lava_Sprite");
+        File[] listOfFiles = folder.listFiles();
+
+        Image[] sprites = new Image[listOfFiles.length];
+        for ( int i = 0; i < listOfFiles.length; i++ ) {
+            try {
+                sprites[i] = new Image(listOfFiles[i].toURI().toURL().toString());
+            } catch( IOException e ) {
+                e.printStackTrace();
+            }
+        }
+
+        return sprites;
+    }
 }
