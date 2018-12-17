@@ -161,6 +161,10 @@ public class StaticRect extends StaticObject{
         ivSprite.setFitHeight(h);
     }
 
+    public void setSprite(Image sprite){
+        this.ivSprite.setImage(sprite);
+    }
+
     public void setCollisionEnabled(boolean collisionEnabled) {
         this.collisionEnabled = collisionEnabled;
     }

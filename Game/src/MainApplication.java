@@ -44,7 +44,7 @@ public class MainApplication extends Application {
     public static final double WINDOW_SIZE_Y = 720.0;
 
     // Temporary Player Sprites
-    private static Image playerSprite = new Image("/assets/sprites_textures/player/pepePls.gif");
+    private static Image playerSprite = new Image("/assets/sprites_textures/player/player_placeholder.png");
 
     // The Player
     public static Player player;
@@ -96,7 +96,7 @@ public class MainApplication extends Application {
         return keys.getOrDefault(key, false);
     }
 
-    public static Stage getStage(){
+    public static Stage getStage() {
         return stage;
     }
 
@@ -138,7 +138,7 @@ public class MainApplication extends Application {
 
                 sceneObjects.add(rectangle);
                 root.getChildren().add(rectangle);
-                if(rectangle.getId().equals("effect-lava-glow")){
+                if (rectangle.getId().equals("effect-lava-glow")) {
                     rectangle.toBack();
                 }
 
@@ -151,7 +151,7 @@ public class MainApplication extends Application {
             }
         }
 
-        for(StaticObject sr : collectedParts){
+        for (StaticObject sr : collectedParts) {
             root.getChildren().add(sr.getSprite());
         }
 
@@ -165,7 +165,7 @@ public class MainApplication extends Application {
         // Get key(s) pressed for player movements.
         gameScene.setOnKeyPressed(e -> {
             keys.put(e.getCode(), true);
-            if(e.getCode() == KeyCode.ESCAPE){
+            if (e.getCode() == KeyCode.ESCAPE) {
                 stopTimer();
                 keys.clear();
                 stage.setScene(Menu.pauseMenuTransparent(stage.getScene()));
@@ -182,7 +182,7 @@ public class MainApplication extends Application {
         if (LEVEL_DECORATION) root.getChildren().add(new ImageView(new Image("/assets/ui/overlays/fog_overlay.png")));
 
         // Add FPS Display
-        if ( DISPLAY_FPS ) {
+        if (DISPLAY_FPS) {
             root.getChildren().add(fpsCounter);
         }
 
@@ -196,11 +196,11 @@ public class MainApplication extends Application {
      */
     private static void update() {
         long now = System.currentTimeMillis();
-        if (time + MAX_FRAME_RATE <= now ) {
+        if (time + MAX_FRAME_RATE <= now) {
 
+            // FPS Display
             if (DISPLAY_FPS) {
 
-                // FPS Display
                 long oldFrameTime = frameTimes[frameTimeIndex];
                 frameTimes[frameTimeIndex] = now;
                 frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length;
@@ -221,20 +221,30 @@ public class MainApplication extends Application {
                     }
 
                 }
+
             }
 
+            // Player Update
             player.onUpdate();
 
-            if(player.getX() < (WINDOW_SIZE_X / 2) - 100) {
+            // Animations
+            for (Object obj : sceneObjects) {
+                if (obj instanceof AnimatedRect) {
+                    AnimatedRect animatedRect = (AnimatedRect) obj;
+                    animatedRect.onUpdate();
+                }
+            }
+
+            if (player.getX() < (WINDOW_SIZE_X / 2) - 100) {
                 scrollScene();
                 player.setX(WINDOW_SIZE_X / 2 - 100);
 
-            }else if(player.getX() > (WINDOW_SIZE_X / 2) + 100){
+            } else if (player.getX() > (WINDOW_SIZE_X / 2) + 100) {
                 scrollScene();
                 player.setX(WINDOW_SIZE_X / 2 + 100);
             }
 
-            for(Enemy enemy : enemies){
+            for (Enemy enemy : enemies) {
                 enemy.onUpdate();
             }
 
@@ -267,7 +277,7 @@ public class MainApplication extends Application {
     /**
      * Start Game Loop Timer
      */
-    public static void startTimer(){
+    public static void startTimer() {
         timer.start();
     }
 
@@ -281,7 +291,7 @@ public class MainApplication extends Application {
     /**
      * Load Fonts and stuff and things
      */
-    public static void loadResources(){
+    public static void loadResources() {
         // https://fonts.google.com/specimen/Russo+One
         Font.loadFont(MainApplication.class.getResource("/assets/ui/fonts/font_russo_one_regular.ttf").toExternalForm(), 10);
     }
@@ -289,7 +299,7 @@ public class MainApplication extends Application {
     /**
      * Load levels in /assets/levels into level queue
      */
-    public static void queueLevels(){
+    public static void queueLevels() {
         levelQueue.clear();
         collectedParts.clear();
 
@@ -301,13 +311,13 @@ public class MainApplication extends Application {
             /*Arrays.sort(files, (f0, f1) -> Integer.compare(f0.getPath().length(), f1.getPath().length()));*/
 
             for (File file : files) {
-                if(file.getName().matches("^level_\\d{2}$")){
+                if (file.getName().matches("^level_\\d{2}$")) {
                     levelQueue.add(file.getPath());
                     System.out.println("Added Level: " + file.getPath());
                 }
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Failed to load levels.");
             System.exit(-1);
@@ -318,7 +328,7 @@ public class MainApplication extends Application {
     /**
      * Exit Application
      */
-    public static void exit(){
+    public static void exit() {
         // Save something or whatever.
         stage.close();
     }

@@ -11,6 +11,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -74,19 +75,19 @@ public class MapLoader {
                             break;
 
                         case '~': // Lava
-                            StaticRect staticRect = new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                    new Image("/assets/sprites_textures/blocks/alt_lava_placeholder.png"), StaticObject.Type.LAVA);
+                            AnimatedRect animatedRect = new AnimatedRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    loadLava(), StaticObject.Type.LAVA);
 
                             if (MainApplication.LEVEL_DECORATION) {
-                                Rectangle staticRectEffect = new Rectangle(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
-                                staticRectEffect.setFill(Color.valueOf("f85d12"));
-                                staticRectEffect.setEffect(new GaussianBlur(40));
-                                staticRectEffect.setId("effect-lava-glow");
+                                Rectangle rectEffect = new Rectangle(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
+                                rectEffect.setFill(Color.valueOf("f85d12"));
+                                rectEffect.setEffect(new GaussianBlur(40));
+                                rectEffect.setId("effect-lava-glow");
 
-                                result.add(staticRectEffect);
+                                result.add(rectEffect);
                             }
 
-                            result.add(staticRect);
+                            result.add(animatedRect);
                             break;
 
                         case '^': // Spikes
@@ -142,11 +143,8 @@ public class MapLoader {
 
                         // Lava
                     } else if (c == '~') {
-                        result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA));
-
-                        StaticRect staticRect = new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                new Image("/assets/sprites_textures/blocks/lava_placeholder.png"), StaticObject.Type.LAVA);
+                       result.add(new AnimatedRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                loadLava(), StaticObject.Type.LAVA));
 
                         // Spike
                     } else if (c == '^') {
@@ -182,4 +180,19 @@ public class MapLoader {
 
     }
 
+    private Image[] loadLava() {
+        File folder = new File("./Game/src/assets/sprites_textures/blocks/lava/");
+        File[] listOfFiles = folder.listFiles();
+
+        Image[] sprites = new Image[listOfFiles.length];
+        for ( int i = 0; i < listOfFiles.length; i++ ) {
+            try {
+                sprites[i] = new Image(listOfFiles[i].toURI().toURL().toString());
+            } catch( IOException e ) {
+                e.printStackTrace();
+            }
+        }
+
+        return sprites;
+    }
 }
