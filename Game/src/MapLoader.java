@@ -109,9 +109,7 @@ public class MapLoader {
 
                         case 'e': // Enemy
                             Enemy enemy = new Enemy(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                    new Image("/assets/sprites_textures/enemies/enemy_placeholder.png"), Enemy.LogicMode.PATROL_AB);
-                            enemy.setPointAB(x * GRID_SIZE, x * GRID_SIZE + 3 * GRID_SIZE);
-                            enemy.setPatrolDistance(100);
+                                    new Image("/assets/sprites_textures/enemies/enemy_placeholder.png"));
 
                             result.add(enemy);
 
