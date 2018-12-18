@@ -1,8 +1,6 @@
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,11 +14,18 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.io.IOException;
-
 public class Menu {
 
-    @SuppressWarnings("Duplicates")
+    private static DropShadow dropShadow = new DropShadow();
+
+    public static void onStart(){
+        dropShadow.setRadius(20.0);
+    }
+
+    /*
+     *     -- SCENES --
+     */
+
     public static Scene mainMenu() {
 
         StackPane root = new StackPane();
@@ -31,16 +36,12 @@ public class Menu {
         ImageView ivBG = new ImageView(new Image("/assets/ui/backgrounds/alt_main_menu_bg_placeholder.png"));
 
         Button btnStart = new Button();
-        Button btnHelp = new Button();
+        Button btnHelp = btnHelp(scene, false);
         Button btnExit = new Button();
 
         btnStart.setText("Start");
         btnStart.setTranslateY(-80);
         btnStart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek())));
-
-        btnHelp.setText("Help");
-        btnHelp.setTranslateY(0);
-        btnHelp.setOnAction(e -> MainApplication.getStage().setScene(helpMenu(scene)));
 
         btnExit.setText("Exit");
         btnExit.setTranslateY(80);
@@ -51,129 +52,98 @@ public class Menu {
         return scene;
     }
 
-    @SuppressWarnings("Duplicates")
     public static Scene helpMenu(Scene prevScene) {
 
-        Parent root;
-
-        try {
-            root = FXMLLoader.load(Menu.class.getResource("/assets/ui/menus/help_menu.fxml"));
-            Controller.prevScene = prevScene;
-            Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
-            scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
-
-            return scene;
-        }catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Failed to load menu.");
-            System.exit(-1);
-        }
-
-        return null;
-    }
-
-    @SuppressWarnings("Duplicates")
-    public static Scene deathMenu() {
-
-        try {
-            Parent root = FXMLLoader.load(Menu.class.getResource("/assets/ui/menus/death_menu.fxml"));
-            Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
-            scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
-
-            return scene;
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Failed to load menu.");
-            System.exit(-1);
-        }
-
-        return null;
-
-        /*Pane root = new Pane();
+        Pane root = new Pane();
+        VBox subRoot = new VBox();
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
 
         scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
-        Label lblHeader = new Label("You Died");
+        Button btnBack = new Button("Back");
+        btnBack.setOnAction(e -> MainApplication.getStage().setScene(prevScene));
 
-        lblHeader.setLayoutX((MainApplication.WINDOW_SIZE_X / 2) - 110);
-        lblHeader.setLayoutY((MainApplication.WINDOW_SIZE_Y / 2) - 130);
-        lblHeader.setTextFill(Color.RED);
+        subRoot.setAlignment(Pos.CENTER);
+        subRoot.setPrefWidth(MainApplication.WINDOW_SIZE_X);
+        subRoot.setPrefHeight(MainApplication.WINDOW_SIZE_Y);
+        subRoot.getChildren().add(btnBack);
+
+        root.getChildren().add(subRoot);
+
+        return scene;
+    }
+
+    public static Scene deathMenu() {
+
+        Pane root = new Pane();
+        VBox subRoot = new VBox(20);
+        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+
+        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
+
+        Label lblHeader = menuHeader("You Died");
         lblHeader.setId("death-screen-header");
 
-        Button btnBack = new Button();
+        Button btnRestart = btnRestart();
+        Button btnMainMenu = btnMainMenu();
 
-        btnBack.setText("Back");
-        btnBack.setLayoutX((MainApplication.WINDOW_SIZE_X / 2) - 80);
-        btnBack.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - 30);
-        btnBack.setOnAction(e -> MainApplication.getStage().setScene(mainMenu()));
+        subRoot.setAlignment(Pos.CENTER);
+        subRoot.setPrefWidth(MainApplication.WINDOW_SIZE_X);
+        subRoot.setPrefHeight(MainApplication.WINDOW_SIZE_Y);
+        subRoot.getChildren().addAll(lblHeader, btnRestart, btnMainMenu);
 
-        root.getChildren().addAll(lblHeader, btnBack);
+        root.getChildren().add(subRoot);
 
-        return scene;*/
+        return scene;
     }
 
     public static Scene levelCompleted(){
 
-        try {
-            Parent root = FXMLLoader.load(Menu.class.getResource("/assets/ui/menus/level_completed_menu.fxml"));
-            Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
-            scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
-
-            return scene;
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Failed to load menu.");
-            System.exit(-1);
-        }
-
-        return null;
-
-    }
-
-    @SuppressWarnings("Duplicates")
-    public static Scene pauseMenu(Scene prevScene) {
-
-        VBox root = new VBox();
-
+        Pane root = new Pane();
+        VBox subRoot = new VBox(20);
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
 
         scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
-        Label lblHeader = new Label();
+        Label lblHeader = menuHeader("Level Completed");
 
-        lblHeader.setText("Paused");
-        lblHeader.setPadding(new Insets(0, 0, 20, 0));
-        lblHeader.setId("menu-header");
-
-        Button btnResume = new Button();
-        Button btnRestart = new Button();
-        Button btnBack = new Button();
-        Button btnHelp = new Button();
-
-        root.setPadding(new Insets(20, 20, 20, 20));
-        root.setSpacing(20);
-
-        root.setAlignment(Pos.CENTER);
-
-        btnResume.setText("Resume");
-        btnResume.setOnAction(e -> {
-            MainApplication.getStage().setScene(prevScene);
-            MainApplication.startTimer();
+        Button btnNextLevel = new Button("Next Level");
+        btnNextLevel.setId("button-wide");
+        btnNextLevel.setOnAction(e -> {
+            MainApplication.levelQueue.remove();
+            if(MainApplication.levelQueue.peek() != null){
+                MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek()));
+            } else {
+                System.out.println("No next level.");
+                MainApplication.queueLevels();
+                MainApplication.getStage().setScene(mainMenu());
+            }
         });
-        btnResume.setId("button-wide");
 
-        btnRestart.setText("Restart");
-        btnRestart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek())));
-        btnRestart.setId("button-wide");
+        Button btnMainMenu = btnMainMenu();
 
-        btnHelp.setText("Help");
-        btnHelp.setOnAction(e -> MainApplication.getStage().setScene(helpMenu(scene)));
-        btnHelp.setId("button-wide");
+        subRoot.setAlignment(Pos.CENTER);
+        subRoot.setPrefWidth(MainApplication.WINDOW_SIZE_X);
+        subRoot.setPrefHeight(MainApplication.WINDOW_SIZE_Y);
+        subRoot.getChildren().addAll(lblHeader, btnNextLevel, btnMainMenu);
+        root.getChildren().add(subRoot);
 
-        btnBack.setText("Main Menu");
-        btnBack.setOnAction(e -> MainApplication.getStage().setScene(mainMenu()));
-        btnBack.setId("button-wide");
+        return scene;
+    }
+
+    public static Scene pauseMenu(Scene prevScene) {
+
+        VBox root = new VBox();
+        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+
+        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
+
+        Label lblHeader = menuHeader("Paused");
+
+        Button btnResume = btnResume(prevScene);
+        Button btnRestart = btnRestart();
+        Button btnMainMenu = btnMainMenu();
+        Button btnHelp = btnHelp(scene, true);
 
         scene.setOnKeyPressed(e -> {
             if(e.getCode() == KeyCode.ESCAPE){
@@ -181,17 +151,18 @@ public class Menu {
             }
         });
 
-        root.getChildren().addAll(lblHeader, btnResume, btnRestart, btnHelp, btnBack);
+        root.setPadding(new Insets(20, 20, 20, 20));
+        root.setSpacing(20);
+        root.setAlignment(Pos.CENTER);
+        root.getChildren().addAll(lblHeader, btnResume, btnRestart, btnHelp, btnMainMenu);
 
         return scene;
     }
 
-    @SuppressWarnings("Duplicates")
     public static Scene pauseMenuTransparent(Scene prevScene) {
 
         Pane root = new Pane();
         VBox subRoot = new VBox();
-
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
 
         scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
@@ -215,54 +186,15 @@ public class Menu {
             }
         }
 
-        DropShadow dropShadow = new DropShadow();
-        dropShadow.setRadius(20.0);
-        /*dropShadow.setOffsetX(5.0);
-        dropShadow.setOffsetY(5.0);*/
-
         Rectangle rectBG = new Rectangle(0, 0, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
-
         rectBG.setFill(Color.color(0.0, 0.0, 0.0, 0.5));
 
-        Label lblHeader = new Label();
+        Label lblHeader = menuHeader("Paused");
 
-        lblHeader.setText("Paused");
-        lblHeader.setPadding(new Insets(0, 0, 20, 0));
-        lblHeader.setId("menu-header");
-        lblHeader.setEffect(dropShadow);
-
-        Button btnResume = new Button();
-        Button btnRestart = new Button();
-        Button btnBack = new Button();
-        Button btnHelp = new Button();
-
-        /*subRoot.setPadding(new Insets(20, 20, 20, 20));*/
-        subRoot.setSpacing(20);
-
-        subRoot.setAlignment(Pos.CENTER);
-
-        btnResume.setText("Resume");
-        btnResume.setOnAction(e -> {
-            MainApplication.getStage().setScene(prevScene);
-            MainApplication.startTimer();
-        });
-        btnResume.setId("button-wide");
-        btnResume.setEffect(dropShadow);
-
-        btnRestart.setText("Restart");
-        btnRestart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek())));
-        btnRestart.setId("button-wide");
-        btnRestart.setEffect(dropShadow);
-
-        btnHelp.setText("Help");
-        btnHelp.setOnAction(e -> MainApplication.getStage().setScene(helpMenu(scene)));
-        btnHelp.setId("button-wide");
-        btnHelp.setEffect(dropShadow );
-
-        btnBack.setText("Main Menu");
-        btnBack.setOnAction(e -> MainApplication.getStage().setScene(mainMenu()));
-        btnBack.setId("button-wide");
-        btnBack.setEffect(dropShadow);
+        Button btnResume = btnResume(prevScene);
+        Button btnRestart = btnRestart();
+        Button btnMainMenu = btnMainMenu();
+        Button btnHelp = btnHelp(scene, true);
 
         scene.setOnKeyPressed(e -> {
             if(e.getCode() == KeyCode.ESCAPE){
@@ -271,14 +203,73 @@ public class Menu {
             }
         });
 
-        subRoot.getChildren().addAll(lblHeader, btnResume, btnRestart, btnHelp, btnBack);
+        subRoot.setSpacing(20);
+        subRoot.setAlignment(Pos.CENTER);
         subRoot.setLayoutX((MainApplication.WINDOW_SIZE_X / 2) - 100);
         subRoot.setLayoutY((MainApplication.WINDOW_SIZE_Y / 2) - 250);
+        subRoot.getChildren().addAll(lblHeader, btnResume, btnRestart, btnHelp, btnMainMenu);
 
-        root.getChildren().add(rectBG);
-        root.getChildren().add(subRoot);
+        root.getChildren().addAll(rectBG, subRoot);
 
         return scene;
+    }
+
+    /*
+     *     -- INDIVIDUAL ELEMENTS --
+     */
+
+    private static Label menuHeader(String text) {
+
+        Label label = new Label(text);
+        label.setId("menu-header");
+        label.setPadding(new Insets(0, 0, 20, 0));
+        label.setEffect(dropShadow);
+
+        return label;
+    }
+
+    private static Button btnResume(Scene prevScene){
+
+        Button btnResume = new Button("Resume");
+        btnResume.setOnAction(e ->{
+            MainApplication.getStage().setScene(prevScene);
+            MainApplication.startTimer();
+        });
+        btnResume.setId("button-wide");
+        btnResume.setEffect(dropShadow);
+
+        return btnResume;
+    }
+
+    private static Button btnRestart(){
+
+        Button btnRestart = new Button("Restart");
+        btnRestart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek())));
+        btnRestart.setId("button-wide");
+        btnRestart.setEffect(dropShadow);
+
+        return btnRestart;
+    }
+
+    private static Button btnHelp(Scene prevScene, boolean wide){
+
+        Button btnHelp = new Button("Help");
+        btnHelp.setOnAction(e -> MainApplication.getStage().setScene(helpMenu(prevScene)));
+        if (wide) btnHelp.setId("button-wide");
+        btnHelp.setEffect(dropShadow);
+
+        return btnHelp;
+    }
+
+    private static Button btnMainMenu(){
+
+        Button btnMainMenu = new Button("Main Menu");
+        btnMainMenu.setOnAction(e -> MainApplication.getStage().setScene(mainMenu()));
+        btnMainMenu.setId("button-wide");
+        btnMainMenu.setEffect(dropShadow);
+
+        return btnMainMenu;
+
     }
 
 }

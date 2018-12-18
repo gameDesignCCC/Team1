@@ -94,10 +94,6 @@ public class Player extends ImageView {
      */
     public void onUpdate() {
 
-        if (isDead) {
-            return;
-        }
-
         boolean keyUp = MainApplication.isPressed(KeyCode.UP) || MainApplication.isPressed(KeyCode.W) || MainApplication.isPressed(KeyCode.SPACE);
         boolean keyDown = MainApplication.isPressed(KeyCode.DOWN) || MainApplication.isPressed(KeyCode.S);
         boolean keyLeft = MainApplication.isPressed(KeyCode.LEFT) || MainApplication.isPressed(KeyCode.A);

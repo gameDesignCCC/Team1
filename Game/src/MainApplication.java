@@ -50,13 +50,13 @@ public class MainApplication extends Application {
     public static Player player;
 
     // Distance Traveled From Level Start
-    public static double vStart;
+    public static double distanceFromStart;
 
     // Placeholder Map Background
     private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg.png");
 
     // Level Decoration (fog, lava glow)
-    public static final boolean LEVEL_DECORATION = true;
+    public static final boolean LEVEL_DECORATION = false;
 
     // Game Loop Timer
     private static AnimationTimer timer;
@@ -78,6 +78,7 @@ public class MainApplication extends Application {
 
         loadResources();
         queueLevels();
+        Menu.onStart();
 
         stage = primaryStage;
 
@@ -112,7 +113,7 @@ public class MainApplication extends Application {
         sceneObjects = new ArrayList<>();
         enemies = new ArrayList<>();
 
-        vStart = 0.0;
+        distanceFromStart = 0.0;
 
         // Timer for game loop. / Should stay at ~60 UPS
         MainApplication.timer = new AnimationTimer() {
@@ -271,7 +272,7 @@ public class MainApplication extends Application {
             }
         }
 
-        vStart += player.getVX();
+        distanceFromStart += player.getVX();
     }
 
     /**

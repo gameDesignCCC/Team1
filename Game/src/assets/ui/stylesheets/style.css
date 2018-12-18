@@ -3,8 +3,8 @@
 }
 
 .root{
-    -fx-background-color: #000000;
-}
+    -fx-background-color: radial-gradient(focus-angle 45deg, center 50% 50%, radius 50%, #354f49, #1a1a1a);
+ }
 
 .button {
     -fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 50%, center 50% 50%, radius 75%, reflect, #a9e6e0, #85b2ae);

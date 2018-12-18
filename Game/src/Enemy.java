@@ -35,7 +35,7 @@ public class Enemy extends ImageView {
 
     // Logic Options
     private double pointA, pointB, oPointA, oPointB;
-    private boolean flag;
+    private boolean movingRight;
     private double patrolDistance;
     private boolean patrolTriggered = false;
 
@@ -66,16 +66,16 @@ public class Enemy extends ImageView {
         vX = 0.0;
         vY = 0.0;
 
-        pointA = oPointA - MainApplication.vStart;
-        pointB = oPointB - MainApplication.vStart;
+        pointA = oPointA - MainApplication.distanceFromStart;
+        pointB = oPointB - MainApplication.distanceFromStart;
 
         if (logicMode == LogicMode.POINT_AB) {
             if (getX() >= pointB) {
-                flag = false;
+                movingRight = false;
             } else if (getX() <= pointA) {
-                flag = true;
+                movingRight = true;
             }
-            vX += flag ? speed : -speed;
+            vX += movingRight ? speed : -speed;
 
         } else if (logicMode == LogicMode.FOLLOW) {
             if (getX() < MainApplication.player.getX()) {
@@ -91,11 +91,11 @@ public class Enemy extends ImageView {
 
             if (!patrolTriggered) {
                 if (getX() >= pointB) {
-                    flag = false;
+                    movingRight = false;
                 } else if (getX() <= pointA) {
-                    flag = true;
+                    movingRight = true;
                 }
-                vX += flag ? speed : -speed;
+                vX += movingRight ? speed : -speed;
             } else {
                 if (getX() < MainApplication.player.getX()) {
                     vX += speed;
@@ -121,19 +121,16 @@ public class Enemy extends ImageView {
         if (player.getX() + player.getFitWidth() >= getX() && player.getX() < getX() + getWidth()
                 && player.getY() + player.getFitHeight() > getY() && player.getY() < getY() + getHeight()) {
             collided = true;
-        }
 
-        if (player.getX() <= getX() + getWidth() && player.getX() + player.getFitWidth() > getX()
+        } else if (player.getX() <= getX() + getWidth() && player.getX() + player.getFitWidth() > getX()
                 && player.getY() + player.getFitHeight() > getY() && player.getY() < getY() + getHeight()) {
             collided = true;
-        }
 
-        if (player.getY() <= getY() + getHeight() && player.getY() + player.getFitHeight() > getY()
+        } else if (player.getY() <= getY() + getHeight() && player.getY() + player.getFitHeight() > getY()
                 && player.getX() + player.getFitWidth() > getX() && player.getX() < getX() + getWidth()) {
             collided = true;
-        }
 
-        if (player.getY() + player.getFitHeight() >= getY() && player.getY() < getY() + getHeight()
+        } else if (player.getY() + player.getFitHeight() >= getY() && player.getY() < getY() + getHeight()
                 && player.getX() + player.getFitWidth() > getX() && player.getX() < getX() + getWidth()) {
             collided = true;
         }

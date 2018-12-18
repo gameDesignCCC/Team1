@@ -101,8 +101,10 @@ public class MapLoader {
                             break;
 
                         case 'I': // Item
-                            result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                    new Image("/assets/sprites_textures/blocks/item_placeholder.png"), StaticObject.Type.ITEM));
+                            StaticRect staticRectItem = new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/blocks/item_placeholder.png"), StaticObject.Type.ITEM);
+                            staticRectItem.setCollisionEnabled(false);
+                            result.add(staticRectItem);
                             break;
 
                         case 'e': // Enemy
@@ -116,8 +118,10 @@ public class MapLoader {
                             break;
 
                         case 'E': // Exit
-                            result.add(new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                    new Image("/assets/sprites_textures/blocks/block_translucent.png"), StaticObject.Type.EXIT));
+                            StaticRect staticRectExit = new StaticRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
+                                    new Image("/assets/sprites_textures/blocks/block_translucent.png"), StaticObject.Type.EXIT);
+                            staticRectExit.setCollisionEnabled(false);
+                            result.add(staticRectExit);
                             break;
 
                     }

@@ -33,7 +33,6 @@ public class StaticRect extends StaticObject{
         this.width = width;
         this.height = height;
         this.type = type;
-        collisionEnabled = type != Type.ITEM && type != Type.EXIT;
 
         ivSprite = new ImageView(sprite);
         ivSprite.setX(x);
@@ -50,24 +49,12 @@ public class StaticRect extends StaticObject{
      * @param height height of rectangle
      * @param sprite sprite of rectangle
      * @param type type of rectangle
+     * @param itemID type if item
      */
     public StaticRect(double x, double y, double width, double height, Image sprite, Type type, String itemID){
-
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.type = type;
+        this(x, y, width, height, sprite, type);
         this.itemID = itemID;
-        collisionEnabled = type != Type.ITEM && type != Type.EXIT;
-
-        ivSprite = new ImageView(sprite);
-        ivSprite.setX(x);
-        ivSprite.setY(y);
-        ivSprite.setFitWidth(width);
-        ivSprite.setFitHeight(height);
     }
-
 
     /**
      * Collision Detection
@@ -81,27 +68,24 @@ public class StaticRect extends StaticObject{
 
         boolean collided = false;
 
-        if (player.getX() + player.getFitWidth() >= x && player.getX() < x + width
-                && player.getY() + player.getFitHeight() > y && player.getY() < y + height) {
-            collisions.add(CollisionType.Right);
-            collided = true;
-        }
-
-        if (player.getX() <= x + width && player.getX() + player.getFitWidth() > x
-                && player.getY() + player.getFitHeight() > y && player.getY() < y + height) {
-            collisions.add(CollisionType.Left);
-            collided = true;
-        }
-
-        if (player.getY() <= y + height && player.getY() + player.getFitHeight() > y
-                && player.getX() + player.getFitWidth() > x && player.getX() < x + width) {
-            collisions.add(CollisionType.Top);
-            collided = true;
-        }
-
         if (player.getY() + player.getFitHeight() >= y && player.getY() < y + height
                 && player.getX() + player.getFitWidth() > x && player.getX() < x + width) {
             collisions.add(CollisionType.Bottom);
+            collided = true;
+
+        } else if (player.getX() + player.getFitWidth() >= x && player.getX() < x + width
+                && player.getY() + player.getFitHeight() > y && player.getY() < y + height) {
+            collisions.add(CollisionType.Right);
+            collided = true;
+
+        } else if (player.getX() <= x + width && player.getX() + player.getFitWidth() > x
+                && player.getY() + player.getFitHeight() > y && player.getY() < y + height) {
+            collisions.add(CollisionType.Left);
+            collided = true;
+
+        } else if (player.getY() <= y + height && player.getY() + player.getFitHeight() > y
+                && player.getX() + player.getFitWidth() > x && player.getX() < x + width) {
+            collisions.add(CollisionType.Top);
             collided = true;
         }
 
