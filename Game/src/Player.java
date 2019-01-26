@@ -3,75 +3,65 @@
  * Date: 24/10/2018
  */
 
-/*
- * KNOW ISSUES:
- * Player does not use top or bottom collision detection.
- */
-
-
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import sun.applet.Main;
 
 public class Player extends ImageView {
 
-    // Player is in jump animation
+    // Player is in Jump Animation
     private boolean inJumpAnimation = false;
 
     // Player Speed When Moved
     private double playerSpeed = 10.0;
 
-    // Player Starting X and Y
-    private double startX;
-    private double startY;
-
     // Player Velocity
-    private double vX = 0.0;
-    private double vY = 0.0;
-
-    // Don't rely on these doing anything useful elsewhere in the application.
-    private boolean isMovingRight = false;
-    private boolean isMovingLeft = false;
+    private double vX, vY = 0.0;
 
     // Gravity
-    static double g = 1;
+    private static final double G = 1;
 
+    // Player is Dead
     private boolean isDead = false;
+
+    // Player Health Points
     private int hp = 100;
 
-    Collision playerCollision = new Collision();
+    // Player Collision with Scene Objects
+    private Collision playerCollision = new Collision();
 
-    Rectangle hpBar = new Rectangle();
+    // Player Health Bar
+    public Rectangle hpBar = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, 0, 20);
+    public Rectangle hpBarBG = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, hp * 4, 20);
 
     Player(double x, double y, double width, double height, Image sprite) {
         this.setX(x);
-        this.startX = x;
         this.setY(y);
-        this.startY = y;
         this.setFitWidth(width);
         this.setFitHeight(height);
         this.setImage(sprite);
-        hpBar.setHeight(4);
-        hpBar.setWidth(width);
+        hpBar.setY(10);
         hpBar.setFill(Color.GREEN);
+        hpBarBG.setFill(Color.color(1.0, 1.0, 1.0, 0.2));
     }
 
     /**
      * Check Stage Collision Top
      * @return
      */
-    public boolean checkStageCollisionTop(){
-        return(this.getY() <= 0);
+    public boolean checkStageCollisionTop() {
+        return (this.getY() <= 0);
     }
 
     /**
      * Check Stage Collision Bottom
      * @return
      */
-    public boolean checkStageCollisionBottom(){
-        return(this.getY()  + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y);
+    public boolean checkStageCollisionBottom() {
+        return (this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y);
     }
 
     /**
@@ -86,25 +76,211 @@ public class Player extends ImageView {
      * Check Stage Collision Right
      * @return Returns whether the player is colliding with the right edge of the stage or not.
      */
-    public boolean checkStageCollisionRight(){
-        return(this.getX() + this.getFitWidth() >= MainApplication.WINDOW_SIZE_X);
+    public boolean checkStageCollisionRight() {
+        return (this.getX() + this.getFitWidth() >= MainApplication.WINDOW_SIZE_X);
     }
 
     /**
      * Player Movement
      * Moves the player every frame.
      */
-    public void move(){
+    public void move() {
         this.setX(this.getX() + vX);
         this.setY(this.getY() + vY);
     }
 
     /**
+     * Player update method called every frame.
+     */
+    public void onUpdate() {
+
+        boolean keyUp = MainApplication.isPressed(KeyCode.UP) || MainApplication.isPressed(KeyCode.W) || MainApplication.isPressed(KeyCode.SPACE);
+        boolean keyDown = MainApplication.isPressed(KeyCode.DOWN) || MainApplication.isPressed(KeyCode.S);
+        boolean keyLeft = MainApplication.isPressed(KeyCode.LEFT) || MainApplication.isPressed(KeyCode.A);
+        boolean keyRight = MainApplication.isPressed(KeyCode.RIGHT) || MainApplication.isPressed(KeyCode.D);
+
+        // Reset Velocities
+        vX = 0.0;
+        vY = inJumpAnimation ? vY : 0.0;
+
+        // Reset Sprite
+
+        // Reset HP bar color & effects
+        hpBar.setFill(Color.GREEN);
+        hpBar.setEffect(null);
+
+        // Move Left Controls
+        if (keyRight && playerCollision.isCollidingRight(this) == null) {
+            vX += playerSpeed;
+
+        } else if (playerCollision.isCollidingRight(this) != null) {
+            collisionEffect(playerCollision.isCollidingRight(this), StaticObject.CollisionType.Right);
+        }
+
+        // Move Right Controls
+        if (keyLeft && playerCollision.isCollidingLeft(this) == null) {
+            vX += -playerSpeed;
+
+        } else if (playerCollision.isCollidingLeft(this) != null) {
+            collisionEffect(playerCollision.isCollidingLeft(this), StaticObject.CollisionType.Left);
+        }
+
+        // Jumping Controls
+        if (keyUp && !inJumpAnimation) {
+            vY += -15.0;
+            inJumpAnimation = true;
+        }
+
+        // Jump
+        if (inJumpAnimation) {
+
+            if (!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y)) {
+                vY += G;
+            } else if (this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y) {
+                vY = 0.0;
+                inJumpAnimation = false;
+            }
+        }
+
+        // End jump animation when player collides with stage bottom
+        if (this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y) {
+            inJumpAnimation = false;
+            setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
+            die();
+        }
+
+        // Falling
+        if (!inJumpAnimation && playerCollision.isCollidingBottom(this) == null && !checkStageCollisionBottom()) {
+            inJumpAnimation = true;
+        }
+
+        // Move the player
+        move();
+
+        // Player dies if hp drops to zero
+        if (hp <= 0) {
+            die();
+        }
+
+        // Preventing intersections with scene objects
+        StaticRect collisionBottom = playerCollision.isCollidingBottom(this);
+        StaticRect collisionTop = playerCollision.isCollidingTop(this);
+
+        if (collisionTop != null && collisionBottom != null) {
+            double diffBottom = getY() + getFitHeight() - collisionBottom.getY();
+            double diffTop = collisionTop.getY() + collisionTop.getHeight() - getY();
+
+            if (diffBottom < diffTop) {
+
+                inJumpAnimation = false;
+                vY = 0.0;
+                setY(collisionTop.getY() - collisionTop.getHeight());
+                collisionEffect(collisionBottom, StaticObject.CollisionType.Bottom);
+
+            } else if (diffBottom > diffTop) {
+
+                vY = 0.0;
+                setY(collisionTop.getY() + collisionTop.getHeight());
+            }
+
+        } else if (collisionBottom != null) {
+
+            inJumpAnimation = false;
+            vY = 0.0;
+            setY(collisionBottom.getY() - collisionBottom.getHeight());
+            collisionEffect(collisionBottom, StaticObject.CollisionType.Bottom);
+
+        } else if (collisionTop != null) {
+
+            vY = 0.0;
+            setY(collisionTop.getY() + collisionTop.getHeight());
+        }
+
+        // Reset HP bar width to match the player's HP
+        hpBar.setWidth(((float) hp) * 4);
+
+        // Enemy Collision
+        if(playerCollision.enemyCollision(this)){
+            damage(5);
+        }
+
+        // Item Collision
+        if (playerCollision.itemCollision(this) != null) {
+            StaticRect s = playerCollision.itemCollision(this);
+
+            s.setX(10 + (MainApplication.collectedParts.size() * 100));
+            s.setY(10);
+            s.setWidth(90);
+            s.setHeight(90);
+
+            MainApplication.collectedParts.add(s);
+            MainApplication.sceneObjects.remove(s);
+            inJumpAnimation = true;
+        }
+
+        // Exit Collision
+        if(playerCollision.exitCollision(this) != null){
+            // Load Next Level
+            MainApplication.stopTimer();
+            MainApplication.getStage().setScene(Menu.levelCompleted());
+        }
+
+    }
+
+    /**
+     * Scene Object Collision Effects
+     * @param staticRect Any StaticRect.
+     * @param type Type of collision. (Left, Right, Top, Bottom)
+     */
+    private void collisionEffect(StaticRect staticRect, StaticObject.CollisionType type){
+
+        if(type == StaticObject.CollisionType.Bottom) {
+
+            if (staticRect.getType() == StaticObject.Type.SPIKE) {
+                damage(120);
+            } else if (staticRect.getType() == StaticObject.Type.ENEMY) {
+                damage(5);
+            } else if (staticRect.getType() == StaticObject.Type.LAVA) {
+                damage(120);
+            }
+
+        } else if(type == StaticObject.CollisionType.Left || type == StaticObject.CollisionType.Right){
+
+            if (staticRect.getType() == StaticObject.Type.LAVA) {
+                damage(120);
+            } else if(staticRect.getType() == StaticObject.Type.LADDER){
+            }
+        }
+    }
+
+    /**
+     * Player Damage
+     * @param damage Damage dealt to the player
+     */
+    public void damage(int damage) {
+        hp -= damage;
+        hpBar.setFill(Color.RED);
+        hpBar.setEffect(new GaussianBlur(5));
+
+    }
+
+    /**
+     * Player Death
+     */
+    public void die() {
+        isDead = true;
+        hp = 0;
+        MainApplication.collectedParts.clear();
+        MainApplication.stopTimer();
+        MainApplication.getStage().setScene(Menu.deathMenu());
+    }
+
+
+    /**
      * Get Y Velocity
-     * Position and size can be called fromm ImageView.
      * @return Returns value of Y velocity.
      */
-    public double getvY() {
+    public double getVY() {
         return vY;
     }
 
@@ -112,144 +288,8 @@ public class Player extends ImageView {
      * Get X Velocity
      * @return Returns value of X velocity.
      */
-    public double getvX() {
+    public double getVX() {
         return vX;
-    }
-
-    /**
-     * Player update method called every frame.
-     */
-    public void onUpdate(boolean up, boolean left, boolean right) {
-
-        if(playerCollision.enemyCollision(this)){
-            hp -= 5;
-        }
-
-        if (!isDead) {
-
-            vX = 0;
-
-            if (!inJumpAnimation) {
-                vY = 0;
-            }
-
-            hpBar.setWidth( ((float) hp) / 3.34 );
-
-            // Player Controls
-            //  |- L&R Controls
-
-            if (right &&
-                    !(this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X) &&
-                    playerCollision.isCollidingRight(this) == null) {
-
-                vX += playerSpeed;
-                isMovingRight = true;
-
-            } else if (isMovingRight && this.getX() + this.getFitWidth() + playerSpeed >= MainApplication.WINDOW_SIZE_X) {
-
-            }
-
-            if (left &&
-                    /*!checkStageCollisionLeft() &&       - Removed for scrolling.
-                    !(this.getX() - playerSpeed <= 0) &&*/
-                    playerCollision.isCollidingLeft(this) == null) {
-
-                vX += playerSpeed * -1;
-                isMovingLeft = true;
-
-            } else if (isMovingLeft && this.getX() - playerSpeed <= 0) {
-
-            }
-
-            // |- Jumping Controls
-
-            if (inJumpAnimation) {
-
-                if (!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y)) {
-                    vY += g;
-                } else if (this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y) {
-                    vY = 0;
-                    inJumpAnimation = false;
-                }
-            }
-
-            // Jump
-            if (up && !inJumpAnimation) {
-                vY += -15.0;
-                inJumpAnimation = true;
-
-            }
-
-            // Ends jump animation when the player collides with stage bottom.
-            if (this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y) {
-                inJumpAnimation = false;
-                this.setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
-            }
-
-            // TODO : Update player falling.
-            if (!inJumpAnimation && playerCollision.isCollidingBottom(this) != null && !checkStageCollisionBottom()) {
-                inJumpAnimation = true;
-
-            }
-
-            // TODO : Fix top & bottom collisions with map objects.
-
-            move();
-
-            hpBar.setX(this.getX());
-            hpBar.setY(this.getY() - 8);
-
-            StaticRect bottom = playerCollision.isCollidingBottom(this);
-            StaticRect top = playerCollision.isCollidingTop(this);
-            StaticRect cLeft = playerCollision.isCollidingLeft(this);
-            StaticRect cRight = playerCollision.isCollidingRight(this);
-
-            if (top != null && bottom != null) {
-                double dBot = getY() + getFitHeight() - bottom.getY();
-                double dTop = top.getY() + top.getHeight() - getY();
-
-                if (dBot < dTop) {
-                    inJumpAnimation = false;
-                    vY = 0.0;
-                    setY(bottom.getY() - bottom.getHeight());
-                } else {
-                    vY = 0;
-                    setY(top.getY() + top.getHeight());
-                }
-            } else if (bottom != null) {
-                inJumpAnimation = false;
-                vY = 0.0;
-                setY(bottom.getY() - bottom.getHeight());
-                if(bottom.getType() == StaticObject.Type.SPIKE){
-                    hp -= 120;
-                }else if(bottom.getType() == StaticObject.Type.ENEMY){
-                    hp -= 5;
-                }else if(bottom.getType() == StaticObject.Type.LAVA){
-                    hp -= 120;
-                }
-            } else if (top != null) {
-                vY = 0;
-                setY(top.getY() + top.getHeight());
-            }
-
-        }
-
-        if( hp <= 0 && !isDead ){
-            die();
-        }
-
-    }
-
-    public void die(){
-        isDead = true;
-        System.out.println("player died");
-        MainApplication.getStage().setScene(Menu.deathMenu());
-    }
-
-    public void reset(){
-        this.setX(startX);
-        this.setY(startY);
-        this.hp = 100;
     }
 
 }

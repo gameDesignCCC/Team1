@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Textbox extends Application {
+public class TextBox extends Application {
 
     // Begin Nested BoxPreset Class
     private class BoxPreset {
@@ -128,7 +128,7 @@ public class Textbox extends Application {
         double y = screensize[1] - h;
 
 
-        Image txtbx = new Image("/assets/ui/text-box.png");
+        Image txtbx = new Image("/assets/ui/overlays/text_box_placeholder.png");
         img = new ImageView(txtbx);
         img.setX(x);
         img.setY(y);

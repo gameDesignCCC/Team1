@@ -1,9 +1,0 @@
-. = Air
-G = Ground
-P = Player
-e = Enemy
-E = Exit
-~ = Lava
-^ = Spike
-H = Ladder
-B = Block

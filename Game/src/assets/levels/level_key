@@ -1,0 +1,12 @@
+All level names MUST be in the form of "level_##" (e.g. level_01, level_99), or they won't be loaded into the queue.
+
+. = Air
+G = Ground
+P = Player
+e = Enemy
+E = Exit
+~ = Lava
+^ = Spike
+H = Ladder
+B = Block
+I = Item
