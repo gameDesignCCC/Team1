@@ -1,0 +1,50 @@
+@font-face {
+    src: url("/assets/ui/fonts/font_russo_one_regular.ttf");
+}
+
+.root{
+    -fx-background-color: radial-gradient(focus-angle 45deg, center 50% 50%, radius 50%, #354f49, #1a1a1a);
+ }
+
+.button {
+    -fx-background-color: radial-gradient(focus-angle 45deg, focus-distance 50%, center 50% 50%, radius 75%, reflect, #a9e6e0, #85b2ae);
+    -fx-background-radius: 2;
+    -fx-font-family: 'Russo One';
+    -fx-text-fill: #2d2d2d;
+    -fx-font-size: 20pt;
+    -fx-min-width: 160px;
+    -fx-max-width: 160px;
+    -fx-min-height: 60;
+    -fx-max-height: 60;
+    -fx-effect: DropShadow(gaussian, #00000090, 10, 0, 2, 2);
+}
+
+.button:focused{
+}
+
+.button:hover{
+    -fx-background-color: #8ec6c1;
+}
+
+.button:armed{
+    -fx-background-color: #83b7b2;
+}
+
+#button-wide{
+    /* -fx-fit-to-width doesn't seem to work for buttons */
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+}
+
+#menu-header{
+    -fx-font-family: "Russo One";
+    -fx-font-size: 50px;
+    -fx-text-fill: #F0F0F0;
+}
+
+#death-screen-header {
+    -fx-font-family: "Russo One";
+    -fx-font-size: 50px;
+    -fx-text-fill: #e90000;
+    -fx-effect: DropShadow(gaussian, #00000090, 10, 0, 2, 2);
+}
