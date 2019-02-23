@@ -14,7 +14,7 @@ public abstract class StaticObject {
 
     /**
      * list of left, right, bottom, and top collisions
-     * @param player the player
+     * @param gameObject game object
      * @return returns collisions
      */
     public abstract ArrayList<CollisionType> checkCollision(GameObject gameObject);

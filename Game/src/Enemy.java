@@ -13,7 +13,7 @@ import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 public class Enemy extends ImageView implements GameObject {
 
     // Speed
-    private double speed = 2.0;
+    double speed = 2.0;
 
     // Velocities
     private double vX, vY;
@@ -31,7 +31,7 @@ public class Enemy extends ImageView implements GameObject {
     // HP Display
     public Rectangle hpBar = new Rectangle();
 
-    EnemyCollision enemyCollision = new EnemyCollision();
+    private EnemyCollision enemyCollision = new EnemyCollision();
 
     Enemy(double x, double y, double width, double height, Image sprite) {
 
@@ -52,7 +52,6 @@ public class Enemy extends ImageView implements GameObject {
 
     public void onUpdate() {
 
-
         vX = 0.0;
         vY = 0.0;
 
@@ -68,15 +67,18 @@ public class Enemy extends ImageView implements GameObject {
 
         if(isTriggered){
             if(getX() < MainApplication.player.getX()){
-                vX += speed;
+                if(enemyCollision.isCollidingRight(this) == null) {
+                    vX += speed;
+                }
             } else if (getX() > MainApplication.player.getX()){
-                vX -= speed;
+                if(enemyCollision.isCollidingLeft(this) == null) {
+                    vX -= speed;
+                }
             }
         }
 
         setX(getX() + vX);
         setY(getY() + vY);
-
     }
 
     public boolean checkPlayerCollision(Player player){
@@ -112,6 +114,10 @@ public class Enemy extends ImageView implements GameObject {
     @Override
     public double getWidth() {
         return this.getFitWidth();
+    }
+
+    public double getSpeed(){
+        return speed;
     }
 
     private double getPlayerDistance(double x, double y, Player player){

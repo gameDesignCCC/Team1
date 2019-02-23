@@ -27,7 +27,6 @@ public class AnimatedRect extends StaticRect {
 
     public void onUpdate( ) {
         if ( (System.currentTimeMillis() - lastTimeMS) / 100.0 >= 1.0 / frameRate ) {
-            System.out.println("Elapsed Time: " + ((System.currentTimeMillis() - lastTimeMS) / 1000.0));
             currentFrame = (currentFrame + 1) % frames.length;
             this.setSprite(frames[currentFrame]);
             lastTimeMS = System.currentTimeMillis();

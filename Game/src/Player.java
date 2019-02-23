@@ -104,6 +104,7 @@ public class Player extends ImageView implements GameObject {
      */
     public void onUpdate() {
 
+        // Key Bindings
         boolean keyUp = MainApplication.isPressed(KeyCode.UP) || MainApplication.isPressed(KeyCode.W) || MainApplication.isPressed(KeyCode.SPACE);
         boolean keyDown = MainApplication.isPressed(KeyCode.DOWN) || MainApplication.isPressed(KeyCode.S);
         boolean keyLeft = MainApplication.isPressed(KeyCode.LEFT) || MainApplication.isPressed(KeyCode.A);
@@ -112,8 +113,6 @@ public class Player extends ImageView implements GameObject {
         // Reset Velocities
         vX = 0.0;
         vY = inJumpAnimation ? vY : 0.0;
-
-        // Reset Sprite
 
         // Reset HP bar color & effects
         hpBar.setFill(Color.GREEN);
@@ -124,15 +123,17 @@ public class Player extends ImageView implements GameObject {
             vX += playerSpeed;
 
         } else if (playerCollision.isCollidingRight(this) != null) {
-            collisionEffect(playerCollision.isCollidingRight(this), StaticObject.CollisionType.Right);
+            onCollision(playerCollision.isCollidingRight(this), StaticObject.CollisionType.Right);
         }
+
+        System.out.println(playerCollision.isCollidingRight(this) != null);
 
         // Move Right Controls
         if (keyLeft && playerCollision.isCollidingLeft(this) == null) {
             vX += -playerSpeed;
 
         } else if (playerCollision.isCollidingLeft(this) != null) {
-            collisionEffect(playerCollision.isCollidingLeft(this), StaticObject.CollisionType.Left);
+            onCollision(playerCollision.isCollidingLeft(this), StaticObject.CollisionType.Left);
         }
 
         // Jumping Controls
@@ -185,7 +186,7 @@ public class Player extends ImageView implements GameObject {
                 inJumpAnimation = false;
                 vY = 0.0;
                 setY(collisionTop.getY() - collisionTop.getHeight());
-                collisionEffect(collisionBottom, StaticObject.CollisionType.Bottom);
+                onCollision(collisionBottom, StaticObject.CollisionType.Bottom);
 
             } else if (diffBottom > diffTop) {
 
@@ -198,7 +199,7 @@ public class Player extends ImageView implements GameObject {
             inJumpAnimation = false;
             vY = 0.0;
             setY(collisionBottom.getY() - collisionBottom.getHeight());
-            collisionEffect(collisionBottom, StaticObject.CollisionType.Bottom);
+            onCollision(collisionBottom, StaticObject.CollisionType.Bottom);
 
         } else if (collisionTop != null) {
 
@@ -242,7 +243,7 @@ public class Player extends ImageView implements GameObject {
      * @param staticRect Any StaticRect.
      * @param type Type of collision. (Left, Right, Top, Bottom)
      */
-    private void collisionEffect(StaticRect staticRect, StaticObject.CollisionType type){
+    private void onCollision(StaticRect staticRect, StaticObject.CollisionType type){
 
         if(type == StaticObject.CollisionType.Bottom) {
 
