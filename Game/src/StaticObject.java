@@ -17,7 +17,7 @@ public abstract class StaticObject {
      * @param player the player
      * @return returns collisions
      */
-    public abstract ArrayList<CollisionType> checkCollision(Player player);
+    public abstract ArrayList<CollisionType> checkCollision(GameObject gameObject);
 
     /**
      * Get Sprite

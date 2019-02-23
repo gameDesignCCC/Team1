@@ -7,9 +7,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 // NOTE: Renamed class from "Enemies" to "Enemy" because I'm assuming that all the enemies will be instantiated and therefore the singular form makes more sense but idk.
-public class Enemy extends ImageView {
+public class Enemy extends ImageView implements GameObject {
 
     // Speed
     private double speed = 2.0;
@@ -23,8 +24,14 @@ public class Enemy extends ImageView {
     // Enemy is dead
     private boolean isDead = false;
 
+    // Enemy Player Following
+    private boolean isTriggered = false;
+    private double triggerDistance = 50.0;
+
     // HP Display
     public Rectangle hpBar = new Rectangle();
+
+    EnemyCollision enemyCollision = new EnemyCollision();
 
     Enemy(double x, double y, double width, double height, Image sprite) {
 
@@ -45,6 +52,7 @@ public class Enemy extends ImageView {
 
     public void onUpdate() {
 
+
         vX = 0.0;
         vY = 0.0;
 
@@ -54,9 +62,24 @@ public class Enemy extends ImageView {
         hpBar.setX(getX());
         hpBar.setY(getY() - 8);
 
+        if(!isTriggered && getPlayerDistance(this.getX(), this.getY(), MainApplication.player) <= triggerDistance){
+            isTriggered = true;
+        }
+
+        if(isTriggered){
+            if(getX() < MainApplication.player.getX()){
+                vX += speed;
+            } else if (getX() > MainApplication.player.getX()){
+                vX -= speed;
+            }
+        }
+
+        setX(getX() + vX);
+        setY(getY() + vY);
+
     }
 
-    public boolean checkCollision(Player player){
+    public boolean checkPlayerCollision(Player player){
 
         boolean collided = false;
 
@@ -81,12 +104,21 @@ public class Enemy extends ImageView {
 
     }
 
-    public double getWidth(){
-        return getFitWidth();
+    @Override
+    public double getHeight() {
+        return this.getFitHeight();
     }
 
-    public double getHeight(){
-        return getFitHeight();
+    @Override
+    public double getWidth() {
+        return this.getFitWidth();
+    }
+
+    private double getPlayerDistance(double x, double y, Player player){
+        double centerX = x + this.getWidth() / 2;
+        double centerY = y + this.getHeight() / 2;
+
+        return (Math.abs(centerX - (player.getX() + (player.getFitWidth() / 2))) + Math.abs(centerY - (player.getY() + (player.getFitHeight() / 2))));
     }
 
 }

@@ -5,7 +5,7 @@ import javafx.scene.image.ImageView;
 import java.util.ArrayList;
 
 
-public class StaticRect extends StaticObject{
+public class StaticRect extends StaticObject implements GameObject{
 
     private double x;
     private double y;
@@ -57,34 +57,34 @@ public class StaticRect extends StaticObject{
     }
 
     /**
-     * Collision Detection
+     * Collision Detection for Player
      *
-     * @param player the player
+     * @param gameObject the player
      * @return returns colliding on left, right, top, and bottom
      */
     @Override
-    public ArrayList<CollisionType> checkCollision(Player player) {
+    public ArrayList<CollisionType> checkCollision(GameObject gameObject) {
         ArrayList<CollisionType> collisions = new ArrayList<>();
 
         boolean collided = false;
 
-        if (player.getY() + player.getFitHeight() >= y && player.getY() < y + height
-                && player.getX() + player.getFitWidth() > x && player.getX() < x + width) {
+        if (gameObject.getY() + gameObject.getHeight() >= y && gameObject.getY() < y + height
+                && gameObject.getX() + gameObject.getWidth() > x && gameObject.getX() < x + width) {
             collisions.add(CollisionType.Bottom);
             collided = true;
 
-        } else if (player.getX() + player.getFitWidth() >= x && player.getX() < x + width
-                && player.getY() + player.getFitHeight() > y && player.getY() < y + height) {
+        } else if (gameObject.getX() + gameObject.getWidth() >= x && gameObject.getX() < x + width
+                && gameObject.getY() + gameObject.getHeight() > y && gameObject.getY() < y + height) {
             collisions.add(CollisionType.Right);
             collided = true;
 
-        } else if (player.getX() <= x + width && player.getX() + player.getFitWidth() > x
-                && player.getY() + player.getFitHeight() > y && player.getY() < y + height) {
+        } else if (gameObject.getX() <= x + width && gameObject.getX() + gameObject.getWidth() > x
+                && gameObject.getY() + gameObject.getHeight() > y && gameObject.getY() < y + height) {
             collisions.add(CollisionType.Left);
             collided = true;
 
-        } else if (player.getY() <= y + height && player.getY() + player.getFitHeight() > y
-                && player.getX() + player.getFitWidth() > x && player.getX() < x + width) {
+        } else if (gameObject.getY() <= y + height && gameObject.getY() + gameObject.getHeight() > y
+                && gameObject.getX() + gameObject.getWidth() > x && gameObject.getX() < x + width) {
             collisions.add(CollisionType.Top);
             collided = true;
         }

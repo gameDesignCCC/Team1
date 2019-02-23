@@ -3,7 +3,7 @@
  * Date: 24/10/2018
  */
 
-public class Collision {
+public class PlayerCollision {
 
     /**
      * Player Collision Right
@@ -107,7 +107,7 @@ public class Collision {
      */
     public boolean enemyCollision(Player player) {
         for (Enemy enemy : MainApplication.enemies) {
-            if (enemy.checkCollision(player)) {
+            if (enemy.checkPlayerCollision(player)) {
                 return true;
             }
         }

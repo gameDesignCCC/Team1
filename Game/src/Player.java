@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Player extends ImageView {
+public class Player extends ImageView implements GameObject {
 
     // Player is in Jump Animation
     private boolean inJumpAnimation = false;
@@ -31,7 +31,7 @@ public class Player extends ImageView {
     private int hp = 100;
 
     // Player Collision with Scene Objects
-    private Collision playerCollision = new Collision();
+    private PlayerCollision playerCollision = new PlayerCollision();
 
     // Player Health Bar
     public Rectangle hpBar = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, 0, 20);
@@ -46,6 +46,16 @@ public class Player extends ImageView {
         hpBar.setY(10);
         hpBar.setFill(Color.GREEN);
         hpBarBG.setFill(Color.color(1.0, 1.0, 1.0, 0.2));
+    }
+
+    @Override
+    public double getHeight() {
+        return this.getFitHeight();
+    }
+
+    @Override
+    public double getWidth() {
+        return this.getFitWidth();
     }
 
     /**
