@@ -244,7 +244,10 @@ public class Menu {
     private static Button btnRestart(){
 
         Button btnRestart = new Button("Restart");
-        btnRestart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek())));
+        btnRestart.setOnAction(e -> {
+            MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek()));
+            MainApplication.collectedParts.clear();
+        });
         btnRestart.setId("button-wide");
         btnRestart.setEffect(dropShadow);
 

@@ -55,12 +55,6 @@ public class Enemy extends ImageView implements GameObject {
         vX = 0.0;
         vY = 0.0;
 
-        setX(getX() + vX);
-        setY(getY() + vY);
-
-        hpBar.setX(getX());
-        hpBar.setY(getY() - 8);
-
         if(!isTriggered && getPlayerDistance(this.getX(), this.getY(), MainApplication.player) <= triggerDistance){
             isTriggered = true;
         }
@@ -79,6 +73,10 @@ public class Enemy extends ImageView implements GameObject {
 
         setX(getX() + vX);
         setY(getY() + vY);
+
+        hpBar.setX(getX());
+        hpBar.setY(getY() - 8);
+
     }
 
     public boolean checkPlayerCollision(Player player){

@@ -126,8 +126,6 @@ public class Player extends ImageView implements GameObject {
             onCollision(playerCollision.isCollidingRight(this), StaticObject.CollisionType.Right);
         }
 
-        System.out.println(playerCollision.isCollidingRight(this) != null);
-
         // Move Right Controls
         if (keyLeft && playerCollision.isCollidingLeft(this) == null) {
             vX += -playerSpeed;

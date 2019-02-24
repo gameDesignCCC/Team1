@@ -8,12 +8,11 @@ public class EnemyCollision {
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
-                if(((StaticRect) object).getX() < enemy.getX() + enemy.getSpeed()) {
-                    StaticRect staticRect = (StaticRect) object;
 
-                    if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Right)) {
-                        return staticRect;
-                    }
+                StaticRect staticRect = (StaticRect) object;
+
+                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Right)) {
+                    return staticRect;
                 }
             }
         }
@@ -24,12 +23,10 @@ public class EnemyCollision {
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
-                if (!(object instanceof Enemy)) {
-                    StaticRect staticRect = (StaticRect) object;
+                StaticRect staticRect = (StaticRect) object;
 
-                    if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Left)) {
-                        return staticRect;
-                    }
+                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Left)) {
+                    return staticRect;
                 }
             }
         }

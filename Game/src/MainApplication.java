@@ -56,7 +56,7 @@ public class MainApplication extends Application {
     private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg.png");
 
     // Level Decoration (fog, lava glow)
-    public static final boolean LEVEL_DECORATION = false;
+    public static final boolean LEVEL_DECORATION = true;
 
     // Game Loop Timer
     private static AnimationTimer timer;
