@@ -5,7 +5,7 @@ import javafx.scene.image.ImageView;
 import java.util.ArrayList;
 
 
-public class StaticRect extends StaticObject implements GameObject{
+public class StaticRect extends StaticObject implements GameObject {
 
     private double x;
     private double y;
@@ -19,14 +19,15 @@ public class StaticRect extends StaticObject implements GameObject{
 
     /**
      * constructor
-     * @param x x coordinate of rectangle
-     * @param y y coordinate of rectangle
-     * @param width width of rectangle
+     *
+     * @param x      x coordinate of rectangle
+     * @param y      y coordinate of rectangle
+     * @param width  width of rectangle
      * @param height height of rectangle
      * @param sprite sprite of rectangle
-     * @param type type of rectangle
+     * @param type   type of rectangle
      */
-    public StaticRect(double x, double y, double width, double height, Image sprite, Type type){
+    public StaticRect(double x, double y, double width, double height, Image sprite, Type type) {
 
         this.x = x;
         this.y = y;
@@ -43,15 +44,16 @@ public class StaticRect extends StaticObject implements GameObject{
 
     /**
      * constructor
-     * @param x x coordinate of rectangle
-     * @param y y coordinate of rectangle
-     * @param width width of rectangle
+     *
+     * @param x      x coordinate of rectangle
+     * @param y      y coordinate of rectangle
+     * @param width  width of rectangle
      * @param height height of rectangle
      * @param sprite sprite of rectangle
-     * @param type type of rectangle
+     * @param type   type of rectangle
      * @param itemID type if item
      */
-    public StaticRect(double x, double y, double width, double height, Image sprite, Type type, String itemID){
+    public StaticRect(double x, double y, double width, double height, Image sprite, Type type, String itemID) {
         this(x, y, width, height, sprite, type);
         this.itemID = itemID;
     }
@@ -83,7 +85,9 @@ public class StaticRect extends StaticObject implements GameObject{
             collisions.add(CollisionType.Left);
             collided = true;
 
-        } else if (gameObject.getY() <= y + height && gameObject.getY() + gameObject.getHeight() > y
+        }
+        // Yes, this needs to be separate from the other tests in order to stop the player from teleporting through blocks, it's not a mistake so please don't fix it, thank.
+        if (gameObject.getY() <= y + height && gameObject.getY() + gameObject.getHeight() > y
                 && gameObject.getX() + gameObject.getWidth() > x && gameObject.getX() < x + width) {
             collisions.add(CollisionType.Top);
             collided = true;
@@ -95,7 +99,7 @@ public class StaticRect extends StaticObject implements GameObject{
         return collisions;
     }
 
-    public double getX(){
+    public double getX() {
         return x;
     }
 
@@ -111,11 +115,11 @@ public class StaticRect extends StaticObject implements GameObject{
         return height;
     }
 
-    public String getItemID(){
+    public String getItemID() {
         return itemID;
     }
 
-    public boolean getCollisionEnabled(){
+    public boolean getCollisionEnabled() {
         return collisionEnabled;
     }
 
@@ -123,29 +127,31 @@ public class StaticRect extends StaticObject implements GameObject{
         return ivSprite;
     }
 
-    public Type getType(){ return type; }
+    public Type getType() {
+        return type;
+    }
 
-    public void setX(double x){
+    public void setX(double x) {
         ivSprite.setX(x);
         this.x = x;
     }
 
-    public void setY(double y){
+    public void setY(double y) {
         ivSprite.setY(y);
         this.y = y;
     }
 
-    public void setWidth(double w){
+    public void setWidth(double w) {
         width = w;
         ivSprite.setFitWidth(w);
     }
 
-    public void setHeight(double h){
+    public void setHeight(double h) {
         width = h;
         ivSprite.setFitHeight(h);
     }
 
-    public void setSprite(Image sprite){
+    public void setSprite(Image sprite) {
         this.ivSprite.setImage(sprite);
     }
 
@@ -156,7 +162,7 @@ public class StaticRect extends StaticObject implements GameObject{
     /**
      * Move ivSprite to the front of the stage
      */
-    public void toFront(){
+    public void toFront() {
         this.ivSprite.toFront();
     }
 

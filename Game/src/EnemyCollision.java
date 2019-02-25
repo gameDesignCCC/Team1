@@ -4,14 +4,13 @@
 
 public class EnemyCollision {
 
-    public StaticRect isCollidingRight(Enemy enemy) {
+    public StaticRect collidingRight(Enemy enemy) {
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
-
                 StaticRect staticRect = (StaticRect) object;
 
-                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Right)) {
+                if (staticRect.getCollisionEnabled() && staticRect.getX() < enemy.getX() + enemy.getWidth() + enemy.getSpeed() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Right)) {
                     return staticRect;
                 }
             }
@@ -19,7 +18,7 @@ public class EnemyCollision {
         return null;
     }
 
-    public StaticRect isCollidingLeft(Enemy enemy) {
+    public StaticRect collidingLeft(Enemy enemy) {
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
@@ -33,32 +32,29 @@ public class EnemyCollision {
         return null;
     }
 
-    public StaticRect isCollidingTop(Enemy enemy) {
+    public StaticRect collidingTop(Enemy enemy) {
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
-                if (!(object instanceof Enemy)) {
-                    StaticRect staticRect = (StaticRect) object;
 
-                    if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Top)) {
-                        return staticRect;
-                    }
+                StaticRect staticRect = (StaticRect) object;
+
+                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Top)) {
+                    return staticRect;
                 }
             }
         }
         return null;
     }
 
-    public StaticRect isCollidingBottom(Enemy enemy) {
+    public StaticRect collidingBottom(Enemy enemy) {
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
-                if (!(object instanceof Enemy)) {
-                    StaticRect staticRect = (StaticRect) object;
+                StaticRect staticRect = (StaticRect) object;
 
-                    if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Bottom)) {
-                        return staticRect;
-                    }
+                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Bottom)) {
+                    return staticRect;
                 }
             }
         }

@@ -7,9 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
-// NOTE: Renamed class from "Enemies" to "Enemy" because I'm assuming that all the enemies will be instantiated and therefore the singular form makes more sense but idk.
 public class Enemy extends ImageView implements GameObject {
 
     // Speed
@@ -61,11 +59,11 @@ public class Enemy extends ImageView implements GameObject {
 
         if(isTriggered){
             if(getX() < MainApplication.player.getX()){
-                if(enemyCollision.isCollidingRight(this) == null) {
+                if(enemyCollision.collidingRight(this) == null) {
                     vX += speed;
                 }
             } else if (getX() > MainApplication.player.getX()){
-                if(enemyCollision.isCollidingLeft(this) == null) {
+                if(enemyCollision.collidingLeft(this) == null) {
                     vX -= speed;
                 }
             }
