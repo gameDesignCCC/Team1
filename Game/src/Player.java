@@ -110,10 +110,10 @@ public class Player extends ImageView implements GameObject {
     public void onUpdate() {
 
         // Key Bindings
-        boolean keyUp = MainApplication.isPressed(KeyCode.UP) || MainApplication.isPressed(KeyCode.W) || MainApplication.isPressed(KeyCode.SPACE);
-        boolean keyDown = MainApplication.isPressed(KeyCode.DOWN) || MainApplication.isPressed(KeyCode.S);
-        boolean keyLeft = MainApplication.isPressed(KeyCode.LEFT) || MainApplication.isPressed(KeyCode.A);
-        boolean keyRight = MainApplication.isPressed(KeyCode.RIGHT) || MainApplication.isPressed(KeyCode.D);
+        boolean keyUp = controlUpPressed();
+        boolean keyDown = controlDownPressed();
+        boolean keyLeft = controlLeftPressed();
+        boolean keyRight = controlRightPressed();
 
         // Reset Velocities
         vX = 0.0;
@@ -222,12 +222,12 @@ public class Player extends ImageView implements GameObject {
         if (playerCollision.itemCollision(this) != null) {
             StaticRect s = playerCollision.itemCollision(this);
 
-            s.setX(10 + (MainApplication.collectedParts.size() * 100));
+            s.setX(10 + (MainApplication.collectedPartsCurrent.size() * 100));
             s.setY(10);
             s.setWidth(90);
             s.setHeight(90);
 
-            MainApplication.collectedParts.add(s);
+            MainApplication.collectedPartsCurrent.add(s);
             MainApplication.sceneObjects.remove(s);
             inJumpAnimation = true;
         }
@@ -236,6 +236,8 @@ public class Player extends ImageView implements GameObject {
         if (playerCollision.exitCollision(this) != null) {
             // Load Next Level
             MainApplication.stopTimer();
+            MainApplication.collectedParts.addAll(MainApplication.collectedPartsCurrent);
+            MainApplication.collectedPartsCurrent.clear();
             MainApplication.getStage().setScene(Menu.levelCompleted());
         }
 
@@ -267,22 +269,24 @@ public class Player extends ImageView implements GameObject {
                 damage(5);
             }
 
-            // Ladders
             if (type == StaticObject.CollisionType.Left) {
-                if (staticRect.getType() == StaticObject.Type.LADDER) {
-                    if (MainApplication.isPressed(KeyCode.LEFT) || MainApplication.isPressed(KeyCode.UP) || MainApplication.isPressed(KeyCode.SPACE)) {
-                        inJumpAnimation = true;
-                        vY = -climbingSpeed;
-                    }
-                }
-            } else if (type == StaticObject.CollisionType.Right) {
-                if (staticRect.getType() == StaticObject.Type.LADDER) {
 
-                    if (MainApplication.isPressed(KeyCode.RIGHT) || MainApplication.isPressed(KeyCode.UP) || MainApplication.isPressed(KeyCode.SPACE)) {
+                if (staticRect.getType() == StaticObject.Type.LADDER) {
+                    if (controlLeftPressed() || controlUpPressed()) {
                         inJumpAnimation = true;
                         vY = -climbingSpeed;
                     }
                 }
+
+            } else if (type == StaticObject.CollisionType.Right) {
+
+                if (staticRect.getType() == StaticObject.Type.LADDER) {
+                    if (controlRightPressed() || controlUpPressed()) {
+                        inJumpAnimation = true;
+                        vY = -climbingSpeed;
+                    }
+                }
+
             }
         }
     }
@@ -327,6 +331,22 @@ public class Player extends ImageView implements GameObject {
      */
     public double getVX() {
         return vX;
+    }
+
+    private boolean controlUpPressed() {
+        return (MainApplication.isPressed(KeyCode.UP) || MainApplication.isPressed(KeyCode.W) || MainApplication.isPressed(KeyCode.SPACE));
+    }
+
+    private static boolean controlDownPressed() {
+        return (MainApplication.isPressed(KeyCode.DOWN) || MainApplication.isPressed(KeyCode.S));
+    }
+
+    private static boolean controlLeftPressed() {
+        return (MainApplication.isPressed(KeyCode.LEFT) || MainApplication.isPressed(KeyCode.A));
+    }
+
+    private static boolean controlRightPressed() {
+        return (MainApplication.isPressed(KeyCode.RIGHT) || MainApplication.isPressed(KeyCode.D));
     }
 
 }
