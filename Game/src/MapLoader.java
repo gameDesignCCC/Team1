@@ -76,7 +76,7 @@ public class MapLoader {
 
                         case '~': // Lava
                             AnimatedRect animatedRect = new AnimatedRect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE,
-                                    loadLava(), StaticObject.Type.LAVA);
+                                    loadLava(), StaticObject.Type.LAVA, 2);
 
                             if (MainApplication.LEVEL_DECORATION) {
                                 Rectangle rectEffect = new Rectangle(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
