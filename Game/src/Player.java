@@ -10,13 +10,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Player extends ImageView {
+public class Player extends ImageView implements GameObject {
 
     // Player is in Jump Animation
     private boolean inJumpAnimation = false;
 
     // Player Speed When Moved
     private double playerSpeed = 10.0;
+    private double climbingSpeed = 5.0;
 
     // Player Velocity
     private double vX, vY = 0.0;
@@ -31,7 +32,7 @@ public class Player extends ImageView {
     private int hp = 100;
 
     // Player Collision with Scene Objects
-    private Collision playerCollision = new Collision();
+    private PlayerCollision playerCollision = new PlayerCollision();
 
     // Player Health Bar
     public Rectangle hpBar = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, 0, 20);
@@ -48,8 +49,19 @@ public class Player extends ImageView {
         hpBarBG.setFill(Color.color(1.0, 1.0, 1.0, 0.2));
     }
 
+    @Override
+    public double getHeight() {
+        return this.getFitHeight();
+    }
+
+    @Override
+    public double getWidth() {
+        return this.getFitWidth();
+    }
+
     /**
      * Check Stage Collision Top
+     *
      * @return
      */
     public boolean checkStageCollisionTop() {
@@ -58,6 +70,7 @@ public class Player extends ImageView {
 
     /**
      * Check Stage Collision Bottom
+     *
      * @return
      */
     public boolean checkStageCollisionBottom() {
@@ -66,6 +79,7 @@ public class Player extends ImageView {
 
     /**
      * Check Stage Collision Left
+     *
      * @return Whether the player is colliding with the left edge of the stage or not.
      */
     public boolean checkStageCollisionLeft() {
@@ -74,6 +88,7 @@ public class Player extends ImageView {
 
     /**
      * Check Stage Collision Right
+     *
      * @return Returns whether the player is colliding with the right edge of the stage or not.
      */
     public boolean checkStageCollisionRight() {
@@ -94,35 +109,34 @@ public class Player extends ImageView {
      */
     public void onUpdate() {
 
-        boolean keyUp = MainApplication.isPressed(KeyCode.UP) || MainApplication.isPressed(KeyCode.W) || MainApplication.isPressed(KeyCode.SPACE);
-        boolean keyDown = MainApplication.isPressed(KeyCode.DOWN) || MainApplication.isPressed(KeyCode.S);
-        boolean keyLeft = MainApplication.isPressed(KeyCode.LEFT) || MainApplication.isPressed(KeyCode.A);
-        boolean keyRight = MainApplication.isPressed(KeyCode.RIGHT) || MainApplication.isPressed(KeyCode.D);
+        // Key Bindings
+        boolean keyUp = controlUpPressed();
+        boolean keyDown = controlDownPressed();
+        boolean keyLeft = controlLeftPressed();
+        boolean keyRight = controlRightPressed();
 
         // Reset Velocities
         vX = 0.0;
         vY = inJumpAnimation ? vY : 0.0;
-
-        // Reset Sprite
 
         // Reset HP bar color & effects
         hpBar.setFill(Color.GREEN);
         hpBar.setEffect(null);
 
         // Move Left Controls
-        if (keyRight && playerCollision.isCollidingRight(this) == null) {
+        if (keyRight && playerCollision.collidingRight(this) == null) {
             vX += playerSpeed;
 
-        } else if (playerCollision.isCollidingRight(this) != null) {
-            collisionEffect(playerCollision.isCollidingRight(this), StaticObject.CollisionType.Right);
+        } else if (playerCollision.collidingRight(this) != null) {
+            onCollision(playerCollision.collidingRight(this), StaticObject.CollisionType.Right);
         }
 
         // Move Right Controls
-        if (keyLeft && playerCollision.isCollidingLeft(this) == null) {
+        if (keyLeft && playerCollision.collidingLeft(this) == null) {
             vX += -playerSpeed;
 
-        } else if (playerCollision.isCollidingLeft(this) != null) {
-            collisionEffect(playerCollision.isCollidingLeft(this), StaticObject.CollisionType.Left);
+        } else if (playerCollision.collidingLeft(this) != null) {
+            onCollision(playerCollision.collidingLeft(this), StaticObject.CollisionType.Left);
         }
 
         // Jumping Controls
@@ -150,7 +164,7 @@ public class Player extends ImageView {
         }
 
         // Falling
-        if (!inJumpAnimation && playerCollision.isCollidingBottom(this) == null && !checkStageCollisionBottom()) {
+        if (!inJumpAnimation && playerCollision.collidingBottom(this) == null && !checkStageCollisionBottom()) {
             inJumpAnimation = true;
         }
 
@@ -163,8 +177,8 @@ public class Player extends ImageView {
         }
 
         // Preventing intersections with scene objects
-        StaticRect collisionBottom = playerCollision.isCollidingBottom(this);
-        StaticRect collisionTop = playerCollision.isCollidingTop(this);
+        StaticRect collisionBottom = playerCollision.collidingBottom(this);
+        StaticRect collisionTop = playerCollision.collidingTop(this);
 
         if (collisionTop != null && collisionBottom != null) {
             double diffBottom = getY() + getFitHeight() - collisionBottom.getY();
@@ -175,23 +189,23 @@ public class Player extends ImageView {
                 inJumpAnimation = false;
                 vY = 0.0;
                 setY(collisionTop.getY() - collisionTop.getHeight());
-                collisionEffect(collisionBottom, StaticObject.CollisionType.Bottom);
+                onCollision(collisionBottom, StaticObject.CollisionType.Bottom);
 
             } else if (diffBottom > diffTop) {
 
                 vY = 0.0;
                 setY(collisionTop.getY() + collisionTop.getHeight());
+
+                onCollision(collisionTop, StaticObject.CollisionType.Top);
             }
 
         } else if (collisionBottom != null) {
-
             inJumpAnimation = false;
             vY = 0.0;
             setY(collisionBottom.getY() - collisionBottom.getHeight());
-            collisionEffect(collisionBottom, StaticObject.CollisionType.Bottom);
+            onCollision(collisionBottom, StaticObject.CollisionType.Bottom);
 
         } else if (collisionTop != null) {
-
             vY = 0.0;
             setY(collisionTop.getY() + collisionTop.getHeight());
         }
@@ -200,7 +214,7 @@ public class Player extends ImageView {
         hpBar.setWidth(((float) hp) * 4);
 
         // Enemy Collision
-        if(playerCollision.enemyCollision(this)){
+        if (playerCollision.enemyCollision(this)) {
             damage(5);
         }
 
@@ -208,20 +222,22 @@ public class Player extends ImageView {
         if (playerCollision.itemCollision(this) != null) {
             StaticRect s = playerCollision.itemCollision(this);
 
-            s.setX(10 + (MainApplication.collectedParts.size() * 100));
+            s.setX(10 + (MainApplication.collectedPartsCurrent.size() * 100));
             s.setY(10);
             s.setWidth(90);
             s.setHeight(90);
 
-            MainApplication.collectedParts.add(s);
+            MainApplication.collectedPartsCurrent.add(s);
             MainApplication.sceneObjects.remove(s);
             inJumpAnimation = true;
         }
 
         // Exit Collision
-        if(playerCollision.exitCollision(this) != null){
+        if (playerCollision.exitCollision(this) != null) {
             // Load Next Level
             MainApplication.stopTimer();
+            MainApplication.collectedParts.addAll(MainApplication.collectedPartsCurrent);
+            MainApplication.collectedPartsCurrent.clear();
             MainApplication.getStage().setScene(Menu.levelCompleted());
         }
 
@@ -229,12 +245,13 @@ public class Player extends ImageView {
 
     /**
      * Scene Object Collision Effects
+     *
      * @param staticRect Any StaticRect.
-     * @param type Type of collision. (Left, Right, Top, Bottom)
+     * @param type       Type of collision. (Left, Right, Top, Bottom)
      */
-    private void collisionEffect(StaticRect staticRect, StaticObject.CollisionType type){
+    private void onCollision(StaticRect staticRect, StaticObject.CollisionType type) {
 
-        if(type == StaticObject.CollisionType.Bottom) {
+        if (type == StaticObject.CollisionType.Bottom) {
 
             if (staticRect.getType() == StaticObject.Type.SPIKE) {
                 damage(120);
@@ -244,17 +261,39 @@ public class Player extends ImageView {
                 damage(120);
             }
 
-        } else if(type == StaticObject.CollisionType.Left || type == StaticObject.CollisionType.Right){
+        } else if (type == StaticObject.CollisionType.Left || type == StaticObject.CollisionType.Right) {
 
             if (staticRect.getType() == StaticObject.Type.LAVA) {
                 damage(120);
-            } else if(staticRect.getType() == StaticObject.Type.LADDER){
+            } else if (staticRect.getType() == StaticObject.Type.ENEMY) {
+                damage(5);
+            }
+
+            if (type == StaticObject.CollisionType.Left) {
+
+                if (staticRect.getType() == StaticObject.Type.LADDER) {
+                    if (controlLeftPressed() || controlUpPressed()) {
+                        inJumpAnimation = true;
+                        vY = -climbingSpeed;
+                    }
+                }
+
+            } else if (type == StaticObject.CollisionType.Right) {
+
+                if (staticRect.getType() == StaticObject.Type.LADDER) {
+                    if (controlRightPressed() || controlUpPressed()) {
+                        inJumpAnimation = true;
+                        vY = -climbingSpeed;
+                    }
+                }
+
             }
         }
     }
 
     /**
      * Player Damage
+     *
      * @param damage Damage dealt to the player
      */
     public void damage(int damage) {
@@ -278,6 +317,7 @@ public class Player extends ImageView {
 
     /**
      * Get Y Velocity
+     *
      * @return Returns value of Y velocity.
      */
     public double getVY() {
@@ -286,10 +326,27 @@ public class Player extends ImageView {
 
     /**
      * Get X Velocity
+     *
      * @return Returns value of X velocity.
      */
     public double getVX() {
         return vX;
+    }
+
+    private boolean controlUpPressed() {
+        return (MainApplication.isPressed(KeyCode.UP) || MainApplication.isPressed(KeyCode.W) || MainApplication.isPressed(KeyCode.SPACE));
+    }
+
+    private static boolean controlDownPressed() {
+        return (MainApplication.isPressed(KeyCode.DOWN) || MainApplication.isPressed(KeyCode.S));
+    }
+
+    private static boolean controlLeftPressed() {
+        return (MainApplication.isPressed(KeyCode.LEFT) || MainApplication.isPressed(KeyCode.A));
+    }
+
+    private static boolean controlRightPressed() {
+        return (MainApplication.isPressed(KeyCode.RIGHT) || MainApplication.isPressed(KeyCode.D));
     }
 
 }

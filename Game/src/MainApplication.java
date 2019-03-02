@@ -47,31 +47,32 @@ public class MainApplication extends Application {
     private static Image playerSprite = new Image("/assets/sprites_textures/player/player_placeholder.png");
 
     // The Player
-    public static Player player;
+    static Player player;
 
     // Distance Traveled From Level Start
-    public static double distanceFromStart;
+    static double distanceFromStart;
 
     // Placeholder Map Background
     private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg.png");
 
     // Level Decoration (fog, lava glow)
-    public static final boolean LEVEL_DECORATION = false;
+    static final boolean LEVEL_DECORATION = true;
 
     // Game Loop Timer
     private static AnimationTimer timer;
 
     // Map Objects
-    public static ArrayList<Object> sceneObjects = new ArrayList<>();
+    static ArrayList<Object> sceneObjects = new ArrayList<>();
 
     // Enemies
-    public static ArrayList<Enemy> enemies;
+    static ArrayList<Enemy> enemies;
 
-    // Player Inventory - Can't be in Player class or it'll get reset every time the level is loaded.
-    public static ArrayList<StaticRect> collectedParts = new ArrayList<>();
+    // Player Inventory
+    static ArrayList<StaticRect> collectedParts = new ArrayList<>();
+    static ArrayList<StaticRect> collectedPartsCurrent = new ArrayList<>();
 
     // Levels
-    public static Queue<String> levelQueue = new LinkedList<>();
+    static Queue<String> levelQueue = new LinkedList<>();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -152,7 +153,7 @@ public class MainApplication extends Application {
             }
         }
 
-        for (StaticObject sr : collectedParts) {
+        for (StaticObject sr : collectedPartsCurrent) {
             root.getChildren().add(sr.getSprite());
         }
 

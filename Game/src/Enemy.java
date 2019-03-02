@@ -8,11 +8,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-// NOTE: Renamed class from "Enemies" to "Enemy" because I'm assuming that all the enemies will be instantiated and therefore the singular form makes more sense but idk.
-public class Enemy extends ImageView {
+public class Enemy extends ImageView implements GameObject {
 
     // Speed
-    private double speed = 2.0;
+    double speed = 2.0;
 
     // Velocities
     private double vX, vY;
@@ -23,8 +22,14 @@ public class Enemy extends ImageView {
     // Enemy is dead
     private boolean isDead = false;
 
+    // Enemy Player Following
+    private boolean isTriggered = false;
+    private double triggerDistance = 50.0;
+
     // HP Display
     public Rectangle hpBar = new Rectangle();
+
+    private EnemyCollision enemyCollision = new EnemyCollision();
 
     Enemy(double x, double y, double width, double height, Image sprite) {
 
@@ -48,6 +53,22 @@ public class Enemy extends ImageView {
         vX = 0.0;
         vY = 0.0;
 
+        if(!isTriggered && getPlayerDistance(this.getX(), this.getY(), MainApplication.player) <= triggerDistance){
+            isTriggered = true;
+        }
+
+        if(isTriggered){
+            if(getX() < MainApplication.player.getX()){
+                if(enemyCollision.collidingRight(this) == null) {
+                    vX += speed;
+                }
+            } else if (getX() > MainApplication.player.getX()){
+                if(enemyCollision.collidingLeft(this) == null) {
+                    vX -= speed;
+                }
+            }
+        }
+
         setX(getX() + vX);
         setY(getY() + vY);
 
@@ -56,7 +77,7 @@ public class Enemy extends ImageView {
 
     }
 
-    public boolean checkCollision(Player player){
+    public boolean checkPlayerCollision(Player player){
 
         boolean collided = false;
 
@@ -81,12 +102,25 @@ public class Enemy extends ImageView {
 
     }
 
-    public double getWidth(){
-        return getFitWidth();
+    @Override
+    public double getHeight() {
+        return this.getFitHeight();
     }
 
-    public double getHeight(){
-        return getFitHeight();
+    @Override
+    public double getWidth() {
+        return this.getFitWidth();
+    }
+
+    public double getSpeed(){
+        return speed;
+    }
+
+    private double getPlayerDistance(double x, double y, Player player){
+        double centerX = x + this.getWidth() / 2;
+        double centerY = y + this.getHeight() / 2;
+
+        return (Math.abs(centerX - (player.getX() + (player.getFitWidth() / 2))) + Math.abs(centerY - (player.getY() + (player.getFitHeight() / 2))));
     }
 
 }

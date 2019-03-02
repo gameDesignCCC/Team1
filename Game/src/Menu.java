@@ -18,7 +18,7 @@ public class Menu {
 
     private static DropShadow dropShadow = new DropShadow();
 
-    public static void onStart(){
+    public static void onStart() {
         dropShadow.setRadius(20.0);
     }
 
@@ -97,7 +97,7 @@ public class Menu {
         return scene;
     }
 
-    public static Scene levelCompleted(){
+    public static Scene levelCompleted() {
 
         Pane root = new Pane();
         VBox subRoot = new VBox(20);
@@ -111,7 +111,7 @@ public class Menu {
         btnNextLevel.setId("button-wide");
         btnNextLevel.setOnAction(e -> {
             MainApplication.levelQueue.remove();
-            if(MainApplication.levelQueue.peek() != null){
+            if (MainApplication.levelQueue.peek() != null) {
                 MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek()));
             } else {
                 System.out.println("No next level.");
@@ -146,7 +146,7 @@ public class Menu {
         Button btnHelp = btnHelp(scene, true);
 
         scene.setOnKeyPressed(e -> {
-            if(e.getCode() == KeyCode.ESCAPE){
+            if (e.getCode() == KeyCode.ESCAPE) {
                 MainApplication.getStage().setScene(mainMenu());
             }
         });
@@ -159,7 +159,7 @@ public class Menu {
         return scene;
     }
 
-    public static Scene pauseMenuTransparent(Scene prevScene) {
+    static Scene pauseMenuTransparent(Scene prevScene) {
 
         Pane root = new Pane();
         VBox subRoot = new VBox();
@@ -169,7 +169,7 @@ public class Menu {
 
         // Note: It might be better to just add the menu elements to the already existing game scene and remove them afterwards.
         for (Node node : prevScene.getRoot().getChildrenUnmodifiable()) {
-            if(node instanceof ImageView){
+            if (node instanceof ImageView) {
                 ImageView iv = ((ImageView) node);
                 ImageView imageView = new ImageView(iv.getImage());
                 imageView.setX(iv.getX());
@@ -177,7 +177,7 @@ public class Menu {
                 imageView.setFitWidth(iv.getFitWidth());
                 imageView.setFitHeight(iv.getFitHeight());
                 root.getChildren().add(imageView);
-            }else if(node instanceof Rectangle){
+            } else if (node instanceof Rectangle) {
                 Rectangle rect = ((Rectangle) node);
                 Rectangle rectangle = new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
                 rectangle.setFill(rect.getFill());
@@ -189,15 +189,8 @@ public class Menu {
         Rectangle rectBG = new Rectangle(0, 0, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
         rectBG.setFill(Color.color(0.0, 0.0, 0.0, 0.5));
 
-        Label lblHeader = menuHeader("Paused");
-
-        Button btnResume = btnResume(prevScene);
-        Button btnRestart = btnRestart();
-        Button btnMainMenu = btnMainMenu();
-        Button btnHelp = btnHelp(scene, true);
-
         scene.setOnKeyPressed(e -> {
-            if(e.getCode() == KeyCode.ESCAPE){
+            if (e.getCode() == KeyCode.ESCAPE) {
                 MainApplication.getStage().setScene(prevScene);
                 MainApplication.startTimer();
             }
@@ -207,7 +200,7 @@ public class Menu {
         subRoot.setAlignment(Pos.CENTER);
         subRoot.setLayoutX((MainApplication.WINDOW_SIZE_X / 2) - 100);
         subRoot.setLayoutY((MainApplication.WINDOW_SIZE_Y / 2) - 250);
-        subRoot.getChildren().addAll(lblHeader, btnResume, btnRestart, btnHelp, btnMainMenu);
+        subRoot.getChildren().addAll(menuHeader("Paused"), btnResume(prevScene), btnRestart(), btnHelp(scene, true), btnMainMenu());
 
         root.getChildren().addAll(rectBG, subRoot);
 
@@ -228,10 +221,10 @@ public class Menu {
         return label;
     }
 
-    private static Button btnResume(Scene prevScene){
+    private static Button btnResume(Scene prevScene) {
 
         Button btnResume = new Button("Resume");
-        btnResume.setOnAction(e ->{
+        btnResume.setOnAction(e -> {
             MainApplication.getStage().setScene(prevScene);
             MainApplication.startTimer();
         });
@@ -241,17 +234,20 @@ public class Menu {
         return btnResume;
     }
 
-    private static Button btnRestart(){
+    private static Button btnRestart() {
 
         Button btnRestart = new Button("Restart");
-        btnRestart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek())));
+        btnRestart.setOnAction(e -> {
+            MainApplication.collectedPartsCurrent.clear();
+            MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek()));
+        });
         btnRestart.setId("button-wide");
         btnRestart.setEffect(dropShadow);
 
         return btnRestart;
     }
 
-    private static Button btnHelp(Scene prevScene, boolean wide){
+    private static Button btnHelp(Scene prevScene, boolean wide) {
 
         Button btnHelp = new Button("Help");
         btnHelp.setOnAction(e -> MainApplication.getStage().setScene(helpMenu(prevScene)));
@@ -261,7 +257,7 @@ public class Menu {
         return btnHelp;
     }
 
-    private static Button btnMainMenu(){
+    private static Button btnMainMenu() {
 
         Button btnMainMenu = new Button("Main Menu");
         btnMainMenu.setOnAction(e -> MainApplication.getStage().setScene(mainMenu()));

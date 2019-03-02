@@ -3,7 +3,7 @@
  * Date: 24/10/2018
  */
 
-public class Collision {
+public class PlayerCollision {
 
     /**
      * Player Collision Right
@@ -11,7 +11,7 @@ public class Collision {
      * @param player The player.
      * @return The right edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
-    public StaticRect isCollidingRight(Player player) {
+    public StaticRect collidingRight(Player player) {
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
@@ -31,7 +31,7 @@ public class Collision {
      * @param player The player.
      * @return The left edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
-    public StaticRect isCollidingLeft(Player player) {
+    public StaticRect collidingLeft(Player player) {
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
@@ -51,7 +51,7 @@ public class Collision {
      * @param player The player.
      * @return The top edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
-    public StaticRect isCollidingTop(Player player) {
+    public StaticRect collidingTop(Player player) {
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
@@ -71,7 +71,7 @@ public class Collision {
      * @param player The player.
      * @return The bottom edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
-    public StaticRect isCollidingBottom(Player player) {
+    public StaticRect collidingBottom(Player player) {
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
@@ -107,7 +107,7 @@ public class Collision {
      */
     public boolean enemyCollision(Player player) {
         for (Enemy enemy : MainApplication.enemies) {
-            if (enemy.checkCollision(player)) {
+            if (enemy.checkPlayerCollision(player)) {
                 return true;
             }
         }
