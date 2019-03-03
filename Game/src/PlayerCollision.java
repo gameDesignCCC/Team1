@@ -13,16 +13,19 @@ public class PlayerCollision {
      */
     public StaticRect collidingRight(Player player) {
 
+        StaticRect s = null;
+
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
                 if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticRect.CollisionType.Right)) {
-                    return staticRect;
+                    s = staticRect;
+                    break;
                 }
             }
         }
-        return null;
+        return s;
     }
 
     /**
@@ -33,16 +36,19 @@ public class PlayerCollision {
      */
     public StaticRect collidingLeft(Player player) {
 
+        StaticRect s = null;
+
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
                 if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left)) {
-                    return staticRect;
+                    s = staticRect;
+                    break;
                 }
             }
         }
-        return null;
+        return s;
     }
 
     /**
@@ -53,16 +59,19 @@ public class PlayerCollision {
      */
     public StaticRect collidingTop(Player player) {
 
+        StaticRect s = null;
+
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
                 if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticRect.CollisionType.Top)) {
-                    return staticRect;
+                    s = staticRect;
+                    break;
                 }
             }
         }
-        return null;
+        return s;
     }
 
     /**
@@ -73,16 +82,19 @@ public class PlayerCollision {
      */
     public StaticRect collidingBottom(Player player) {
 
+        StaticRect s = null;
+
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
                 if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticRect.CollisionType.Bottom)) {
-                    return staticRect;
+                    s = staticRect;
+                    break;
                 }
             }
         }
-        return null;
+        return s;
     }
 
     /**
@@ -106,12 +118,16 @@ public class PlayerCollision {
      * @return Any Enemy in enemies the player is colliding with.
      */
     public boolean enemyCollision(Player player) {
+
+        boolean result = false;
+
         for (Enemy enemy : MainApplication.enemies) {
             if (enemy.checkPlayerCollision(player)) {
-                return true;
+                result = true;
+                break;
             }
         }
-        return false;
+        return result;
     }
 
     /**
@@ -121,17 +137,21 @@ public class PlayerCollision {
      * @return Any StaticRect with the type ITEM in sceneObjects the player is colliding with.
      */
     public StaticRect itemCollision(Player player) {
+
+        StaticRect s = null;
+
         for (Object obj : MainApplication.sceneObjects) {
             if (obj instanceof StaticRect) {
-                StaticRect s = ((StaticRect) obj);
-                if (s.getType() == StaticObject.Type.ITEM) {
-                    if (isColliding(s, player)) {
-                        return s;
+                StaticRect staticRect = ((StaticRect) obj);
+                if (staticRect.getType() == StaticObject.Type.ITEM) {
+                    if (isColliding(staticRect, player)) {
+                        s = staticRect;
+                        break;
                     }
                 }
             }
         }
-        return null;
+        return s;
     }
 
     /**
@@ -141,17 +161,21 @@ public class PlayerCollision {
      * @return Any StaticRect with the type EXIT in sceneObjects the player is colliding with.
      */
     public StaticRect exitCollision(Player player) {
+
+        StaticRect s = null;
+
         for (Object obj : MainApplication.sceneObjects) {
             if (obj instanceof StaticRect) {
-                StaticRect s = ((StaticRect) obj);
-                if (s.getType() == StaticObject.Type.EXIT) {
-                    if (isColliding(s, player)) {
-                        return s;
+                StaticRect staticRect = ((StaticRect) obj);
+                if (staticRect.getType() == StaticObject.Type.EXIT) {
+                    if (isColliding(staticRect, player)) {
+                        s = staticRect;
+                        break;
                     }
                 }
             }
         }
-        return null;
+        return s;
     }
 
 }

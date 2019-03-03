@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 public class Enemy extends ImageView implements GameObject {
 
     // Speed
-    double speed = 2.0;
+    private static final double SPEED = 2.0;
 
     // Velocities
     private double vX, vY;
@@ -22,15 +22,24 @@ public class Enemy extends ImageView implements GameObject {
     // Enemy is dead
     private boolean isDead = false;
 
-    // Enemy Player Following
+    // Enemy AI
     private boolean isTriggered = false;
-    private double triggerDistance = 50.0;
+    private double triggerDistance = 200.0;
 
     // HP Display
-    public Rectangle hpBar = new Rectangle();
+    Rectangle hpBar = new Rectangle();
 
+    // Enemy Collision
     private EnemyCollision enemyCollision = new EnemyCollision();
 
+    /**
+     * Default Constructor
+     * @param x x position for new enemy
+     * @param y y position for new enemy
+     * @param width Width for new enemy
+     * @param height Height for new enemy
+     * @param sprite Sprite for new enemy
+     */
     Enemy(double x, double y, double width, double height, Image sprite) {
 
         this.setX(x);
@@ -44,10 +53,19 @@ public class Enemy extends ImageView implements GameObject {
         hpBar.setFill(Color.GREEN);
     }
 
+    /**
+     * Constructor
+     * @param x x position for new enemy
+     * @param y y position for new enemy
+     * @param sprite Sprite for new enemy
+     */
     Enemy(double x, double y, Image sprite) {
         this(x, y, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, sprite);
     }
 
+    /**
+     * Update on every frame
+     */
     public void onUpdate() {
 
         vX = 0.0;
@@ -58,13 +76,16 @@ public class Enemy extends ImageView implements GameObject {
         }
 
         if(isTriggered){
+            if(getPlayerDistance(getX(), getY(), MainApplication.player) >= triggerDistance){
+                isTriggered = false;
+            }
             if(getX() < MainApplication.player.getX()){
                 if(enemyCollision.collidingRight(this) == null) {
-                    vX += speed;
+                    vX += SPEED;
                 }
             } else if (getX() > MainApplication.player.getX()){
                 if(enemyCollision.collidingLeft(this) == null) {
-                    vX -= speed;
+                    vX -= SPEED;
                 }
             }
         }
@@ -77,6 +98,11 @@ public class Enemy extends ImageView implements GameObject {
 
     }
 
+    /**
+     * Check if this enemy is colliding with the player
+     * @param player The player
+     * @return Colliding with the player [T|F]
+     */
     public boolean checkPlayerCollision(Player player){
 
         boolean collided = false;
@@ -102,20 +128,39 @@ public class Enemy extends ImageView implements GameObject {
 
     }
 
+    /**
+     * Get enemy height
+     * @return Enemy's height
+     */
     @Override
     public double getHeight() {
         return this.getFitHeight();
     }
 
+    /**
+     * Get enemy width
+     * @return Enemy's width
+     */
     @Override
     public double getWidth() {
         return this.getFitWidth();
     }
 
+    /**
+     * Get enemy SPEED
+     * @return Enemy's SPEED
+     */
     public double getSpeed(){
-        return speed;
+        return SPEED;
     }
 
+    /**
+     * Get distance from player
+     * @param x x position of enemy
+     * @param y y position of enemy
+     * @param player The player
+     * @return Enemy's distance from the player
+     */
     private double getPlayerDistance(double x, double y, Player player){
         double centerX = x + this.getWidth() / 2;
         double centerY = y + this.getHeight() / 2;

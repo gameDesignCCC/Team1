@@ -50,7 +50,7 @@ public class MainApplication extends Application {
     static Player player;
 
     // Distance Traveled From Level Start
-    static double distanceFromStart;
+    static double distanceScrolled;
 
     // Placeholder Map Background
     private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg.png");
@@ -114,7 +114,7 @@ public class MainApplication extends Application {
         sceneObjects = new ArrayList<>();
         enemies = new ArrayList<>();
 
-        distanceFromStart = 0.0;
+        distanceScrolled = 0.0;
 
         // Timer for game loop. / Should stay at ~60 UPS
         MainApplication.timer = new AnimationTimer() {
@@ -273,7 +273,7 @@ public class MainApplication extends Application {
             }
         }
 
-        distanceFromStart += player.getVX();
+        distanceScrolled += player.getVX();
     }
 
     /**

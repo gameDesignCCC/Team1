@@ -6,33 +6,41 @@ public class EnemyCollision {
 
     public StaticRect collidingRight(Enemy enemy) {
 
+        StaticRect s = null;
+
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
-                if (staticRect.getCollisionEnabled() && staticRect.getX() < enemy.getX() + enemy.getWidth() + enemy.getSpeed() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Right)) {
-                    return staticRect;
+                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Right)) {
+                    s = staticRect;
+                    break;
                 }
             }
         }
-        return null;
+        return s;
     }
 
     public StaticRect collidingLeft(Enemy enemy) {
+
+        StaticRect s = null;
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
                 if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Left)) {
-                    return staticRect;
+                    s = staticRect;
+                    break;
                 }
             }
         }
-        return null;
+        return s;
     }
 
     public StaticRect collidingTop(Enemy enemy) {
+
+        StaticRect s = null;
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
@@ -40,25 +48,29 @@ public class EnemyCollision {
                 StaticRect staticRect = (StaticRect) object;
 
                 if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Top)) {
-                    return staticRect;
+                    s = staticRect;
+                    break;
                 }
             }
         }
-        return null;
+        return s;
     }
 
     public StaticRect collidingBottom(Enemy enemy) {
+
+        StaticRect s = null;
 
         for (Object object : MainApplication.sceneObjects) {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
                 if (staticRect.getCollisionEnabled() && staticRect.checkCollision(enemy).contains(StaticRect.CollisionType.Bottom)) {
-                    return staticRect;
+                    s = staticRect;
+                    break;
                 }
             }
         }
-        return null;
+        return s;
     }
 
 }

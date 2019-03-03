@@ -16,8 +16,8 @@ public class Player extends ImageView implements GameObject {
     private boolean inJumpAnimation = false;
 
     // Player Speed When Moved
-    private double playerSpeed = 10.0;
-    private double climbingSpeed = 5.0;
+    private static final double SPEED = 10.0;
+    private static final double CLIMBING_SPEED = 5.0;
 
     // Player Velocity
     private double vX, vY = 0.0;
@@ -125,7 +125,7 @@ public class Player extends ImageView implements GameObject {
 
         // Move Left Controls
         if (keyRight && playerCollision.collidingRight(this) == null) {
-            vX += playerSpeed;
+            vX += SPEED;
 
         } else if (playerCollision.collidingRight(this) != null) {
             onCollision(playerCollision.collidingRight(this), StaticObject.CollisionType.Right);
@@ -133,7 +133,7 @@ public class Player extends ImageView implements GameObject {
 
         // Move Right Controls
         if (keyLeft && playerCollision.collidingLeft(this) == null) {
-            vX += -playerSpeed;
+            vX += -SPEED;
 
         } else if (playerCollision.collidingLeft(this) != null) {
             onCollision(playerCollision.collidingLeft(this), StaticObject.CollisionType.Left);
@@ -274,7 +274,7 @@ public class Player extends ImageView implements GameObject {
                 if (staticRect.getType() == StaticObject.Type.LADDER) {
                     if (controlLeftPressed() || controlUpPressed()) {
                         inJumpAnimation = true;
-                        vY = -climbingSpeed;
+                        vY = -CLIMBING_SPEED;
                     }
                 }
 
@@ -283,7 +283,7 @@ public class Player extends ImageView implements GameObject {
                 if (staticRect.getType() == StaticObject.Type.LADDER) {
                     if (controlRightPressed() || controlUpPressed()) {
                         inJumpAnimation = true;
-                        vY = -climbingSpeed;
+                        vY = -CLIMBING_SPEED;
                     }
                 }
 
