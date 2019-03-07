@@ -236,6 +236,7 @@ public class Player extends ImageView implements GameObject {
             MainApplication.collectedParts.addAll(MainApplication.collectedPartsCurrent);
             MainApplication.collectedPartsCurrent.clear();
             MainApplication.getStage().setScene(Menu.levelCompleted());
+            MainApplication.currentLevelIndex++;
         }
 
     }

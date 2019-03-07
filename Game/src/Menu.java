@@ -41,13 +41,44 @@ public class Menu {
 
         btnStart.setText("Start");
         btnStart.setTranslateY(-80);
-        btnStart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek())));
+        btnStart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex))));
 
         btnExit.setText("Exit");
         btnExit.setTranslateY(80);
         btnExit.setOnAction(e -> MainApplication.exit());
 
-        root.getChildren().addAll(ivBG, btnStart, btnHelp, btnExit);
+        Button btnLevelSelect = new Button("Levels");
+        btnLevelSelect.setTranslateY(160);
+        btnLevelSelect.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(scene)));
+
+        root.getChildren().addAll(ivBG, btnStart, btnHelp, btnExit, btnLevelSelect);
+
+        return scene;
+    }
+
+    private static Scene levelSelect(Scene prevScene){
+
+        Pane root = new Pane();
+        VBox levelListRoot = new VBox(20);
+        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+
+        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
+
+        levelListRoot.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 80);
+
+        for(int i = 0; i < MainApplication.levels.size(); i++){
+            Button btn = new Button("Level " + (i + 1));
+            int lvl = i;
+            btn.setOnAction(e ->{
+                MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(lvl)));
+                MainApplication.currentLevelIndex = lvl;
+            });
+            levelListRoot.getChildren().add(btn);
+        }
+
+        levelListRoot.setAlignment(Pos.CENTER);
+
+        root.getChildren().add(levelListRoot);
 
         return scene;
     }
@@ -110,9 +141,8 @@ public class Menu {
         Button btnNextLevel = new Button("Next Level");
         btnNextLevel.setId("button-wide");
         btnNextLevel.setOnAction(e -> {
-            MainApplication.levelQueue.remove();
-            if (MainApplication.levelQueue.peek() != null) {
-                MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek()));
+            if (MainApplication.levels.size() > MainApplication.currentLevelIndex) {
+                MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex)));
             } else {
                 System.out.println("No next level.");
                 MainApplication.queueLevels();
@@ -239,7 +269,7 @@ public class Menu {
         Button btnRestart = new Button("Restart");
         btnRestart.setOnAction(e -> {
             MainApplication.collectedPartsCurrent.clear();
-            MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levelQueue.peek()));
+            MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex)));
         });
         btnRestart.setId("button-wide");
         btnRestart.setEffect(dropShadow);
