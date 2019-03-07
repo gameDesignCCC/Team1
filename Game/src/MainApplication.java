@@ -71,11 +71,13 @@ public class MainApplication extends Application {
     static ArrayList<StaticRect> collectedParts = new ArrayList<>();
     static ArrayList<StaticRect> collectedPartsCurrent = new ArrayList<>();
 
-    // Levels
-    static Queue<String> levelQueue = new LinkedList<>();
-
     // Current Scene Parent
     static Pane currentRoot;
+
+    // Level List
+    static List<String> levels = new LinkedList<>();
+
+    static int currentLevelIndex = 0;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -306,8 +308,8 @@ public class MainApplication extends Application {
      * Load levels in /assets/levels into level queue
      */
     public static void queueLevels() {
-        levelQueue.clear();
         collectedParts.clear();
+        currentLevelIndex = 0;
 
         try {
             File levelsDIR = new File(MainApplication.class.getResource("/assets/levels").getFile());
@@ -318,8 +320,9 @@ public class MainApplication extends Application {
 
             for (File file : files) {
                 if (file.getName().matches("^level_\\d{2}$")) {
-                    levelQueue.add(file.getPath());
-                    System.out.println("Added Level: " + file.getPath());
+                    if(!levels.contains(file.getPath())){
+                        levels.add(file.getPath());
+                    }
                 }
             }
 

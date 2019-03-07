@@ -36,6 +36,11 @@
     -fx-max-width: 200px;
 }
 
+#button-xwide{
+    -fx-min-width: 220;
+    -fx-max-width: 220;
+}
+
 #menu-header{
     -fx-font-family: "Russo One";
     -fx-font-size: 50px;
