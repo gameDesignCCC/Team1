@@ -74,6 +74,9 @@ public class MainApplication extends Application {
     // Levels
     static Queue<String> levelQueue = new LinkedList<>();
 
+    // Current Scene Parent
+    static Pane currentRoot;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -190,6 +193,7 @@ public class MainApplication extends Application {
 
         MainApplication.timer.start();
 
+        currentRoot = root;
         return gameScene;
     }
 

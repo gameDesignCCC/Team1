@@ -31,9 +31,6 @@ public class Player extends ImageView implements GameObject {
     // Player Health Points
     private int hp = 100;
 
-    // Player Collision with Scene Objects
-    private PlayerCollision playerCollision = new PlayerCollision();
-
     // Player Health Bar
     public Rectangle hpBar = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, 0, 20);
     public Rectangle hpBarBG = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, hp * 4, 20);
@@ -124,19 +121,19 @@ public class Player extends ImageView implements GameObject {
         hpBar.setEffect(null);
 
         // Move Left Controls
-        if (keyRight && playerCollision.collidingRight(this) == null) {
+        if (keyRight && PlayerCollision.collidingRight(this) == null) {
             vX += SPEED;
 
-        } else if (playerCollision.collidingRight(this) != null) {
-            onCollision(playerCollision.collidingRight(this), StaticObject.CollisionType.Right);
+        } else if (PlayerCollision.collidingRight(this) != null) {
+            onCollision(PlayerCollision.collidingRight(this), StaticObject.CollisionType.Right);
         }
 
         // Move Right Controls
-        if (keyLeft && playerCollision.collidingLeft(this) == null) {
+        if (keyLeft && PlayerCollision.collidingLeft(this) == null) {
             vX += -SPEED;
 
-        } else if (playerCollision.collidingLeft(this) != null) {
-            onCollision(playerCollision.collidingLeft(this), StaticObject.CollisionType.Left);
+        } else if (PlayerCollision.collidingLeft(this) != null) {
+            onCollision(PlayerCollision.collidingLeft(this), StaticObject.CollisionType.Left);
         }
 
         // Jumping Controls
@@ -164,7 +161,7 @@ public class Player extends ImageView implements GameObject {
         }
 
         // Falling
-        if (!inJumpAnimation && playerCollision.collidingBottom(this) == null && !checkStageCollisionBottom()) {
+        if (!inJumpAnimation && PlayerCollision.collidingBottom(this) == null && !checkStageCollisionBottom()) {
             inJumpAnimation = true;
         }
 
@@ -177,8 +174,8 @@ public class Player extends ImageView implements GameObject {
         }
 
         // Preventing intersections with scene objects
-        StaticRect collisionBottom = playerCollision.collidingBottom(this);
-        StaticRect collisionTop = playerCollision.collidingTop(this);
+        StaticRect collisionBottom = PlayerCollision.collidingBottom(this);
+        StaticRect collisionTop = PlayerCollision.collidingTop(this);
 
         if (collisionTop != null && collisionBottom != null) {
             double diffBottom = getY() + getFitHeight() - collisionBottom.getY();
@@ -214,13 +211,13 @@ public class Player extends ImageView implements GameObject {
         hpBar.setWidth(((float) hp) * 4);
 
         // Enemy Collision
-        if (playerCollision.enemyCollision(this)) {
+        if (PlayerCollision.enemyCollision(this)) {
             damage(5);
         }
 
         // Item Collision
-        if (playerCollision.itemCollision(this) != null) {
-            StaticRect s = playerCollision.itemCollision(this);
+        if (PlayerCollision.itemCollision(this) != null) {
+            StaticRect s = PlayerCollision.itemCollision(this);
 
             s.setX(10 + (MainApplication.collectedPartsCurrent.size() * 100));
             s.setY(10);
@@ -233,7 +230,7 @@ public class Player extends ImageView implements GameObject {
         }
 
         // Exit Collision
-        if (playerCollision.exitCollision(this) != null) {
+        if (PlayerCollision.exitCollision(this) != null) {
             // Load Next Level
             MainApplication.stopTimer();
             MainApplication.collectedParts.addAll(MainApplication.collectedPartsCurrent);

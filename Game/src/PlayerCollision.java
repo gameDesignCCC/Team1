@@ -11,7 +11,7 @@ public class PlayerCollision {
      * @param player The player.
      * @return The right edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
-    public StaticRect collidingRight(Player player) {
+    public static StaticRect collidingRight(Player player) {
 
         StaticRect s = null;
 
@@ -34,7 +34,7 @@ public class PlayerCollision {
      * @param player The player.
      * @return The left edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
-    public StaticRect collidingLeft(Player player) {
+    public static StaticRect collidingLeft(Player player) {
 
         StaticRect s = null;
 
@@ -57,7 +57,7 @@ public class PlayerCollision {
      * @param player The player.
      * @return The top edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
-    public StaticRect collidingTop(Player player) {
+    public static StaticRect collidingTop(Player player) {
 
         StaticRect s = null;
 
@@ -80,7 +80,7 @@ public class PlayerCollision {
      * @param player The player.
      * @return The bottom edge of the player is colliding with any static map object (StaticRect) in sceneObjects.
      */
-    public StaticRect collidingBottom(Player player) {
+    public static StaticRect collidingBottom(Player player) {
 
         StaticRect s = null;
 
@@ -104,7 +104,7 @@ public class PlayerCollision {
      * @param player     The player.
      * @return Player is colliding with staticRect.
      */
-    public boolean isColliding(StaticRect staticRect, Player player) {
+    public static boolean isColliding(StaticRect staticRect, Player player) {
         return (staticRect.checkCollision(player).contains(StaticRect.CollisionType.Bottom) ||
                 staticRect.checkCollision(player).contains(StaticRect.CollisionType.Right) ||
                 staticRect.checkCollision(player).contains(StaticRect.CollisionType.Left) ||
@@ -117,7 +117,7 @@ public class PlayerCollision {
      * @param player The player.
      * @return Any Enemy in enemies the player is colliding with.
      */
-    public boolean enemyCollision(Player player) {
+    public static boolean enemyCollision(Player player) {
 
         boolean result = false;
 
@@ -136,7 +136,7 @@ public class PlayerCollision {
      * @param player The player.
      * @return Any StaticRect with the type ITEM in sceneObjects the player is colliding with.
      */
-    public StaticRect itemCollision(Player player) {
+    public static StaticRect itemCollision(Player player) {
 
         StaticRect s = null;
 
@@ -160,7 +160,7 @@ public class PlayerCollision {
      * @param player The player.
      * @return Any StaticRect with the type EXIT in sceneObjects the player is colliding with.
      */
-    public StaticRect exitCollision(Player player) {
+    public static StaticRect exitCollision(Player player) {
 
         StaticRect s = null;
 

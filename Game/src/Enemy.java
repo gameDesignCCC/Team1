@@ -29,9 +29,6 @@ public class Enemy extends ImageView implements GameObject {
     // HP Display
     Rectangle hpBar = new Rectangle();
 
-    // Enemy Collision
-    private EnemyCollision enemyCollision = new EnemyCollision();
-
     /**
      * Default Constructor
      * @param x x position for new enemy
@@ -80,11 +77,11 @@ public class Enemy extends ImageView implements GameObject {
                 isTriggered = false;
             }
             if(getX() < MainApplication.player.getX()){
-                if(enemyCollision.collidingRight(this) == null) {
+                if(EnemyCollision.collidingRight(this) == null) {
                     vX += SPEED;
                 }
             } else if (getX() > MainApplication.player.getX()){
-                if(enemyCollision.collidingLeft(this) == null) {
+                if(EnemyCollision.collidingLeft(this) == null) {
                     vX -= SPEED;
                 }
             }

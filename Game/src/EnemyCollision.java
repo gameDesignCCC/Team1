@@ -4,7 +4,7 @@
 
 public class EnemyCollision {
 
-    public StaticRect collidingRight(Enemy enemy) {
+    public static StaticRect collidingRight(Enemy enemy) {
 
         StaticRect s = null;
 
@@ -21,7 +21,7 @@ public class EnemyCollision {
         return s;
     }
 
-    public StaticRect collidingLeft(Enemy enemy) {
+    public static StaticRect collidingLeft(Enemy enemy) {
 
         StaticRect s = null;
 
@@ -38,7 +38,7 @@ public class EnemyCollision {
         return s;
     }
 
-    public StaticRect collidingTop(Enemy enemy) {
+    public static StaticRect collidingTop(Enemy enemy) {
 
         StaticRect s = null;
 
@@ -56,7 +56,7 @@ public class EnemyCollision {
         return s;
     }
 
-    public StaticRect collidingBottom(Enemy enemy) {
+    public static StaticRect collidingBottom(Enemy enemy) {
 
         StaticRect s = null;
 
