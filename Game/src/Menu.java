@@ -56,7 +56,7 @@ public class Menu {
         return scene;
     }
 
-    private static Scene levelSelect(Scene prevScene){
+    private static Scene levelSelect(Scene prevScene) {
 
         Pane root = new Pane();
         VBox levelListRoot = new VBox(20);
@@ -64,17 +64,29 @@ public class Menu {
 
         scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
-        levelListRoot.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 80);
+        levelListRoot.setLayoutX(40);
+        levelListRoot.setLayoutY(40);
 
-        for(int i = 0; i < MainApplication.levels.size(); i++){
+        for (int i = 0; i < MainApplication.levels.size(); i++) {
+            if (i == 7) {
+                Button nxtPageBtn = new Button("More");
+                levelListRoot.getChildren().add(nxtPageBtn);
+
+                break;
+            }
             Button btn = new Button("Level " + (i + 1));
             int lvl = i;
-            btn.setOnAction(e ->{
+            btn.setOnAction(e -> {
                 MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(lvl)));
                 MainApplication.currentLevelIndex = lvl;
             });
             levelListRoot.getChildren().add(btn);
         }
+
+        Rectangle levelsBG = new Rectangle(20, 20, 200, MainApplication.WINDOW_SIZE_Y - 40);
+        levelsBG.setHeight(MainApplication.levels.size() * 80 + 20);
+        levelsBG.setOpacity(0.3);
+        root.getChildren().add(levelsBG);
 
         levelListRoot.setAlignment(Pos.CENTER);
 
