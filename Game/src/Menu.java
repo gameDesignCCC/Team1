@@ -14,6 +14,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 public class Menu {
 
     private static DropShadow dropShadow = new DropShadow();
@@ -35,21 +39,19 @@ public class Menu {
 
         ImageView ivBG = new ImageView(new Image("/assets/ui/backgrounds/alt_main_menu_bg_placeholder.png"));
 
-        Button btnStart = new Button();
+        Button btnStart = new Button("Start");
         Button btnHelp = btnHelp(scene, false);
-        Button btnExit = new Button();
+        Button btnLevelSelect = new Button("Levels");
+        Button btnExit = new Button("Exit");
 
-        btnStart.setText("Start");
         btnStart.setTranslateY(-80);
         btnStart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex))));
 
-        btnExit.setText("Exit");
-        btnExit.setTranslateY(80);
-        btnExit.setOnAction(e -> MainApplication.exit());
-
-        Button btnLevelSelect = new Button("Levels");
-        btnLevelSelect.setTranslateY(160);
+        btnLevelSelect.setTranslateY(80);
         btnLevelSelect.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(scene)));
+
+        btnExit.setTranslateY(160);
+        btnExit.setOnAction(e -> MainApplication.exit());
 
         root.getChildren().addAll(ivBG, btnStart, btnHelp, btnExit, btnLevelSelect);
 
@@ -67,30 +69,70 @@ public class Menu {
         levelListRoot.setLayoutX(40);
         levelListRoot.setLayoutY(40);
 
-        for (int i = 0; i < MainApplication.levels.size(); i++) {
-            if (i == 7) {
-                Button nxtPageBtn = new Button("More");
-                levelListRoot.getChildren().add(nxtPageBtn);
+        ArrayList<Button> levelButtons = new ArrayList<>();
 
+        for (int i = 0; i < MainApplication.levels.size(); i++) {
+
+            System.out.println(MainApplication.currentLevelIndex);
+            if (i >= 7) {
+                Button nxtPageBtn = new Button("More");
+                nxtPageBtn.setOnAction(e -> {
+                    // TODO : This should do something.
+                });
+
+                if(i > MainApplication.currentLevelIndex) {
+                    nxtPageBtn.setId("button-disabled");
+                    nxtPageBtn.setOnAction(null);
+                }
+
+                levelListRoot.getChildren().add(nxtPageBtn);
                 break;
             }
-            Button btn = new Button("Level " + (i + 1));
-            int lvl = i;
-            btn.setOnAction(e -> {
-                MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(lvl)));
-                MainApplication.currentLevelIndex = lvl;
-            });
-            levelListRoot.getChildren().add(btn);
+
+            if(i > MainApplication.currentLevelIndex){
+                Button btn = new Button("Level " + (i + 1));
+                btn.setId("button-disabled");
+                levelListRoot.getChildren().add(btn);
+                levelButtons.add(btn);
+            } else {
+                Button btn = new Button("Level " + (i + 1));
+                int lvl = i;
+                btn.setOnAction(e -> {
+                    MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(lvl)));
+                    MainApplication.currentLevelIndex = lvl;
+                });
+                levelListRoot.getChildren().add(btn);
+                levelButtons.add(btn);
+            }
+
         }
 
         Rectangle levelsBG = new Rectangle(20, 20, 200, MainApplication.WINDOW_SIZE_Y - 40);
         levelsBG.setHeight(MainApplication.levels.size() * 80 + 20);
         levelsBG.setOpacity(0.3);
+
+        Rectangle levelDetailsBG = new Rectangle(240, 20, MainApplication.WINDOW_SIZE_X - 260, MainApplication.WINDOW_SIZE_Y - 40);
+        levelDetailsBG.setOpacity(0.3);
+        root.getChildren().add(levelDetailsBG);
+
         root.getChildren().add(levelsBG);
 
-        levelListRoot.setAlignment(Pos.CENTER);
-
         root.getChildren().add(levelListRoot);
+
+        Button btnBack = new Button("Back");
+        btnBack.setLayoutX(260);
+        btnBack.setLayoutY(MainApplication.WINDOW_SIZE_Y - 100);
+        btnBack.setOnAction(e -> {
+            MainApplication.getStage().setScene(mainMenu());
+        });
+        root.getChildren().add(btnBack);
+
+        scene.setOnKeyPressed(e ->{
+            if (e.getCode().equals(KeyCode.ESCAPE)) {
+                MainApplication.getStage().setScene(mainMenu());
+                System.out.println("we");
+            }
+        });
 
         return scene;
     }
@@ -103,15 +145,21 @@ public class Menu {
 
         scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
-        Button btnBack = new Button("Back");
-        btnBack.setOnAction(e -> MainApplication.getStage().setScene(prevScene));
+        ImageView overlay = new ImageView(new Image("/assets/ui/overlays/controls_overlay.png"));
+        root.getChildren().add(overlay);
 
         subRoot.setAlignment(Pos.CENTER);
         subRoot.setPrefWidth(MainApplication.WINDOW_SIZE_X);
         subRoot.setPrefHeight(MainApplication.WINDOW_SIZE_Y);
-        subRoot.getChildren().add(btnBack);
-
         root.getChildren().add(subRoot);
+
+        Button btnBack = new Button("Back");
+        btnBack.setOnAction(e -> MainApplication.getStage().setScene(prevScene));
+        btnBack.setLayoutY(MainApplication.WINDOW_SIZE_Y - 80);
+        btnBack.setLayoutX(20);
+
+        root.getChildren().add(btnBack);
+
 
         return scene;
     }

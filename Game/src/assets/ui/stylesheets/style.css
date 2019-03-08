@@ -41,6 +41,10 @@
     -fx-max-width: 220;
 }
 
+#button-disabled{
+    -fx-background-color: #616161;
+}
+
 #menu-header{
     -fx-font-family: "Russo One";
     -fx-font-size: 50px;
