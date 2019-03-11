@@ -1,6 +1,6 @@
 import javafx.scene.image.Image;
 
-public class AnimatedRect extends StaticRect {
+public class AnimatedRect extends StaticRect implements GameObject{
 
     private Image[] frames;
     private double frameRate;
