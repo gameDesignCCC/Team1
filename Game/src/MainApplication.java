@@ -75,7 +75,8 @@ public class MainApplication extends Application {
     static Pane currentRoot;
 
     // Level List
-    static List<String> levels = new LinkedList<>();
+    static List<Level> levels = new LinkedList<>();
+    static List<Level> completedLevels = new LinkedList<>();
 
     static int currentLevelIndex = 0;
 
@@ -318,11 +319,15 @@ public class MainApplication extends Application {
             Arrays.sort(files);
             /*Arrays.sort(files, (f0, f1) -> Integer.compare(f0.getPath().length(), f1.getPath().length()));*/
 
+            int index = 0;
             for (File file : files) {
                 if (file.getName().matches("^level_\\d{2}$")) {
-                    if(!levels.contains(file.getPath())){
-                        levels.add(file.getPath());
+                    index++;
+                    boolean fileExists = false;
+                    for(Level level : levels){
+                        if (level.getPath().equals(file.getPath())) fileExists = true;
                     }
+                    if (!fileExists) levels.add(new Level("Level " + index, file.getPath(), index, file));
                 }
             }
 

@@ -232,13 +232,17 @@ public class Player extends ImageView implements GameObject {
         // Exit Collision
         if (PlayerCollision.exitCollision(this) != null) {
             // Load Next Level
-            MainApplication.stopTimer();
-            MainApplication.collectedParts.addAll(MainApplication.collectedPartsCurrent);
-            MainApplication.collectedPartsCurrent.clear();
-            MainApplication.getStage().setScene(Menu.levelCompleted());
-            MainApplication.currentLevelIndex++;
+            onLevelExit();
         }
+    }
 
+    private void onLevelExit(){
+        MainApplication.stopTimer();
+        MainApplication.collectedParts.addAll(MainApplication.collectedPartsCurrent);
+        MainApplication.collectedPartsCurrent.clear();
+        MainApplication.getStage().setScene(Menu.levelCompleted());
+        MainApplication.completedLevels.add(MainApplication.levels.get(MainApplication.currentLevelIndex));
+        MainApplication.currentLevelIndex++;
     }
 
     /**
