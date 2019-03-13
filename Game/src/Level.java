@@ -7,7 +7,7 @@ public class Level {
     private File levelFile;
     private int levelNumber;
 
-    Level(String name, String path, int levelNumber, File levelFile){
+    Level(String name, String path, File levelFile, int levelNumber) {
         this.name = name;
         this.path = path;
         this.levelFile = levelFile;
@@ -22,7 +22,7 @@ public class Level {
         return path;
     }
 
-    public File getLevelFile(){
+    public File getLevelFile() {
         return levelFile;
     }
 
