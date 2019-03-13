@@ -12,8 +12,9 @@ import javafx.scene.shape.Rectangle;
 
 public class Player extends ImageView implements GameObject {
 
-    // Player is in Jump Animation
+    // Player Animations
     private boolean inJumpAnimation = false;
+    private boolean inClimbAnimation = false;
 
     // Player Speed When Moved
     private static final double SPEED = 10.0;
@@ -116,6 +117,9 @@ public class Player extends ImageView implements GameObject {
         vX = 0.0;
         vY = inJumpAnimation ? vY : 0.0;
 
+        // Reset Animation
+        inClimbAnimation = false;
+
         // Reset HP bar color & effects
         hpBar.setFill(Color.GREEN);
         hpBar.setEffect(null);
@@ -161,7 +165,7 @@ public class Player extends ImageView implements GameObject {
         }
 
         // Falling
-        if (!inJumpAnimation && PlayerCollision.collidingBottom(this) == null && !checkStageCollisionBottom()) {
+        if (!inJumpAnimation && !inClimbAnimation && PlayerCollision.collidingBottom(this) == null) {
             inJumpAnimation = true;
         }
 
@@ -234,9 +238,10 @@ public class Player extends ImageView implements GameObject {
             // Load Next Level
             onLevelExit();
         }
+
     }
 
-    private void onLevelExit(){
+    private void onLevelExit() {
         MainApplication.stopTimer();
         MainApplication.collectedParts.addAll(MainApplication.collectedPartsCurrent);
         MainApplication.collectedPartsCurrent.clear();
@@ -271,24 +276,29 @@ public class Player extends ImageView implements GameObject {
                 damage(5);
             }
 
-            if (type == StaticObject.CollisionType.Left) {
-
-                if (staticRect.getType() == StaticObject.Type.LADDER) {
-                    if (controlLeftPressed() || controlUpPressed()) {
-                        inJumpAnimation = true;
-                        vY = -CLIMBING_SPEED;
-                    }
-                }
-
-            } else if (type == StaticObject.CollisionType.Right) {
+            if (type == StaticObject.CollisionType.Right) {
 
                 if (staticRect.getType() == StaticObject.Type.LADDER) {
                     if (controlRightPressed() || controlUpPressed()) {
-                        inJumpAnimation = true;
+                        inClimbAnimation = true;
                         vY = -CLIMBING_SPEED;
+                    } else if (controlDownPressed()) {
+                        inClimbAnimation = true;
+                        vY = CLIMBING_SPEED;
                     }
                 }
 
+            } else {
+
+                if (staticRect.getType() == StaticObject.Type.LADDER) {
+                    if (controlLeftPressed() || controlUpPressed()) {
+                        inClimbAnimation = true;
+                        vY = -CLIMBING_SPEED;
+                    } else if (controlDownPressed()) {
+                        inClimbAnimation = true;
+                        vY = CLIMBING_SPEED;
+                    }
+                }
             }
         }
     }

@@ -15,14 +15,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Menu {
 
+    // Effects
     private static DropShadow dropShadow = new DropShadow();
 
-    public static void onStart() {
+    // Initialization
+    public static void init() {
         dropShadow.setRadius(20.0);
     }
 
@@ -71,35 +71,42 @@ public class Menu {
 
         ArrayList<Button> levelButtons = new ArrayList<>();
 
+
         for (int i = 0; i < MainApplication.levels.size(); i++) {
 
-            if (i >= 7) {
-                Button nxtPageBtn = new Button("More");
+            if (i == 7) {
+                Button nxtPageBtn = new Button();
+                nxtPageBtn.setId("button-small");
+                nxtPageBtn.setGraphic(new ImageView(new Image("/assets/ui/icons/down.png")));
+                nxtPageBtn.setLayoutX(120);
+                nxtPageBtn.setLayoutY(600);
                 nxtPageBtn.setOnAction(e -> {
-                    // TODO : This should do something.
                 });
 
-                if(!MainApplication.completedLevels.contains(MainApplication.levels.get(i))) {
-                    nxtPageBtn.setId("button-disabled");
-                    nxtPageBtn.setOnAction(null);
-                }
+                Button prevPageBtn = new Button();
+                prevPageBtn.setId("button-disabled-small");
+                prevPageBtn.setGraphic(new ImageView(new Image("/assets/ui/icons/up.png")));
+                prevPageBtn.setLayoutX(40);
+                prevPageBtn.setLayoutY(600);
+                prevPageBtn.setOnAction(e -> {
+                });
 
-                levelListRoot.getChildren().add(nxtPageBtn);
+                root.getChildren().addAll(nxtPageBtn, prevPageBtn);
                 break;
-            }
 
-            if(!MainApplication.completedLevels.contains(MainApplication.levels.get(i))){
-                Button btn = new Button(MainApplication.levels.get(i).getName());
-                btn.setId("button-disabled");
-                levelListRoot.getChildren().add(btn);
-                levelButtons.add(btn);
-            } else {
+            } else if (MainApplication.completedLevels.contains(MainApplication.levels.get(i))) {
                 Button btn = new Button(MainApplication.levels.get(i).getName());
                 int lvl = i;
                 btn.setOnAction(e -> {
                     MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(lvl).getPath()));
                     MainApplication.currentLevelIndex = lvl;
                 });
+                levelListRoot.getChildren().add(btn);
+                levelButtons.add(btn);
+
+            } else {
+                Button btn = new Button(MainApplication.levels.get(i).getName());
+                btn.setId("button-disabled");
                 levelListRoot.getChildren().add(btn);
                 levelButtons.add(btn);
             }
@@ -112,26 +119,28 @@ public class Menu {
 
         Rectangle levelDetailsBG = new Rectangle(240, 20, MainApplication.WINDOW_SIZE_X - 260, MainApplication.WINDOW_SIZE_Y - 40);
         levelDetailsBG.setOpacity(0.3);
+
         root.getChildren().add(levelDetailsBG);
-
         root.getChildren().add(levelsBG);
-
         root.getChildren().add(levelListRoot);
 
         Button btnBack = new Button("Back");
         btnBack.setLayoutX(260);
         btnBack.setLayoutY(MainApplication.WINDOW_SIZE_Y - 100);
         btnBack.setOnAction(e -> {
-            MainApplication.getStage().setScene(mainMenu());
+            MainApplication.getStage().setScene(prevScene);
         });
         root.getChildren().add(btnBack);
 
-        scene.setOnKeyPressed(e ->{
+        scene.setOnKeyPressed(e -> {
             if (e.getCode().equals(KeyCode.ESCAPE)) {
                 MainApplication.getStage().setScene(mainMenu());
                 System.out.println("we");
             }
         });
+
+        levelsBG.toBack();
+        levelDetailsBG.toBack();
 
         return scene;
     }

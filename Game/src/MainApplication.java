@@ -53,7 +53,7 @@ public class MainApplication extends Application {
     static double distanceScrolled;
 
     // Placeholder Map Background
-    private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg.png");
+    private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg_extended.png");
 
     // Level Decoration (fog, lava glow)
     static final boolean LEVEL_DECORATION = true;
@@ -85,7 +85,7 @@ public class MainApplication extends Application {
 
         loadResources();
         queueLevels();
-        Menu.onStart();
+        Menu.init();
 
         stage = primaryStage;
 
@@ -280,6 +280,7 @@ public class MainApplication extends Application {
             }
         }
 
+        levelBG.setX(levelBG.getX() + player.getVX() * 0.1 * -1);
         distanceScrolled += player.getVX();
     }
 
@@ -319,15 +320,15 @@ public class MainApplication extends Application {
             Arrays.sort(files);
             /*Arrays.sort(files, (f0, f1) -> Integer.compare(f0.getPath().length(), f1.getPath().length()));*/
 
-            int index = 0;
+            int i = 0;
             for (File file : files) {
                 if (file.getName().matches("^level_\\d{2}$")) {
-                    index++;
                     boolean fileExists = false;
-                    for(Level level : levels){
+                    for (Level level : levels) {
                         if (level.getPath().equals(file.getPath())) fileExists = true;
                     }
-                    if (!fileExists) levels.add(new Level("Level " + index, file.getPath(), index, file));
+                    if (!fileExists) levels.add(new Level("Level " + (i + 1), file.getPath(), file, i));
+                    i++;
                 }
             }
 
