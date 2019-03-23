@@ -26,6 +26,9 @@ public class Menu {
         dropShadow.setRadius(20.0);
     }
 
+    // Level Select
+    private static int levelPage = 0;
+
     /*
      *     -- SCENES --
      */
@@ -71,25 +74,30 @@ public class Menu {
 
         ArrayList<Button> levelButtons = new ArrayList<>();
 
-
         for (int i = 0; i < MainApplication.levels.size(); i++) {
 
             if (i == 7) {
+
                 Button nxtPageBtn = new Button();
-                nxtPageBtn.setId("button-small");
+                Button prevPageBtn = new Button();
+
+                nxtPageBtn.setId("button-disabled-small");
                 nxtPageBtn.setGraphic(new ImageView(new Image("/assets/ui/icons/down.png")));
                 nxtPageBtn.setLayoutX(120);
                 nxtPageBtn.setLayoutY(600);
                 nxtPageBtn.setOnAction(e -> {
+                    updateThings(prevPageBtn, nxtPageBtn, levelButtons, levelListRoot);
                 });
 
-                Button prevPageBtn = new Button();
                 prevPageBtn.setId("button-disabled-small");
                 prevPageBtn.setGraphic(new ImageView(new Image("/assets/ui/icons/up.png")));
                 prevPageBtn.setLayoutX(40);
                 prevPageBtn.setLayoutY(600);
                 prevPageBtn.setOnAction(e -> {
+                    updateThings(prevPageBtn, nxtPageBtn, levelButtons, levelListRoot);
                 });
+
+                updateThings(prevPageBtn, nxtPageBtn, levelButtons, levelListRoot);
 
                 root.getChildren().addAll(nxtPageBtn, prevPageBtn);
                 break;
@@ -135,7 +143,6 @@ public class Menu {
         scene.setOnKeyPressed(e -> {
             if (e.getCode().equals(KeyCode.ESCAPE)) {
                 MainApplication.getStage().setScene(mainMenu());
-                System.out.println("we");
             }
         });
 
@@ -143,6 +150,35 @@ public class Menu {
         levelDetailsBG.toBack();
 
         return scene;
+    }
+
+    private static void updateThings(Button prevPageBtn, Button nxtPageBtn, ArrayList<Button> levelButtons, VBox levelListRoot){
+        if(levelPage > 0){
+            prevPageBtn.setOnAction(e -> {
+                for(Button btn : levelButtons){
+                    levelListRoot.getChildren().remove(btn);
+                }
+                levelButtons.clear();
+            });
+            prevPageBtn.setId("button-small");
+        } else {
+            prevPageBtn.setOnAction(null);
+            prevPageBtn.setId("button-disabled-small");
+        }
+
+        if(levelPage * 7 < MainApplication.levels.size()){
+            nxtPageBtn.setOnAction(e ->{
+                for(Button btn : levelButtons){
+                    levelListRoot.getChildren().remove(btn);
+                }
+                levelButtons.clear();
+            });
+            nxtPageBtn.setId("button-small");
+        } else {
+            nxtPageBtn.setOnAction(null);
+            nxtPageBtn.setId("button-disabled-small");
+        }
+
     }
 
     public static Scene helpMenu(Scene prevScene) {
