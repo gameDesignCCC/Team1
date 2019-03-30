@@ -46,7 +46,7 @@ public class Menu {
         btnStart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex).getPath())));
 
         btnLevelSelect.setTranslateY(80);
-        btnLevelSelect.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(scene, 0)));
+        btnLevelSelect.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(scene, 0, MainApplication.levels.get(0), true)));
 
         btnExit.setTranslateY(160);
         btnExit.setOnAction(e -> MainApplication.exit());
@@ -58,7 +58,7 @@ public class Menu {
         return scene;
     }
 
-    private static Scene levelSelect(Scene prevScene, int page) {
+    private static Scene levelSelect(Scene prevScene, int page, Level selectedLevel, boolean userSelected) {
 
         Pane root = new Pane();
         VBox levelListRoot = new VBox(20);
@@ -69,63 +69,83 @@ public class Menu {
         levelListRoot.setLayoutX(40);
         levelListRoot.setLayoutY(40);
 
-        Button nxtPageBtn = new Button();
-        Button prevPageBtn = new Button();
+        Button btnNxtPage = new Button();
+        Button btnPrevPage = new Button();
 
-        nxtPageBtn.setId("button-small-disabled");
-        nxtPageBtn.setGraphic(new ImageView(new Image("/assets/ui/icons/down.png")));
-        nxtPageBtn.setLayoutX(120);
-        nxtPageBtn.setLayoutY(600);
+        btnNxtPage.setId("button-small-disabled");
+        btnNxtPage.setGraphic(new ImageView(new Image("/assets/ui/icons/down.png")));
+        btnNxtPage.setLayoutX(120);
+        btnNxtPage.setLayoutY(600);
         if (page * 7 < MainApplication.levels.size() && MainApplication.levels.size() > (page + 1) * 7) {
-            nxtPageBtn.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(prevScene, page + 1)));
-            nxtPageBtn.setId("button-small");
+            btnNxtPage.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(prevScene, page + 1, MainApplication.levels.get((page + 1) * 7), true)));
+            btnNxtPage.setId("button-small");
         }
 
-        prevPageBtn.setId("button-small-disabled");
-        prevPageBtn.setGraphic(new ImageView(new Image("/assets/ui/icons/up.png")));
-        prevPageBtn.setLayoutX(40);
-        prevPageBtn.setLayoutY(600);
+        btnPrevPage.setId("button-small-disabled");
+        btnPrevPage.setGraphic(new ImageView(new Image("/assets/ui/icons/up.png")));
+        btnPrevPage.setLayoutX(40);
+        btnPrevPage.setLayoutY(600);
         if (page != 0) {
-            prevPageBtn.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(prevScene, page - 1)));
-            prevPageBtn.setId("button-small");
+            btnPrevPage.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(prevScene, page - 1, MainApplication.levels.get((page - 1) * 7), true)));
+            btnPrevPage.setId("button-small");
         }
 
-        root.getChildren().addAll(nxtPageBtn, prevPageBtn);
+        root.getChildren().addAll(btnNxtPage, btnPrevPage);
 
         for (int i = 0; i < MainApplication.levels.size(); i++) {
 
             if (i == (page + 1) * 7) {
                 break;
-            } else if ( i >= page * 7 && MainApplication.completedLevels.contains(MainApplication.levels.get(i))) {
+            } else if (i >= page * 7 && (MainApplication.completedLevels.contains(MainApplication.levels.get(i)) || i == MainApplication.currentLevelIndex)) {
                 Button btn = new Button(MainApplication.levels.get(i).getName());
                 int lvl = i;
                 btn.setOnAction(e -> {
-                    MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(lvl).getPath()));
-                    MainApplication.currentLevelIndex = lvl;
+                    MainApplication.getStage().setScene(levelSelect(prevScene, page, MainApplication.levels.get(lvl), true));
                 });
+                if (userSelected && selectedLevel == MainApplication.levels.get(i)) {
+                    btn.setId("button-selected");
+                }
                 levelListRoot.getChildren().add(btn);
-
-            } else if (i >= page * 7){
+            } else if (i >= page * 7) {
                 Button btn = new Button(MainApplication.levels.get(i).getName());
                 btn.setId("button-disabled");
                 levelListRoot.getChildren().add(btn);
             }
         }
 
-        Rectangle levelsBG = new Rectangle(20, 20, 200, MainApplication.WINDOW_SIZE_Y - 40);
-        levelsBG.setHeight(MainApplication.levels.size() * 80 + 20);
+        Rectangle levelsBG = new Rectangle(20, 0, 200, MainApplication.WINDOW_SIZE_Y - 40);
+        levelsBG.setHeight(MainApplication.WINDOW_SIZE_Y);
         levelsBG.setOpacity(0.3);
 
         Rectangle levelDetailsBG = new Rectangle(240, 20, MainApplication.WINDOW_SIZE_X - 260, MainApplication.WINDOW_SIZE_Y - 40);
         levelDetailsBG.setOpacity(0.3);
 
-        root.getChildren().add(levelDetailsBG);
-        root.getChildren().add(levelsBG);
-        root.getChildren().add(levelListRoot);
+        root.getChildren().addAll(levelDetailsBG, levelsBG, levelListRoot);
+
+        Label lbl = new Label("Level " + (selectedLevel.getLevelNumber() + 1));
+        lbl.setLayoutX(300);
+        lbl.setLayoutY(50);
+        lbl.setId("menu-text");
+        root.getChildren().add(lbl);
+
+        Button btnStartLevel = new Button("Start");
+        btnStartLevel.setLayoutX(260);
+        btnStartLevel.setLayoutY(620);
+        if (MainApplication.completedLevels.contains(selectedLevel) || MainApplication.currentLevelIndex == MainApplication.levels.indexOf(selectedLevel)) {
+            btnStartLevel.setOnAction(e -> {
+                MainApplication.getStage().setScene(MainApplication.getGameScene(selectedLevel.getPath()));
+                MainApplication.currentLevelIndex = MainApplication.levels.indexOf(selectedLevel);
+            });
+        } else {
+            btnStartLevel.setId("button-disabled");
+        }
+        root.getChildren().add(btnStartLevel);
+
 
         Button btnBack = new Button("Back");
-        btnBack.setLayoutX(260);
-        btnBack.setLayoutY(MainApplication.WINDOW_SIZE_Y - 100);
+        btnBack.setLayoutX(40);
+        btnBack.setLayoutY(660);
+        btnBack.setId("button-short");
         btnBack.setOnAction(e -> {
             MainApplication.getStage().setScene(prevScene);
         });

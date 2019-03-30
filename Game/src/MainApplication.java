@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -76,14 +77,17 @@ public class MainApplication extends Application {
     static List<Level> completedLevels = new LinkedList<>();
     static int currentLevelIndex = 0;
 
+    public static AudioClip audioClip = new AudioClip("file:C:/Users/Quack/IdeaProjects/Team1/Game/src/assets/audio/music.mp3");
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         loadResources();
         queueLevels();
         Menu.init();
+        audioClip.setVolume(0.1);
 
-        completedLevels.addAll(levels);
+        // completedLevels.addAll(levels);
 
         stage = primaryStage;
 
@@ -175,6 +179,7 @@ public class MainApplication extends Application {
                 stopTimer();
                 keys.clear();
                 stage.setScene(Menu.pauseMenuTransparent(stage.getScene()));
+                audioClip.stop();
             }
         });
         gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
@@ -195,6 +200,7 @@ public class MainApplication extends Application {
         MainApplication.timer.start();
 
         currentRoot = root;
+        audioClip.play();
         return gameScene;
     }
 

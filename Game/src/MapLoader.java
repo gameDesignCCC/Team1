@@ -29,9 +29,9 @@ public class MapLoader {
         m.load("");
     }
 
-    public ArrayList<Object> load(String file) {
+    public ArrayList<Object> load(String path) {
         ArrayList<Object> result = new ArrayList<>();
-        File f = new File(file);
+        File f = new File(path);
         try {
             Scanner scan = new Scanner(f);
 
@@ -130,7 +130,7 @@ public class MapLoader {
             scan.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            System.out.println("Failed to load level \"" + file + "\", file not found.");
+            System.out.println("Failed to load level \"" + path + "\", file not found.");
         }
         return result;
 

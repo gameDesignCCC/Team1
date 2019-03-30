@@ -287,6 +287,7 @@ public class Player extends ImageView implements GameObject {
         MainApplication.getStage().setScene(Menu.levelCompleted());
         MainApplication.completedLevels.add(MainApplication.levels.get(MainApplication.currentLevelIndex));
         MainApplication.currentLevelIndex++;
+        MainApplication.audioClip.stop();
     }
 
     /**
@@ -363,6 +364,7 @@ public class Player extends ImageView implements GameObject {
         MainApplication.collectedParts.clear();
         MainApplication.stopTimer();
         MainApplication.getStage().setScene(Menu.deathMenu());
+        MainApplication.audioClip.stop();
     }
 
 
