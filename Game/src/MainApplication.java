@@ -83,6 +83,8 @@ public class MainApplication extends Application {
         queueLevels();
         Menu.init();
 
+        completedLevels.addAll(levels);
+
         stage = primaryStage;
 
         stage.getIcons().add(new Image("/assets/application/favicon_placeholder128.png"));

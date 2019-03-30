@@ -33,6 +33,7 @@
 #button-small{
     -fx-min-width: 80;
     -fx-max-width: 80;
+    -fx-effect: null;
 }
 
 #button-wide{
@@ -45,10 +46,11 @@
     -fx-background-color: #616161;
 }
 
-#button-disabled-small{
+#button-small-disabled{
     -fx-background-color: #616161;
     -fx-min-width: 80;
     -fx-max-width: 80;
+    -fx-effect: null;
 }
 
 #menu-header{
