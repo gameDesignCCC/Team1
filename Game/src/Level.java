@@ -1,6 +1,7 @@
 import java.io.File;
+import java.io.Serializable;
 
-public class Level {
+public class Level implements Serializable {
 
     private String name;
     private String path;

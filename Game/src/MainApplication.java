@@ -17,13 +17,18 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 public class MainApplication extends Application {
+
+    // Stage Size
+    public static final double WINDOW_SIZE_X = 1280.0;
+    public static final double WINDOW_SIZE_Y = 720.0;
+
+    public static String installDIR;
 
     private static Stage stage;
 
@@ -39,10 +44,6 @@ public class MainApplication extends Application {
 
     // Key(s) pressed for player movement.
     private static HashMap<KeyCode, Boolean> keys;
-
-    // Stage Size
-    public static final double WINDOW_SIZE_X = 1280.0;
-    public static final double WINDOW_SIZE_Y = 720.0;
 
     // The Player
     static Player player;
@@ -73,11 +74,13 @@ public class MainApplication extends Application {
     static Pane currentRoot;
 
     // Level List
-    static List<Level> levels = new LinkedList<>();
-    static List<Level> completedLevels = new LinkedList<>();
+    static List<Level> levels = new ArrayList<>();
+    static List<Level> completedLevels = new ArrayList<>();
     static int currentLevelIndex = 0;
 
     public static AudioClip audioClip = new AudioClip("file:C:/Users/Quack/IdeaProjects/Team1/Game/src/assets/audio/music.mp3");
+
+    public static SaveGame savedGame;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -85,7 +88,7 @@ public class MainApplication extends Application {
         loadResources();
         queueLevels();
         Menu.init();
-        audioClip.setVolume(0.1);
+        loadGame();
 
         // completedLevels.addAll(levels);
 
@@ -200,7 +203,7 @@ public class MainApplication extends Application {
         MainApplication.timer.start();
 
         currentRoot = root;
-        audioClip.play();
+        // audioClip.play();
         return gameScene;
     }
 
@@ -306,8 +309,8 @@ public class MainApplication extends Application {
      * Load Fonts and stuff and things
      */
     public static void loadResources() {
-        // https://fonts.google.com/specimen/Russo+One
-        Font.loadFont(MainApplication.class.getResource("/assets/ui/fonts/font_russo_one_regular.ttf").toExternalForm(), 10);
+        installDIR = System.getProperty("user.dir");
+        audioClip.setVolume(0.1);
     }
 
     /**
@@ -349,7 +352,54 @@ public class MainApplication extends Application {
      */
     public static void exit() {
         // Save something or whatever.
+        saveGame();
+
         stage.close();
+    }
+
+    public static void loadGame(){
+        loadGame(new File(installDIR + "/save.data"));
+    }
+
+    public static void loadGame(File saveFile){
+        try {
+            FileInputStream fin = new FileInputStream(saveFile.getPath());
+            ObjectInputStream oin = new ObjectInputStream(fin);
+
+            savedGame = (SaveGame) oin.readObject();
+
+            currentLevelIndex = savedGame.getCurrentLevelIndex();
+            completedLevels = savedGame.getCompletedLevels();
+            levels = savedGame.getLevels();
+
+            oin.close();
+            fin.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void saveGame(){
+        try {
+            FileOutputStream fout = new FileOutputStream(installDIR + "/save.data");
+            ObjectOutputStream oout = new ObjectOutputStream(fout);
+
+            oout.writeObject(new SaveGame(currentLevelIndex, completedLevels, levels));
+
+            oout.close();
+            fout.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

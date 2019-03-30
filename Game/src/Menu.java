@@ -13,6 +13,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
+
+import java.io.File;
 
 public class Menu {
 
@@ -22,6 +26,8 @@ public class Menu {
     // Initialization
     public static void init() {
         dropShadow.setRadius(20.0);
+        // https://fonts.google.com/specimen/Russo+One
+        Font.loadFont(MainApplication.class.getResource("/assets/ui/fonts/font_russo_one_regular.ttf").toExternalForm(), 10);
     }
 
     /*
@@ -186,6 +192,30 @@ public class Menu {
 
         root.getChildren().add(btnBack);
 
+        Button b = new Button("settings");
+        b.setOnAction(e -> MainApplication.getStage().setScene(settingsMenu()));
+        root.getChildren().add(b);
+
+        return scene;
+    }
+
+    public static Scene settingsMenu(){
+        Pane root = new Pane();
+        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+
+        Button btn = new Button("load game");
+        btn.setOnAction(e -> {
+            FileChooser fc = new FileChooser();
+            File f = fc.showOpenDialog(MainApplication.getStage());
+            MainApplication.loadGame(f);
+            MainApplication.getStage().setScene(mainMenu());
+        });
+        root.getChildren().add(btn);
+
+        Button btn0 = new Button("back");
+        btn0.setLayoutY(40);
+        btn0.setOnAction(e -> MainApplication.getStage().setScene(mainMenu()));
+        root.getChildren().add(btn0);
 
         return scene;
     }
