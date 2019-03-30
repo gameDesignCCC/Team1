@@ -42,6 +42,13 @@
     -fx-max-width: 200px;
 }
 
+#button-short{
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+    -fx-effect: null;
+    -fx-font-size: 20px;
+}
+
 #button-disabled{
     -fx-background-color: #616161;
 }
@@ -53,10 +60,21 @@
     -fx-effect: null;
 }
 
+#button-selected{
+    -fx-background-color: #53706e;
+}
+
 #menu-header{
     -fx-font-family: "Russo One";
     -fx-font-size: 50px;
     -fx-text-fill: #F0F0F0;
+}
+
+#menu-text{
+    -fx-font-family: "Russo One";
+    -fx-text-fill: #FFF;
+    -fx-scale-x: 3;
+    -fx-scale-y: 3;
 }
 
 #death-screen-header {
