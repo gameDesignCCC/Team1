@@ -14,8 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.util.ArrayList;
-
 public class Menu {
 
     // Effects
@@ -25,9 +23,6 @@ public class Menu {
     public static void init() {
         dropShadow.setRadius(20.0);
     }
-
-    // Level Select
-    private static int levelPage = 0;
 
     /*
      *     -- SCENES --
@@ -58,6 +53,8 @@ public class Menu {
 
         root.getChildren().addAll(ivBG, btnStart, btnHelp, btnExit, btnLevelSelect);
 
+        MainApplication.currentRoot = root;
+
         return scene;
     }
 
@@ -72,8 +69,6 @@ public class Menu {
         levelListRoot.setLayoutX(40);
         levelListRoot.setLayoutY(40);
 
-        ArrayList<Button> levelButtons = new ArrayList<>();
-
         for (int i = 0; i < MainApplication.levels.size(); i++) {
 
             if (i == 7) {
@@ -86,7 +81,6 @@ public class Menu {
                 nxtPageBtn.setLayoutX(120);
                 nxtPageBtn.setLayoutY(600);
                 nxtPageBtn.setOnAction(e -> {
-                    updateThings(prevPageBtn, nxtPageBtn, levelButtons, levelListRoot);
                 });
 
                 prevPageBtn.setId("button-disabled-small");
@@ -94,10 +88,7 @@ public class Menu {
                 prevPageBtn.setLayoutX(40);
                 prevPageBtn.setLayoutY(600);
                 prevPageBtn.setOnAction(e -> {
-                    updateThings(prevPageBtn, nxtPageBtn, levelButtons, levelListRoot);
                 });
-
-                updateThings(prevPageBtn, nxtPageBtn, levelButtons, levelListRoot);
 
                 root.getChildren().addAll(nxtPageBtn, prevPageBtn);
                 break;
@@ -110,15 +101,12 @@ public class Menu {
                     MainApplication.currentLevelIndex = lvl;
                 });
                 levelListRoot.getChildren().add(btn);
-                levelButtons.add(btn);
 
             } else {
                 Button btn = new Button(MainApplication.levels.get(i).getName());
                 btn.setId("button-disabled");
                 levelListRoot.getChildren().add(btn);
-                levelButtons.add(btn);
             }
-
         }
 
         Rectangle levelsBG = new Rectangle(20, 20, 200, MainApplication.WINDOW_SIZE_Y - 40);
@@ -150,35 +138,6 @@ public class Menu {
         levelDetailsBG.toBack();
 
         return scene;
-    }
-
-    private static void updateThings(Button prevPageBtn, Button nxtPageBtn, ArrayList<Button> levelButtons, VBox levelListRoot){
-        if(levelPage > 0){
-            prevPageBtn.setOnAction(e -> {
-                for(Button btn : levelButtons){
-                    levelListRoot.getChildren().remove(btn);
-                }
-                levelButtons.clear();
-            });
-            prevPageBtn.setId("button-small");
-        } else {
-            prevPageBtn.setOnAction(null);
-            prevPageBtn.setId("button-disabled-small");
-        }
-
-        if(levelPage * 7 < MainApplication.levels.size()){
-            nxtPageBtn.setOnAction(e ->{
-                for(Button btn : levelButtons){
-                    levelListRoot.getChildren().remove(btn);
-                }
-                levelButtons.clear();
-            });
-            nxtPageBtn.setId("button-small");
-        } else {
-            nxtPageBtn.setOnAction(null);
-            nxtPageBtn.setId("button-disabled-small");
-        }
-
     }
 
     public static Scene helpMenu(Scene prevScene) {

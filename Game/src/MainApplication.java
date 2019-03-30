@@ -43,9 +43,6 @@ public class MainApplication extends Application {
     public static final double WINDOW_SIZE_X = 1280.0;
     public static final double WINDOW_SIZE_Y = 720.0;
 
-    // Temporary Player Sprites
-    private static Image playerSprite = new Image("/assets/sprites_textures/player/player_placeholder.png");
-
     // The Player
     static Player player;
 
@@ -77,7 +74,6 @@ public class MainApplication extends Application {
     // Level List
     static List<Level> levels = new LinkedList<>();
     static List<Level> completedLevels = new LinkedList<>();
-
     static int currentLevelIndex = 0;
 
     @Override
@@ -164,7 +160,7 @@ public class MainApplication extends Application {
         }
 
         // Spawn Player
-        player = new Player(mapLoader.playerX, mapLoader.playerY, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE, playerSprite);
+        player = new Player(mapLoader.playerX, mapLoader.playerY, MapLoader.GRID_SIZE, MapLoader.GRID_SIZE);
         root.getChildren().add(player);
         root.getChildren().add(player.hpBarBG);
         root.getChildren().add(player.hpBar);

@@ -36,7 +36,29 @@ public class Player extends ImageView implements GameObject {
     public Rectangle hpBar = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, 0, 20);
     public Rectangle hpBarBG = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, hp * 4, 20);
 
-    Player(double x, double y, double width, double height, Image sprite) {
+    // Sprites
+    private static Image sprite = new Image("assets/sprites_textures/player/player_placeholder.png");
+
+    private static Image[] spriteFramesR = {
+            new Image("assets/sprites_textures/player/r0.png"),
+            new Image("assets/sprites_textures/player/r1.png"),
+            new Image("assets/sprites_textures/player/r2.png"),
+            new Image("assets/sprites_textures/player/r3.png"),
+            new Image("assets/sprites_textures/player/r4.png")
+    };
+
+    private static Image[] spriteFramesL = {
+            new Image("assets/sprites_textures/player/l0.png"),
+            new Image("assets/sprites_textures/player/l1.png"),
+            new Image("assets/sprites_textures/player/l2.png"),
+            new Image("assets/sprites_textures/player/l3.png"),
+            new Image("assets/sprites_textures/player/l4.png")
+    };
+
+    private static double lastSpriteUpdateTime = 0.0;
+    private static int currentSpriteFrame = 0;
+
+    Player(double x, double y, double width, double height) {
         this.setX(x);
         this.setY(y);
         this.setFitWidth(width);
@@ -106,6 +128,23 @@ public class Player extends ImageView implements GameObject {
      * Player update method called every frame.
      */
     public void onUpdate() {
+
+        if (vX < 0) {
+            if (System.currentTimeMillis() - lastSpriteUpdateTime >= 100) {
+                currentSpriteFrame = (currentSpriteFrame + 1) % spriteFramesL.length;
+                setImage(spriteFramesL[currentSpriteFrame]);
+                lastSpriteUpdateTime = System.currentTimeMillis();
+            }
+        } else if (vX > 0) {
+            if (System.currentTimeMillis() - lastSpriteUpdateTime >= 100) {
+                currentSpriteFrame = (currentSpriteFrame + 1) % spriteFramesR.length;
+                setImage(spriteFramesR[currentSpriteFrame]);
+                lastSpriteUpdateTime = System.currentTimeMillis();
+            }
+        } else {
+            setImage(sprite);
+            currentSpriteFrame = 0;
+        }
 
         // Key Bindings
         boolean keyUp = controlUpPressed();
