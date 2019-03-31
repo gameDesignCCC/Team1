@@ -9,23 +9,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
+import util.Format;
 
 import java.io.File;
 
 public class Menu {
 
-    // Effects
-    private static DropShadow dropShadow = new DropShadow();
-
-    // Initialization
-    public static void init() {
-        dropShadow.setRadius(20.0);
+    /**
+     * Initialization
+     */
+    static void init() {
         // https://fonts.google.com/specimen/Russo+One
         Font.loadFont(MainApplication.class.getResource("/assets/ui/fonts/font_russo_one_regular.ttf").toExternalForm(), 10);
     }
@@ -34,9 +32,15 @@ public class Menu {
      *     -- SCENES --
      */
 
-    public static Scene mainMenu() {
+    /**
+     * Main Menu Scene
+     *
+     * @return Main Menu Scene
+     */
+    static Scene mainMenu() {
 
-        StackPane root = new StackPane();
+        Pane root = new Pane();
+        VBox listRoot = new VBox(20);
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
 
         scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
@@ -45,25 +49,43 @@ public class Menu {
 
         Button btnStart = new Button("Start");
         Button btnHelp = btnHelp(scene, false);
+        Button btnSettings = new Button("Settings");
         Button btnLevelSelect = new Button("Levels");
         Button btnExit = new Button("Exit");
 
-        btnStart.setTranslateY(-80);
-        btnStart.setOnAction(e -> MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex).getPath())));
-
-        btnLevelSelect.setTranslateY(80);
+        btnStart.setOnAction(e -> {
+            if(MainApplication.currentLevelIndex < MainApplication.levels.size() - 1){
+                MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex)));
+            } else {
+                MainApplication.log("No next level in queue for loading, resetting to level 0.");
+                MainApplication.currentLevelIndex = 0;
+                MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex)));
+            }
+        });
+        btnSettings.setOnAction(e -> MainApplication.getStage().setScene(settingsMenu(scene)));
         btnLevelSelect.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(scene, 0, MainApplication.levels.get(0), true)));
-
-        btnExit.setTranslateY(160);
         btnExit.setOnAction(e -> MainApplication.exit());
 
-        root.getChildren().addAll(ivBG, btnStart, btnHelp, btnExit, btnLevelSelect);
+        listRoot.getChildren().addAll(btnStart, btnSettings, btnHelp, btnLevelSelect, btnExit);
+        listRoot.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 80);
+        listRoot.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - listRoot.getChildren().size() * 20);
+
+        root.getChildren().addAll(ivBG, listRoot);
 
         MainApplication.currentRoot = root;
 
         return scene;
     }
 
+    /**
+     * Level Select Menu Scene
+     *
+     * @param prevScene     Previous Scene
+     * @param page          Page of Level Selection
+     * @param selectedLevel Selected Level When Opening
+     * @param userSelected  If the user selected the level or it was done automatically.
+     * @return Level Select Scene
+     */
     private static Scene levelSelect(Scene prevScene, int page, Level selectedLevel, boolean userSelected) {
 
         Pane root = new Pane();
@@ -105,9 +127,7 @@ public class Menu {
             } else if (i >= page * 7 && (MainApplication.completedLevels.contains(MainApplication.levels.get(i)) || i == MainApplication.currentLevelIndex)) {
                 Button btn = new Button(MainApplication.levels.get(i).getName());
                 int lvl = i;
-                btn.setOnAction(e -> {
-                    MainApplication.getStage().setScene(levelSelect(prevScene, page, MainApplication.levels.get(lvl), true));
-                });
+                btn.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(prevScene, page, MainApplication.levels.get(lvl), true)));
                 if (userSelected && selectedLevel == MainApplication.levels.get(i)) {
                     btn.setId("button-selected");
                 }
@@ -139,7 +159,7 @@ public class Menu {
         btnStartLevel.setLayoutY(620);
         if (MainApplication.completedLevels.contains(selectedLevel) || MainApplication.currentLevelIndex == MainApplication.levels.indexOf(selectedLevel)) {
             btnStartLevel.setOnAction(e -> {
-                MainApplication.getStage().setScene(MainApplication.getGameScene(selectedLevel.getPath()));
+                MainApplication.getStage().setScene(MainApplication.getGameScene(selectedLevel));
                 MainApplication.currentLevelIndex = MainApplication.levels.indexOf(selectedLevel);
             });
         } else {
@@ -152,9 +172,7 @@ public class Menu {
         btnBack.setLayoutX(40);
         btnBack.setLayoutY(660);
         btnBack.setId("button-short");
-        btnBack.setOnAction(e -> {
-            MainApplication.getStage().setScene(prevScene);
-        });
+        btnBack.setOnAction(e -> MainApplication.getStage().setScene(prevScene));
         root.getChildren().add(btnBack);
 
         scene.setOnKeyPressed(e -> {
@@ -169,7 +187,13 @@ public class Menu {
         return scene;
     }
 
-    public static Scene helpMenu(Scene prevScene) {
+    /**
+     * Help Menu Scene
+     *
+     * @param prevScene Previous Scene
+     * @return Help Menu Scene
+     */
+    static Scene helpMenu(Scene prevScene) {
 
         Pane root = new Pane();
         VBox subRoot = new VBox();
@@ -192,35 +216,65 @@ public class Menu {
 
         root.getChildren().add(btnBack);
 
-        Button b = new Button("settings");
-        b.setOnAction(e -> MainApplication.getStage().setScene(settingsMenu()));
-        root.getChildren().add(b);
-
         return scene;
     }
 
-    public static Scene settingsMenu(){
+    /**
+     * Settings Menu Scene
+     *
+     * @param prevScene Previous Scene
+     * @return Settings Menu Scene
+     */
+    static Scene settingsMenu(Scene prevScene) {
+
         Pane root = new Pane();
+        VBox listRoot = new VBox(20);
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
 
-        Button btn = new Button("load game");
-        btn.setOnAction(e -> {
-            FileChooser fc = new FileChooser();
-            File f = fc.showOpenDialog(MainApplication.getStage());
-            MainApplication.loadGame(f);
-            MainApplication.getStage().setScene(mainMenu());
-        });
-        root.getChildren().add(btn);
+        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
 
-        Button btn0 = new Button("back");
-        btn0.setLayoutY(40);
-        btn0.setOnAction(e -> MainApplication.getStage().setScene(mainMenu()));
-        root.getChildren().add(btn0);
+        Button btnLoadGame = new Button("Load Game");
+        btnLoadGame.setId("button-wide-smallfont");
+        btnLoadGame.setOnAction(e -> {
+            FileChooser fc = new FileChooser();
+            fc.setInitialDirectory(MainApplication.installDIR);
+            fc.setTitle("Load Game Save");
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Game save file", "*" + MainApplication.saveExt));
+            File f = fc.showOpenDialog(MainApplication.getStage());
+            if (f != null) MainApplication.loadGame();
+        });
+
+        Button btnToggleDisplayFPS = new Button("Show FPS: " + Format.boolAsOnOff(MainApplication.displayFPS));
+        btnToggleDisplayFPS.setId("button-wide-smallfont");
+        btnToggleDisplayFPS.setOnAction(e -> {
+            MainApplication.displayFPS = !MainApplication.displayFPS;
+            btnToggleDisplayFPS.setText("Show FPS: " + Format.boolAsOnOff(MainApplication.displayFPS));
+            MainApplication.log("(User Settings) Toggled FPS Display " + Format.boolAsOnOff(MainApplication.displayFPS));
+        });
+
+        Button btnToggleAutoSave = new Button("AutoSave: " + Format.boolAsOnOff(MainApplication.autoSave));
+        btnToggleAutoSave.setId("button-wide-smallfont");
+        btnToggleAutoSave.setOnAction(e -> {
+            MainApplication.autoSave = !MainApplication.autoSave;
+            btnToggleAutoSave.setText("AutoSave: " + Format.boolAsOnOff(MainApplication.autoSave));
+            MainApplication.log("(User Settings) Toggled AutoSave " + Format.boolAsOnOff(MainApplication.autoSave));
+        });
+
+        listRoot.getChildren().addAll(menuHeader("Settings"), btnLoadGame, btnToggleAutoSave, btnToggleDisplayFPS, btnBack(prevScene, true));
+        listRoot.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 100);
+        listRoot.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - listRoot.getChildren().size() * 40);
+
+        root.getChildren().add(listRoot);
 
         return scene;
     }
 
-    public static Scene deathMenu() {
+    /**
+     * Death Menu Scene
+     *
+     * @return Death Menu Scene
+     */
+    static Scene deathMenu() {
 
         Pane root = new Pane();
         VBox subRoot = new VBox(20);
@@ -231,8 +285,8 @@ public class Menu {
         Label lblHeader = menuHeader("You Died");
         lblHeader.setId("death-screen-header");
 
-        Button btnRestart = btnRestart();
         Button btnMainMenu = btnMainMenu();
+        Button btnRestart = btnRestart();
 
         subRoot.setAlignment(Pos.CENTER);
         subRoot.setPrefWidth(MainApplication.WINDOW_SIZE_X);
@@ -244,7 +298,12 @@ public class Menu {
         return scene;
     }
 
-    public static Scene levelCompleted() {
+    /**
+     * Level Completed Scene
+     *
+     * @return Level Completed Scene
+     */
+    static Scene levelCompleted() {
 
         Pane root = new Pane();
         VBox subRoot = new VBox(20);
@@ -258,11 +317,9 @@ public class Menu {
         btnNextLevel.setId("button-wide");
         btnNextLevel.setOnAction(e -> {
             if (MainApplication.levels.size() > MainApplication.currentLevelIndex) {
-                MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex).getPath()));
+                MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex)));
             } else {
-                System.out.println("No next level.");
-                MainApplication.queueLevels();
-                MainApplication.getStage().setScene(mainMenu());
+                MainApplication.getStage().setScene(gameCompleted());
             }
         });
 
@@ -277,35 +334,13 @@ public class Menu {
         return scene;
     }
 
-    public static Scene pauseMenu(Scene prevScene) {
-
-        VBox root = new VBox();
-        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
-
-        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
-
-        Label lblHeader = menuHeader("Paused");
-
-        Button btnResume = btnResume(prevScene);
-        Button btnRestart = btnRestart();
-        Button btnMainMenu = btnMainMenu();
-        Button btnHelp = btnHelp(scene, true);
-
-        scene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ESCAPE) {
-                MainApplication.getStage().setScene(mainMenu());
-            }
-        });
-
-        root.setPadding(new Insets(20, 20, 20, 20));
-        root.setSpacing(20);
-        root.setAlignment(Pos.CENTER);
-        root.getChildren().addAll(lblHeader, btnResume, btnRestart, btnHelp, btnMainMenu);
-
-        return scene;
-    }
-
-    static Scene pauseMenuTransparent(Scene prevScene) {
+    /**
+     * Pause Menu Scene
+     *
+     * @param prevScene Previous Scene
+     * @return Pause Menu Scene
+     */
+    static Scene pauseMenu(Scene prevScene) {
 
         Pane root = new Pane();
         VBox subRoot = new VBox();
@@ -346,9 +381,69 @@ public class Menu {
         subRoot.setAlignment(Pos.CENTER);
         subRoot.setLayoutX((MainApplication.WINDOW_SIZE_X / 2) - 100);
         subRoot.setLayoutY((MainApplication.WINDOW_SIZE_Y / 2) - 250);
-        subRoot.getChildren().addAll(menuHeader("Paused"), btnResume(prevScene), btnRestart(), btnHelp(scene, true), btnMainMenu());
+        subRoot.getChildren().addAll(menuHeader("Paused"), btnResume(prevScene), btnRestart(), btnSettings(scene, true), btnHelp(scene, true), btnMainMenu());
 
         root.getChildren().addAll(rectBG, subRoot);
+
+        return scene;
+    }
+
+    static Scene gameCompleted(){
+
+        Pane root = new Pane();
+        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+
+        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
+
+        Label lbl = new Label("gg ez");
+        lbl.setTextFill(Color.WHITE);
+        lbl.setLayoutX(100);
+        lbl.setLayoutY(100);
+        lbl.setScaleX(2);
+        lbl.setScaleY(2);
+
+        Button btn = new Button("Main Menu");
+        btn.setId("button-wide");
+        btn.setOnAction(e -> {
+            MainApplication.getStage().setScene(mainMenu());
+        });
+        btn.setLayoutX(100);
+        btn.setLayoutY(200);
+        root.getChildren().addAll(lbl, btn);
+
+        return scene;
+    }
+
+    /**
+     * Pause Menu Scene Non-transparent [DEPRECATED]
+     *
+     * @param prevScene Previous Scene
+     * @return Pause Menu Screen Non-transparent
+     */
+    public static Scene pauseMenuLegacy(Scene prevScene) {
+
+        VBox root = new VBox();
+        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+
+        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
+
+        Label lblHeader = menuHeader("Paused");
+
+        Button btnResume = btnResume(prevScene);
+        Button btnRestart = btnRestart();
+        Button btnMainMenu = btnMainMenu();
+        Button btnHelp = btnHelp(scene, true);
+
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                MainApplication.getStage().setScene(mainMenu());
+            }
+        });
+
+        root.setPadding(new Insets(20, 20, 20, 20));
+        root.setSpacing(20);
+        root.setAlignment(Pos.CENTER);
+        root.getChildren().addAll(lblHeader, btnResume, btnRestart, btnHelp, btnMainMenu);
 
         return scene;
     }
@@ -362,7 +457,7 @@ public class Menu {
         Label label = new Label(text);
         label.setId("menu-header");
         label.setPadding(new Insets(0, 0, 20, 0));
-        label.setEffect(dropShadow);
+        label.setEffect(dropShadow());
 
         return label;
     }
@@ -375,9 +470,17 @@ public class Menu {
             MainApplication.startTimer();
         });
         btnResume.setId("button-wide");
-        btnResume.setEffect(dropShadow);
+        btnResume.setEffect(dropShadow());
 
         return btnResume;
+    }
+
+    private static Button btnSettings(Scene prevScene, boolean wide) {
+        Button btnSetting = new Button("Settings");
+        if (wide) btnSetting.setId("button-wide");
+        btnSetting.setEffect(dropShadow());
+        btnSetting.setOnAction(e -> MainApplication.getStage().setScene(settingsMenu(prevScene)));
+        return btnSetting;
     }
 
     private static Button btnRestart() {
@@ -385,10 +488,10 @@ public class Menu {
         Button btnRestart = new Button("Restart");
         btnRestart.setOnAction(e -> {
             MainApplication.collectedPartsCurrent.clear();
-            MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex).getPath()));
+            MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex)));
         });
         btnRestart.setId("button-wide");
-        btnRestart.setEffect(dropShadow);
+        btnRestart.setEffect(dropShadow());
 
         return btnRestart;
     }
@@ -398,7 +501,7 @@ public class Menu {
         Button btnHelp = new Button("Help");
         btnHelp.setOnAction(e -> MainApplication.getStage().setScene(helpMenu(prevScene)));
         if (wide) btnHelp.setId("button-wide");
-        btnHelp.setEffect(dropShadow);
+        btnHelp.setEffect(dropShadow());
 
         return btnHelp;
     }
@@ -408,10 +511,28 @@ public class Menu {
         Button btnMainMenu = new Button("Main Menu");
         btnMainMenu.setOnAction(e -> MainApplication.getStage().setScene(mainMenu()));
         btnMainMenu.setId("button-wide");
-        btnMainMenu.setEffect(dropShadow);
+        btnMainMenu.setEffect(dropShadow());
 
         return btnMainMenu;
 
+    }
+
+    private static Button btnBack(Scene prevScene, boolean wide){
+        Button btnBack = new Button("Back");
+        if(wide) btnBack.setId("button-wide");
+        btnBack.setEffect(dropShadow());
+        btnBack.setOnAction(e -> MainApplication.getStage().setScene(prevScene));
+        return btnBack;
+    }
+
+    /*
+     *     -- EFFECTS --
+     */
+
+    private static DropShadow dropShadow() {
+        DropShadow ds = new DropShadow();
+        ds.setRadius(20.0);
+        return ds;
     }
 
 }

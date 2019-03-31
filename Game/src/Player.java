@@ -269,25 +269,45 @@ public class Player extends ImageView implements GameObject {
 
             MainApplication.collectedPartsCurrent.add(s);
             MainApplication.sceneObjects.remove(s);
+
             inJumpAnimation = true;
         }
 
         // Exit Collision
         if (PlayerCollision.exitCollision(this) != null) {
-            // Load Next Level
             onLevelExit();
         }
 
     }
 
+    /**
+     * On Level Exit
+     */
     private void onLevelExit() {
+
+        // Stop game loop
         MainApplication.stopTimer();
-        MainApplication.collectedParts.addAll(MainApplication.collectedPartsCurrent);
-        MainApplication.collectedPartsCurrent.clear();
-        MainApplication.getStage().setScene(Menu.levelCompleted());
+
+        // Add current level to list of completed levels.
         MainApplication.completedLevels.add(MainApplication.levels.get(MainApplication.currentLevelIndex));
+
+        // Add parts collected in current level to list of total collected parts.
+        MainApplication.collectedParts.addAll(MainApplication.collectedPartsCurrent);
+
+        // Clear list of parts collected in current level.
+        MainApplication.collectedPartsCurrent.clear();
+
+        // Increase the current level position.
         MainApplication.currentLevelIndex++;
-        MainApplication.audioClip.stop();
+
+        // Stop music player.
+        MainApplication.musicPlayer.stop();
+
+        // Auto save if enabled.
+        if (MainApplication.autoSave) MainApplication.saveGame();
+
+        // Set scene to level completed menu.
+        MainApplication.getStage().setScene(Menu.levelCompleted());
     }
 
     /**
@@ -364,7 +384,7 @@ public class Player extends ImageView implements GameObject {
         MainApplication.collectedParts.clear();
         MainApplication.stopTimer();
         MainApplication.getStage().setScene(Menu.deathMenu());
-        MainApplication.audioClip.stop();
+        MainApplication.musicPlayer.stop();
     }
 
 
