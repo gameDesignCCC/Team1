@@ -1,9 +1,9 @@
 /*
- * Name: CCC 2018 Platformer Game
- * Date: 6/10/2018 - 20/10/2018
+ * Name: CCC 2018-2019 Platformer Game
+ * Date: 10/6/2018 - 31/3/2019
  * Team: Advanced Game Development Team 1
  * Author(s):
- * Repo: https://github.com/gameDesignCCC/Team1
+ * Repo: https://github.com/gameDesignCCC/Team1.git
  */
 
 import javafx.animation.AnimationTimer;
@@ -20,18 +20,30 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MainApplication extends Application {
 
     // Stage Size
-    public static final double WINDOW_SIZE_X = 1280.0;
-    public static final double WINDOW_SIZE_Y = 720.0;
+    static final double WINDOW_SIZE_X = 1280.0;
+    static final double WINDOW_SIZE_Y = 720.0;
 
-    public static String installDIR;
+    // Installation Directory (set in loadResources())
+    static File installDIR;
 
+    // Game Saving
+    static File defaultSaveDIR;
+    static File defaultSaveFile;
+    static String defaultSaveName = "save";
+    static String saveExt = ".gs";
+    static SaveGame savedGame;
+    static boolean autoSave = true;
+
+    // The Stage
     private static Stage stage;
 
+    // Framerate Limiter
     private static final double MAX_FRAME_RATE = 16.67;
     private static long time = System.currentTimeMillis();
 
@@ -40,7 +52,7 @@ public class MainApplication extends Application {
     private static int frameTimeIndex = 0;
     private static boolean arrayFilled = false;
     private static Label fpsCounter = new Label();
-    private static final boolean DISPLAY_FPS = true;
+    static boolean displayFPS = true;
 
     // Key(s) pressed for player movement.
     private static HashMap<KeyCode, Boolean> keys;
@@ -49,7 +61,7 @@ public class MainApplication extends Application {
     static Player player;
 
     // Distance Traveled From Level Start
-    static double distanceScrolled;
+    static double distanceScrolled = 0.0;
 
     // Placeholder Map Background
     private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg_extended.png");
@@ -78,9 +90,8 @@ public class MainApplication extends Application {
     static List<Level> completedLevels = new ArrayList<>();
     static int currentLevelIndex = 0;
 
-    public static AudioClip audioClip = new AudioClip("file:C:/Users/Quack/IdeaProjects/Team1/Game/src/assets/audio/music.mp3");
-
-    public static SaveGame savedGame;
+    // Music Player
+    static AudioClip musicPlayer = new AudioClip("file:C:/Users/Quack/IdeaProjects/Team1/Game/src/assets/audio/music.mp3");
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -113,7 +124,7 @@ public class MainApplication extends Application {
         return stage;
     }
 
-    public static Scene getGameScene(String level) {
+    public static Scene getGameScene(Level level) {
         // Reset Scene
 
         Pane root = new Pane();
@@ -181,8 +192,8 @@ public class MainApplication extends Application {
             if (e.getCode() == KeyCode.ESCAPE) {
                 stopTimer();
                 keys.clear();
-                stage.setScene(Menu.pauseMenuTransparent(stage.getScene()));
-                audioClip.stop();
+                stage.setScene(Menu.pauseMenu(stage.getScene()));
+                musicPlayer.stop();
             }
         });
         gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
@@ -196,14 +207,14 @@ public class MainApplication extends Application {
         if (LEVEL_DECORATION) root.getChildren().add(new ImageView(new Image("/assets/ui/overlays/fog_overlay.png")));
 
         // Add FPS Display
-        if (DISPLAY_FPS) {
+        if (displayFPS) {
             root.getChildren().add(fpsCounter);
         }
 
         MainApplication.timer.start();
 
         currentRoot = root;
-        // audioClip.play();
+        // musicPlayer.play();
         return gameScene;
     }
 
@@ -215,7 +226,7 @@ public class MainApplication extends Application {
         if (time + MAX_FRAME_RATE <= now) {
 
             // FPS Display
-            if (DISPLAY_FPS) {
+            if (displayFPS) {
 
                 long oldFrameTime = frameTimes[frameTimeIndex];
                 frameTimes[frameTimeIndex] = now;
@@ -294,37 +305,110 @@ public class MainApplication extends Application {
     /**
      * Start Game Loop Timer
      */
-    public static void startTimer() {
+    static void startTimer() {
         timer.start();
     }
 
     /**
      * Stop Game Loop Timer
      */
-    public static void stopTimer() {
+    static void stopTimer() {
         timer.stop();
     }
 
     /**
      * Load Fonts and stuff and things
      */
-    public static void loadResources() {
-        installDIR = System.getProperty("user.dir");
-        audioClip.setVolume(0.1);
+    private static void loadResources() {
+        installDIR = new File(System.getProperty("user.dir").replace("\\", "/"));
+        defaultSaveDIR = new File(installDIR.getPath() + "/saves");
+        defaultSaveFile = new File(defaultSaveDIR.getPath() + "/" + defaultSaveName + saveExt);
+
+        if (!defaultSaveDIR.exists()) {
+            boolean successful = defaultSaveDIR.mkdirs();
+            if (successful) {
+                log("No saves directory was located, a new directory was created at \"" + defaultSaveDIR.getPath() + "\".");
+            } else {
+                log("No saves directory was located, and was unable to be created.", 1);
+            }
+        }
+    }
+
+    static void loadGame(File saveFile) {
+        if (defaultSaveFile.exists()) {
+            try {
+                FileInputStream fin = new FileInputStream(saveFile.getPath());
+                ObjectInputStream oin = new ObjectInputStream(fin);
+
+                savedGame = (SaveGame) oin.readObject();
+
+                currentLevelIndex = savedGame.getCurrentLevelIndex();
+                completedLevels = savedGame.getCompletedLevels();
+                levels = savedGame.getLevels();
+
+                oin.close();
+                fin.close();
+
+                log("Loaded game save from \"" + defaultSaveFile + "\".");
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                log("FileNotFound exception caught loading game. This should be impossible so idk how you managed to break it.", 1);
+            } catch (InvalidClassException e) {
+                e.printStackTrace();
+                log("InvalidClass exception caught loading game. It's possible the game save is invalid, or for a previous version.", 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+                log("IO exception caught while loading game.", 1);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                log("ClassNotFoundException exception caught loading game.", 1);
+            }
+        } else {
+            log("No game save was found at saves directory \"" + defaultSaveDIR + "\".");
+        }
+
+    }
+
+    static void loadGame() {
+        loadGame(defaultSaveFile);
+    }
+
+    static void saveGame(File saveFile) {
+        try {
+            FileOutputStream fout = new FileOutputStream(saveFile.getPath());
+            ObjectOutputStream oout = new ObjectOutputStream(fout);
+
+            oout.writeObject(new SaveGame(currentLevelIndex, completedLevels, levels));
+
+            oout.close();
+            fout.close();
+
+            log("Saved game to \"" + defaultSaveFile + "\".");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            log("FileNotFound exception caught saving game.", 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log("IO exception caught saving game.", 1);
+        }
+    }
+
+    static void saveGame() {
+        saveGame(defaultSaveFile);
     }
 
     /**
      * Load levels in /assets/levels into level queue
      */
-    public static void queueLevels() {
-        collectedParts.clear();
-        currentLevelIndex = 0;
+    static void queueLevels() {
 
         try {
             File levelsDIR = new File(MainApplication.class.getResource("/assets/levels").getFile());
             File[] files = levelsDIR.listFiles();
 
-            Arrays.sort(files);
+            if (files != null) Arrays.sort(files);
             /*Arrays.sort(files, (f0, f1) -> Integer.compare(f0.getPath().length(), f1.getPath().length()));*/
 
             int i = 0;
@@ -341,65 +425,35 @@ public class MainApplication extends Application {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Failed to load levels.");
+            log("Exception caught loading levels. Quitting...", 1);
             System.exit(-1);
         }
-
     }
 
     /**
      * Exit Application
      */
-    public static void exit() {
+    static void exit() {
         // Save something or whatever.
-        saveGame();
+        if (autoSave) saveGame();
 
         stage.close();
+        log("Quitting...");
+        System.exit(0);
     }
 
-    public static void loadGame(){
-        loadGame(new File(installDIR + "/save.data"));
-    }
-
-    public static void loadGame(File saveFile){
-        try {
-            FileInputStream fin = new FileInputStream(saveFile.getPath());
-            ObjectInputStream oin = new ObjectInputStream(fin);
-
-            savedGame = (SaveGame) oin.readObject();
-
-            currentLevelIndex = savedGame.getCurrentLevelIndex();
-            completedLevels = savedGame.getCompletedLevels();
-            levels = savedGame.getLevels();
-
-            oin.close();
-            fin.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+    // scuffed logger
+    public static void log(String msg, int type) {
+        SimpleDateFormat df = new SimpleDateFormat("[yyyy/MM/dd HH:mm:ss] ");
+        if (type == 0) {
+            System.out.println(df.format(new Date()) + "INFO: " + msg);
+        } else if (type == 1) {
+            System.err.println(df.format(new Date()) + "ERROR: " + msg);
         }
-
     }
 
-    public static void saveGame(){
-        try {
-            FileOutputStream fout = new FileOutputStream(installDIR + "/save.data");
-            ObjectOutputStream oout = new ObjectOutputStream(fout);
-
-            oout.writeObject(new SaveGame(currentLevelIndex, completedLevels, levels));
-
-            oout.close();
-            fout.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void log(String msg) {
+        log(msg, 0);
     }
 
     public static void main(String[] args) {

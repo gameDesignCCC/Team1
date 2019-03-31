@@ -42,6 +42,16 @@
     -fx-max-width: 200px;
 }
 
+#button-smallfont{
+    -fx-font-size: 16pt;
+}
+
+#button-wide-smallfont{
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+    -fx-font-size: 16pt;
+}
+
 #button-short{
     -fx-min-height: 40px;
     -fx-max-height: 40px;

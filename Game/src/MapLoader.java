@@ -20,18 +20,12 @@ public class MapLoader {
     public int playerX = -1;
     public int playerY = -1;
 
-    public static void main(String args[]) {
-        MapLoader m = new MapLoader();
+    public ArrayList<Object> load(Level level) {
 
-        File file = new File("");
-        System.out.println(file.canRead());
-
-        m.load("");
-    }
-
-    public ArrayList<Object> load(String path) {
+        String path = level.getPath();
         ArrayList<Object> result = new ArrayList<>();
         File f = new File(path);
+
         try {
             Scanner scan = new Scanner(f);
 
@@ -130,7 +124,7 @@ public class MapLoader {
             scan.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            System.out.println("Failed to load level \"" + path + "\", file not found.");
+            MainApplication.log("FileNotFound exception caught loading level \"" + path + "\".");
         }
         return result;
 
@@ -141,10 +135,10 @@ public class MapLoader {
         File[] listOfFiles = folder.listFiles();
 
         Image[] sprites = new Image[listOfFiles.length];
-        for ( int i = 0; i < listOfFiles.length; i++ ) {
+        for (int i = 0; i < listOfFiles.length; i++) {
             try {
                 sprites[i] = new Image(listOfFiles[i].toURI().toURL().toString());
-            } catch( IOException e ) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
