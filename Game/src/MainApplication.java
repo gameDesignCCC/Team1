@@ -335,7 +335,7 @@ public class MainApplication extends Application {
     }
 
     static void loadGame(File saveFile) {
-        if (defaultSaveFile.exists()) {
+        if (saveFile.exists()) {
             try {
                 FileInputStream fin = new FileInputStream(saveFile.getPath());
                 ObjectInputStream oin = new ObjectInputStream(fin);
@@ -349,7 +349,7 @@ public class MainApplication extends Application {
                 oin.close();
                 fin.close();
 
-                log("Loaded game save from \"" + defaultSaveFile + "\".");
+                log("Loaded game save from \"" + saveFile.getPath() + "\".");
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -365,7 +365,7 @@ public class MainApplication extends Application {
                 log("ClassNotFoundException exception caught loading game.", 1);
             }
         } else {
-            log("No game save was found at saves directory \"" + defaultSaveDIR + "\".");
+            log("No game save was found at saves directory \"" + saveFile.getParentFile() + "\".");
         }
 
     }

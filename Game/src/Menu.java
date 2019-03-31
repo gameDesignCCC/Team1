@@ -237,7 +237,7 @@ public class Menu {
         btnLoadGame.setId("button-wide-smallfont");
         btnLoadGame.setOnAction(e -> {
             FileChooser fc = new FileChooser();
-            fc.setInitialDirectory(MainApplication.installDIR);
+            fc.setInitialDirectory(MainApplication.defaultSaveDIR);
             fc.setTitle("Load Game Save");
             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Game save file", "*" + MainApplication.saveExt));
             File f = fc.showOpenDialog(MainApplication.getStage());
