@@ -7,7 +7,7 @@ public class SaveGame implements Serializable {
     private List<Level> completedLevels;
     private List<Level> levels;
 
-    public SaveGame(int currentLevelIndex, List<Level> completedLevels, List<Level> levels){
+    public SaveGame(int currentLevelIndex, List<Level> completedLevels, List<Level> levels) {
         this.currentLevelIndex = currentLevelIndex;
         this.completedLevels = completedLevels;
         this.levels = levels;
