@@ -54,7 +54,7 @@ public class Menu {
         Button btnExit = new Button("Exit");
 
         btnStart.setOnAction(e -> {
-            if(MainApplication.currentLevelIndex < MainApplication.levels.size() - 1){
+            if (MainApplication.currentLevelIndex < MainApplication.levels.size() - 1) {
                 MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex)));
             } else {
                 MainApplication.log("No next level in queue for loading, resetting to level 0.");
@@ -388,7 +388,7 @@ public class Menu {
         return scene;
     }
 
-    static Scene gameCompleted(){
+    static Scene gameCompleted() {
 
         Pane root = new Pane();
         Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
@@ -517,9 +517,9 @@ public class Menu {
 
     }
 
-    private static Button btnBack(Scene prevScene, boolean wide){
+    private static Button btnBack(Scene prevScene, boolean wide) {
         Button btnBack = new Button("Back");
-        if(wide) btnBack.setId("button-wide");
+        if (wide) btnBack.setId("button-wide");
         btnBack.setEffect(dropShadow());
         btnBack.setOnAction(e -> MainApplication.getStage().setScene(prevScene));
         return btnBack;
