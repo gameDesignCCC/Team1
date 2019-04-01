@@ -29,16 +29,19 @@ public class MainApplication extends Application {
     static final double WINDOW_SIZE_X = 1280.0;
     static final double WINDOW_SIZE_Y = 720.0;
 
-    // Installation Directory (set in loadResources())
-    static File installDIR;
+    // Installation Directory
+    private static final File INSTALL_DIR = new File(System.getProperty("user.dir").replace("\\", "/"));
 
     // Game Saving
-    static File defaultSaveDIR;
-    static File defaultSaveFile;
-    static String defaultSaveName = "save";
-    static String saveExt = ".gs";
-    static SaveGame savedGame;
+    static final String SAVE_EXT = ".gs";
+    static final String DEFAULT_SAVE_NAME = "save";
+    static final File DEFAULT_SAVE_DIR = new File(INSTALL_DIR.getPath() + "/saves");
+    static final File DEFAULT_SAVE_FILE = new File(DEFAULT_SAVE_DIR.getPath() + "/" + DEFAULT_SAVE_NAME + SAVE_EXT);
+    static String workingSaveName = DEFAULT_SAVE_NAME;
+    static File workingSaveDIR = DEFAULT_SAVE_DIR;
+    static File workingSaveFile = DEFAULT_SAVE_FILE;
     static boolean autoSave = true;
+    static SaveGame savedGame;
 
     // The Stage
     private static Stage stage;
@@ -320,14 +323,10 @@ public class MainApplication extends Application {
      * Load Fonts and stuff and things
      */
     private static void loadResources() {
-        installDIR = new File(System.getProperty("user.dir").replace("\\", "/"));
-        defaultSaveDIR = new File(installDIR.getPath() + "/saves");
-        defaultSaveFile = new File(defaultSaveDIR.getPath() + "/" + defaultSaveName + saveExt);
-
-        if (!defaultSaveDIR.exists()) {
-            boolean successful = defaultSaveDIR.mkdirs();
+        if (!DEFAULT_SAVE_DIR.exists()) {
+            boolean successful = DEFAULT_SAVE_DIR.mkdirs();
             if (successful) {
-                log("No saves directory was located, a new directory was created at \"" + defaultSaveDIR.getPath() + "\".");
+                log("No saves directory was located, a new directory was created at \"" + DEFAULT_SAVE_DIR.getPath() + "\".");
             } else {
                 log("No saves directory was located, and was unable to be created.", 1);
             }
@@ -364,39 +363,64 @@ public class MainApplication extends Application {
                 e.printStackTrace();
                 log("ClassNotFoundException exception caught loading game.", 1);
             }
+
+            setGameSave(saveFile);
+
         } else {
-            log("No game save was found at saves directory \"" + saveFile.getParentFile() + "\".");
+            log("No game save was found at \"" + saveFile.getPath() + "\".");
         }
 
     }
 
     static void loadGame() {
-        loadGame(defaultSaveFile);
+        loadGame(workingSaveFile);
     }
 
-    static void saveGame(File saveFile) {
-        try {
-            FileOutputStream fout = new FileOutputStream(saveFile.getPath());
-            ObjectOutputStream oout = new ObjectOutputStream(fout);
+    static void saveGame(File saveFile, boolean retry) {
 
-            oout.writeObject(new SaveGame(currentLevelIndex, completedLevels, levels));
+        if (saveFile.getParentFile().exists()) {
+            try {
+                FileOutputStream fout = new FileOutputStream(saveFile.getPath());
+                ObjectOutputStream oout = new ObjectOutputStream(fout);
 
-            oout.close();
-            fout.close();
+                oout.writeObject(new SaveGame(currentLevelIndex, completedLevels, levels));
 
-            log("Saved game to \"" + defaultSaveFile + "\".");
+                oout.close();
+                fout.close();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            log("FileNotFound exception caught saving game.", 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            log("IO exception caught saving game.", 1);
+                log("Saved game to \"" + saveFile.getPath() + "\".");
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                log("FileNotFound exception caught saving game.", 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+                log("IO exception caught saving game.", 1);
+            }
+        } else {
+            boolean successful = saveFile.getParentFile().mkdirs();
+            if (successful) {
+                if (!retry) {
+                    log("The current game save file's parent directory did not exist, and was recreated at \"" + saveFile.getParentFile().getPath() + "\". Retrying...", 2);
+                    saveGame(saveFile, true);
+                } else {
+                    log("The current game save file's parent directory did not exist. The directory was recreated at \"" + saveFile.getParentFile().getPath() + "\" but was unable to save.", 1);
+                }
+            } else {
+                log("The current game save file's parent directory does not exist and could not be recreated.", 1);
+            }
         }
     }
 
     static void saveGame() {
-        saveGame(defaultSaveFile);
+        saveGame(workingSaveFile, false);
+    }
+
+    static void setGameSave(File saveFile) {
+        workingSaveDIR = saveFile.getParentFile();
+        workingSaveFile = saveFile;
+        workingSaveName = saveFile.getName();
+        if (!workingSaveFile.equals(DEFAULT_SAVE_FILE)) log("(User Settings) Working save file changed to \"" + saveFile.getPath() + "\".");
     }
 
     /**
@@ -449,6 +473,8 @@ public class MainApplication extends Application {
             System.out.println(df.format(new Date()) + "INFO: " + msg);
         } else if (type == 1) {
             System.err.println(df.format(new Date()) + "ERROR: " + msg);
+        } else if (type == 2) {
+            System.out.println(df.format(new Date()) + "WARNING: " + msg);
         }
     }
 

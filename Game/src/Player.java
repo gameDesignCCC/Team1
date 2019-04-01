@@ -33,8 +33,8 @@ public class Player extends ImageView implements GameObject {
     private int hp = 100;
 
     // Player Health Bar
-    public Rectangle hpBar = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, 0, 20);
-    public Rectangle hpBarBG = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, hp * 4, 20);
+    Rectangle hpBar = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, 0, 20);
+    Rectangle hpBarBG = new Rectangle((MainApplication.WINDOW_SIZE_X / 2) - 200, 10, hp * 4, 20);
 
     // Sprites
     private static Image sprite = new Image("assets/sprites_textures/player/player_placeholder.png");
@@ -82,7 +82,7 @@ public class Player extends ImageView implements GameObject {
     /**
      * Check Stage Collision Top
      *
-     * @return
+     * @return Player colliding with stage top.
      */
     public boolean checkStageCollisionTop() {
         return (this.getY() <= 0);
@@ -91,7 +91,7 @@ public class Player extends ImageView implements GameObject {
     /**
      * Check Stage Collision Bottom
      *
-     * @return
+     * @return Player colliding with stage bottom.
      */
     public boolean checkStageCollisionBottom() {
         return (this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y);
@@ -100,7 +100,7 @@ public class Player extends ImageView implements GameObject {
     /**
      * Check Stage Collision Left
      *
-     * @return Whether the player is colliding with the left edge of the stage or not.
+     * @return Player colliding with stage left.
      */
     public boolean checkStageCollisionLeft() {
         return (this.getX() <= 0);
@@ -109,7 +109,7 @@ public class Player extends ImageView implements GameObject {
     /**
      * Check Stage Collision Right
      *
-     * @return Returns whether the player is colliding with the right edge of the stage or not.
+     * @return Player colliding with stage right.
      */
     public boolean checkStageCollisionRight() {
         return (this.getX() + this.getFitWidth() >= MainApplication.WINDOW_SIZE_X);
@@ -119,7 +119,7 @@ public class Player extends ImageView implements GameObject {
      * Player Movement
      * Moves the player every frame.
      */
-    public void move() {
+    private void move() {
         this.setX(this.getX() + vX);
         this.setY(this.getY() + vY);
     }
@@ -127,7 +127,7 @@ public class Player extends ImageView implements GameObject {
     /**
      * Player update method called every frame.
      */
-    public void onUpdate() {
+    void onUpdate() {
 
         if (vX < 0) {
             if (System.currentTimeMillis() - lastSpriteUpdateTime >= 100) {
@@ -304,7 +304,7 @@ public class Player extends ImageView implements GameObject {
         MainApplication.musicPlayer.stop();
 
         // Auto save if enabled.
-        if (MainApplication.autoSave) MainApplication.saveGame();
+        if (MainApplication.autoSave) MainApplication.saveGame(MainApplication.workingSaveFile, false);
 
         // Set scene to level completed menu.
         MainApplication.getStage().setScene(Menu.levelCompleted());
@@ -368,7 +368,7 @@ public class Player extends ImageView implements GameObject {
      *
      * @param damage Damage dealt to the player
      */
-    public void damage(int damage) {
+    private void damage(int damage) {
         hp -= damage;
         hpBar.setFill(Color.RED);
         hpBar.setEffect(new GaussianBlur(5));
@@ -378,7 +378,7 @@ public class Player extends ImageView implements GameObject {
     /**
      * Player Death
      */
-    public void die() {
+    private void die() {
         isDead = true;
         hp = 0;
         MainApplication.collectedParts.clear();
@@ -393,7 +393,7 @@ public class Player extends ImageView implements GameObject {
      *
      * @return Returns value of Y velocity.
      */
-    public double getVY() {
+    double getVY() {
         return vY;
     }
 
@@ -402,7 +402,7 @@ public class Player extends ImageView implements GameObject {
      *
      * @return Returns value of X velocity.
      */
-    public double getVX() {
+    double getVX() {
         return vX;
     }
 
