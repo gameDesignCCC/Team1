@@ -128,8 +128,13 @@ public class Menu {
                 Button btn = new Button(MainApplication.levels.get(i).getName());
                 int lvl = i;
                 btn.setOnAction(e -> MainApplication.getStage().setScene(levelSelect(prevScene, page, MainApplication.levels.get(lvl), true)));
-                if (userSelected && selectedLevel == MainApplication.levels.get(i)) {
-                    btn.setId("button-selected");
+                if (selectedLevel == MainApplication.levels.get(i)) {
+                    if (userSelected) btn.setId("button-selected");
+                    btn.setOnAction(null);
+                    btn.setOnMouseClicked(e -> {
+                        if (e.getClickCount() >= 2)
+                            MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(lvl)));
+                    });
                 }
                 levelListRoot.getChildren().add(btn);
             } else if (i >= page * 7) {
@@ -237,11 +242,11 @@ public class Menu {
         btnLoadGame.setId("button-wide-smallfont");
         btnLoadGame.setOnAction(e -> {
             FileChooser fc = new FileChooser();
-            fc.setInitialDirectory(MainApplication.defaultSaveDIR);
+            fc.setInitialDirectory(MainApplication.workingSaveDIR);
             fc.setTitle("Load Game Save");
-            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Game save file", "*" + MainApplication.saveExt));
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Game save file", "*" + MainApplication.SAVE_EXT));
             File f = fc.showOpenDialog(MainApplication.getStage());
-            if (f != null) MainApplication.loadGame();
+            if (f != null) MainApplication.loadGame(f);
         });
 
         Button btnToggleDisplayFPS = new Button("Show FPS: " + Format.boolAsOnOff(MainApplication.displayFPS));
@@ -265,35 +270,6 @@ public class Menu {
         listRoot.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - listRoot.getChildren().size() * 40);
 
         root.getChildren().add(listRoot);
-
-        return scene;
-    }
-
-    /**
-     * Death Menu Scene
-     *
-     * @return Death Menu Scene
-     */
-    static Scene deathMenu() {
-
-        Pane root = new Pane();
-        VBox subRoot = new VBox(20);
-        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
-
-        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
-
-        Label lblHeader = menuHeader("You Died");
-        lblHeader.setId("death-screen-header");
-
-        Button btnMainMenu = btnMainMenu();
-        Button btnRestart = btnRestart();
-
-        subRoot.setAlignment(Pos.CENTER);
-        subRoot.setPrefWidth(MainApplication.WINDOW_SIZE_X);
-        subRoot.setPrefHeight(MainApplication.WINDOW_SIZE_Y);
-        subRoot.getChildren().addAll(lblHeader, btnRestart, btnMainMenu);
-
-        root.getChildren().add(subRoot);
 
         return scene;
     }
@@ -410,6 +386,35 @@ public class Menu {
         btn.setLayoutX(100);
         btn.setLayoutY(200);
         root.getChildren().addAll(lbl, btn);
+
+        return scene;
+    }
+
+    /**
+     * Death Menu Scene
+     *
+     * @return Death Menu Scene
+     */
+    static Scene deathMenu() {
+
+        Pane root = new Pane();
+        VBox subRoot = new VBox(20);
+        Scene scene = new Scene(root, MainApplication.WINDOW_SIZE_X, MainApplication.WINDOW_SIZE_Y);
+
+        scene.getStylesheets().add("/assets/ui/stylesheets/style.css");
+
+        Label lblHeader = menuHeader("You Died");
+        lblHeader.setId("death-screen-header");
+
+        Button btnMainMenu = btnMainMenu();
+        Button btnRestart = btnRestart();
+
+        subRoot.setAlignment(Pos.CENTER);
+        subRoot.setPrefWidth(MainApplication.WINDOW_SIZE_X);
+        subRoot.setPrefHeight(MainApplication.WINDOW_SIZE_Y);
+        subRoot.getChildren().addAll(lblHeader, btnRestart, btnMainMenu);
+
+        root.getChildren().add(subRoot);
 
         return scene;
     }
