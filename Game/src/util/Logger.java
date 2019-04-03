@@ -6,10 +6,6 @@ import java.util.*;
 
 public class Logger {
 
-    /*
-     *  Introducing, the scuffed logger...
-     */
-
     public enum TYPE {
         INFO, WARNING, ERROR, FATAL_ERROR
     }
@@ -68,6 +64,13 @@ public class Logger {
             }
         } else if (lvl == TYPE.ERROR) {
             s = df.format(d) + "ERROR: " + msg;
+            System.err.println(s);
+            if (fileWrite) {
+                out.add(s);
+                write();
+            }
+        } else if (lvl == TYPE.FATAL_ERROR) {
+            s = df.format(d) + "FATAL: " + msg;
             System.err.println(s);
             if (fileWrite) {
                 out.add(s);
