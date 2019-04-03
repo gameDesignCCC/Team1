@@ -104,7 +104,6 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        logger.start();
         logger.log("Starting application...");
         loadResources();
         queueLevels();

@@ -4,7 +4,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Logger extends Thread {
+public class Logger {
 
     /*
      *  Introducing, the scuffed logger...
@@ -22,16 +22,13 @@ public class Logger extends Thread {
     private PrintWriter pw;
 
     private List<String> out = new ArrayList<>();
-    private List<String> backlog = new ArrayList<>();
 
-    private boolean running = false;
-    private boolean writing = false;
     private boolean canWrite = false;
 
     public Logger(File outputFile) {
         this.outputFile = outputFile;
 
-        log("Starting logger...", false);
+        log("Initializing logger...", false);
         if (!outputFile.getParentFile().exists()) {
             boolean successful = outputFile.getParentFile().mkdirs();
             if (successful) {
@@ -59,33 +56,21 @@ public class Logger extends Thread {
             s = df.format(d) + "INFO: " + msg;
             System.out.println(s);
             if (fileWrite) {
-                if (!writing) {
-                    out.add(s);
-                } else {
-                    backlog.add(s);
-                }
+                out.add(s);
                 write();
             }
         } else if (lvl == TYPE.WARNING) {
             s = df.format(d) + "WARNING: " + msg;
             System.out.println(s);
             if (fileWrite) {
-                if (!writing) {
-                    out.add(s);
-                } else {
-                    backlog.add(s);
-                }
+                out.add(s);
                 write();
             }
         } else if (lvl == TYPE.ERROR) {
             s = df.format(d) + "ERROR: " + msg;
             System.err.println(s);
             if (fileWrite) {
-                if (!writing) {
-                    out.add(s);
-                } else {
-                    backlog.add(s);
-                }
+                out.add(s);
                 write();
             }
         }
@@ -95,15 +80,9 @@ public class Logger extends Thread {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
-        if (!writing) {
-            out.add(df.format(new Date()) + "EXCEPTION: -- BEGIN EXCEPTION OUTPUT --");
-            out.add(sw.toString());
-            out.add(df.format(new Date()) + "EXCEPTION: -- END EXCEPTION OUTPUT --");
-        } else {
-            out.add(df.format(new Date()) + "EXCEPTION: -- BEGIN EXCEPTION OUTPUT --");
-            backlog.add(sw.toString());
-            out.add(df.format(new Date()) + "EXCEPTION: -- END EXCEPTION OUTPUT --");
-        }
+        out.add(df.format(new Date()) + "EXCEPTION: -- BEGIN EXCEPTION OUTPUT --");
+        out.add(sw.toString());
+        out.add(df.format(new Date()) + "EXCEPTION: -- END EXCEPTION OUTPUT --");
         write();
     }
 
@@ -121,19 +100,11 @@ public class Logger extends Thread {
 
     public void write() {
         if (canWrite) {
-            writing = true;
             for (String s : out) {
                 pw.println(s);
                 pw.flush();
             }
             out.clear();
-            writing = false;
-
-            if (!backlog.isEmpty()) {
-                out.addAll(backlog);
-                backlog.clear();
-                write();
-            }
         }
     }
 
@@ -148,19 +119,6 @@ public class Logger extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
                 log("Logger could not close file writer.", TYPE.ERROR);
-            }
-        }
-        running = false;
-        interrupt();
-    }
-
-    public void run() {
-        running = true;
-        double lastTime = System.currentTimeMillis();
-
-        while (running) {
-            if (System.currentTimeMillis() - lastTime >= 10000) {
-                lastTime = System.currentTimeMillis();
             }
         }
     }
