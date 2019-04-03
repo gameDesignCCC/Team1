@@ -464,7 +464,7 @@ public class MainApplication extends Application {
 
         } catch (Exception e) {
             e.printStackTrace();
-            logger.log("Exception caught loading levels. Quitting...", Logger.TYPE.ERROR);
+            logger.log("Exception caught loading levels. Quitting...", Logger.TYPE.FATAL_ERROR);
             System.exit(-1);
         }
     }
