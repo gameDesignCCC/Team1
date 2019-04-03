@@ -124,7 +124,7 @@ public class MapLoader {
             scan.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            MainApplication.log("FileNotFound exception caught loading level \"" + path + "\".");
+            MainApplication.logger.log("FileNotFound exception caught loading level \"" + path + "\".");
         }
         return result;
 

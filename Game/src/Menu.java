@@ -15,6 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import util.Format;
+import util.Logger;
 
 import java.io.File;
 
@@ -57,7 +58,7 @@ public class Menu {
             if (MainApplication.currentLevelIndex < MainApplication.levels.size() - 1) {
                 MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex)));
             } else {
-                MainApplication.log("No next level in queue for loading, resetting to level 0.");
+                MainApplication.logger.log("No next level in queue for loading, resetting to level 0.");
                 MainApplication.currentLevelIndex = 0;
                 MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(MainApplication.currentLevelIndex)));
             }
@@ -254,7 +255,7 @@ public class Menu {
         btnToggleDisplayFPS.setOnAction(e -> {
             MainApplication.displayFPS = !MainApplication.displayFPS;
             btnToggleDisplayFPS.setText("Show FPS: " + Format.boolAsOnOff(MainApplication.displayFPS));
-            MainApplication.log("(User Settings) Toggled FPS Display " + Format.boolAsOnOff(MainApplication.displayFPS));
+            MainApplication.logger.log("(User Settings) Toggled FPS Display " + Format.boolAsOnOff(MainApplication.displayFPS));
         });
 
         Button btnToggleAutoSave = new Button("AutoSave: " + Format.boolAsOnOff(MainApplication.autoSave));
@@ -262,10 +263,27 @@ public class Menu {
         btnToggleAutoSave.setOnAction(e -> {
             MainApplication.autoSave = !MainApplication.autoSave;
             btnToggleAutoSave.setText("AutoSave: " + Format.boolAsOnOff(MainApplication.autoSave));
-            MainApplication.log("(User Settings) Toggled AutoSave " + Format.boolAsOnOff(MainApplication.autoSave));
+            MainApplication.logger.log("(User Settings) Toggled AutoSave " + Format.boolAsOnOff(MainApplication.autoSave));
         });
 
-        listRoot.getChildren().addAll(menuHeader("Settings"), btnLoadGame, btnToggleAutoSave, btnToggleDisplayFPS, btnBack(prevScene, true));
+        Button btnClearLogs = new Button("Clear Logs");
+        btnClearLogs.setId("button-wide-smallfont");
+        btnClearLogs.setOnAction(e -> {
+            if (MainApplication.LOG_OUTPUT_DIR.listFiles() != null) {
+                for (File f : MainApplication.LOG_OUTPUT_DIR.listFiles()) {
+                    if (!f.getPath().equals(MainApplication.logger.getOutputFile().getPath())) {
+                        boolean success = f.delete();
+                        if (success) {
+                            MainApplication.logger.log("(User Settings) Removed old log output file at \"" + f.getPath() + "\".");
+                        } else {
+                            MainApplication.logger.log("(User Settings) Could not remove old log output at \"" + f.getPath() + "\".", Logger.TYPE.ERROR);
+                        }
+                    }
+                }
+            }
+        });
+
+        listRoot.getChildren().addAll(menuHeader("Settings"), btnLoadGame, btnToggleAutoSave, btnToggleDisplayFPS, btnClearLogs, btnBack(prevScene, true));
         listRoot.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 100);
         listRoot.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - listRoot.getChildren().size() * 40);
 
