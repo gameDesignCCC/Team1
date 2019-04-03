@@ -99,7 +99,7 @@ public class MainApplication extends Application {
     static int currentLevelIndex = 0;
 
     // Music Player
-    static AudioClip musicPlayer = new AudioClip("file:C:/Users/Quack/IdeaProjects/Team1/Game/src/assets/audio/music.mp3");
+    static AudioClip musicPlayer = new AudioClip(MainApplication.class.getResource("/assets/audio/music.mp3").toExternalForm());
 
     @Override
     public void start(Stage primaryStage) throws Exception {
