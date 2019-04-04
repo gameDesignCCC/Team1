@@ -8,6 +8,7 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import util.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -124,7 +125,9 @@ public class MapLoader {
             scan.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            MainApplication.logger.log("FileNotFound exception caught loading level \"" + path + "\".");
+            MainApplication.logger.log(e);
+            MainApplication.logger.log("FileNotFound exception caught loading level \"" + path + "\", Quitting...", Logger.Type.FATAL_ERROR);
+            MainApplication.exit(-1);
         }
         return result;
 
@@ -140,6 +143,8 @@ public class MapLoader {
                 sprites[i] = new Image(listOfFiles[i].toURI().toURL().toString());
             } catch (IOException e) {
                 e.printStackTrace();
+                MainApplication.logger.log(e);
+                MainApplication.logger.log("Failed to load lava sprites.", Logger.Type.ERROR);
             }
         }
 

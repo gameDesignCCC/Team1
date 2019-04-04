@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Logger {
 
-    public enum TYPE {
+    public enum Type {
         INFO, WARNING, ERROR, FATAL_ERROR
     }
 
@@ -16,8 +16,6 @@ public class Logger {
     private BufferedWriter bw;
     private FileWriter fw;
     private PrintWriter pw;
-
-    private List<String> out = new ArrayList<>();
 
     private boolean canWrite = false;
 
@@ -30,7 +28,7 @@ public class Logger {
             if (successful) {
                 log("No log output directory was located, a new directory was created at \"" + outputFile.getParentFile().getPath() + "\".");
             } else {
-                log("No log output directory was located, and was unable to be created.", Logger.TYPE.ERROR);
+                log("No log output directory was located, and was unable to be created.", Type.ERROR);
             }
         }
 
@@ -41,41 +39,34 @@ public class Logger {
             canWrite = true;
         } catch (IOException e) {
             e.printStackTrace();
-            log("Logger could not initialize, no log file will be created.", TYPE.ERROR, false);
+            log(e);
+            log("Logger could not initialize, no log file will be created.", Type.ERROR, false);
         }
     }
 
-    public void log(String msg, TYPE lvl, boolean fileWrite) {
+    public void log(String msg, Type lvl, boolean fileWrite) {
         Date d = new Date();
         String s;
-        if (lvl == TYPE.INFO) {
+        if (lvl == Type.INFO) {
             s = df.format(d) + "INFO: " + msg;
             System.out.println(s);
-            if (fileWrite) {
-                out.add(s);
-                write();
-            }
-        } else if (lvl == TYPE.WARNING) {
+            if (fileWrite) write(s);
+
+        } else if (lvl == Type.WARNING) {
             s = df.format(d) + "WARNING: " + msg;
             System.out.println(s);
-            if (fileWrite) {
-                out.add(s);
-                write();
-            }
-        } else if (lvl == TYPE.ERROR) {
+            if (fileWrite) write(s);
+
+        } else if (lvl == Type.ERROR) {
             s = df.format(d) + "ERROR: " + msg;
             System.err.println(s);
-            if (fileWrite) {
-                out.add(s);
-                write();
-            }
-        } else if (lvl == TYPE.FATAL_ERROR) {
+            if (fileWrite) write(s);
+
+        } else if (lvl == Type.FATAL_ERROR) {
             s = df.format(d) + "FATAL: " + msg;
             System.err.println(s);
-            if (fileWrite) {
-                out.add(s);
-                write();
-            }
+            if (fileWrite) write(s);
+
         }
     }
 
@@ -83,37 +74,33 @@ public class Logger {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
-        out.add(df.format(new Date()) + "EXCEPTION: -- BEGIN EXCEPTION OUTPUT --");
-        out.add(sw.toString());
-        out.add(df.format(new Date()) + "EXCEPTION: -- END EXCEPTION OUTPUT --");
-        write();
+        write(df.format(new Date()) + "EXCEPTION: -- BEGIN EXCEPTION OUTPUT --");
+        write(sw.toString());
+        write(df.format(new Date()) + "EXCEPTION: -- END EXCEPTION OUTPUT --");
     }
 
-    public void log(String msg, TYPE type) {
+    public void log(String msg, Type type) {
         log(msg, type, true);
     }
 
     public void log(String msg, boolean fileWrite) {
-        log(msg, TYPE.INFO, fileWrite);
+        log(msg, Type.INFO, fileWrite);
     }
 
     public void log(String msg) {
-        log(msg, TYPE.INFO, true);
+        log(msg, Type.INFO, true);
     }
 
-    public void write() {
+    public void write(String s) {
         if (canWrite) {
-            for (String s : out) {
-                pw.println(s);
-                pw.flush();
-            }
-            out.clear();
+            pw.println(s);
+            pw.flush();
+
         }
     }
 
     public void close() {
         if (canWrite) {
-            write();
             try {
                 bw.close();
                 fw.close();
@@ -121,7 +108,8 @@ public class Logger {
                 log("Logger closed, the output file can be found at \"" + outputFile.getPath() + "\".");
             } catch (IOException e) {
                 e.printStackTrace();
-                log("Logger could not close file writer.", TYPE.ERROR);
+                log(e);
+                log("Logger could not close file writer.", Type.ERROR);
             }
         }
     }
