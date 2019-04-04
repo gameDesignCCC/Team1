@@ -7,7 +7,7 @@ import java.util.*;
 public class Logger {
 
     public enum Type {
-        INFO, WARNING, ERROR, FATAL_ERROR
+        INFO, WARNING, ERROR, FATAL_ERROR, DEBUG
     }
 
     private File outputFile;
@@ -65,6 +65,11 @@ public class Logger {
         } else if (lvl == Type.FATAL_ERROR) {
             s = df.format(d) + "FATAL: " + msg;
             System.err.println(s);
+            if (fileWrite) write(s);
+
+        } else if (lvl == Type.DEBUG) {
+            s = df.format(d) + "DEBUG: " + msg;
+            System.out.println(s);
             if (fileWrite) write(s);
 
         }
