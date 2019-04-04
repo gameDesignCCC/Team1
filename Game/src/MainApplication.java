@@ -334,7 +334,7 @@ public class MainApplication extends Application {
                         "No saves directory was located, a new directory was created at \"" + DEFAULT_SAVE_DIR.getPath() + "\".");
             } else {
                 logger.log(
-                        "No saves directory was located, and was unable to be created.", Logger.TYPE.ERROR);
+                        "No saves directory was located, and was unable to be created.", Logger.Type.ERROR);
             }
         }
 
@@ -360,20 +360,24 @@ public class MainApplication extends Application {
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                logger.log(e);
                 logger.log(
-                        "FileNotFound exception caught loading game. This should be impossible so idk how you managed to break it.", Logger.TYPE.ERROR);
+                        "FileNotFound exception caught loading game. This should be impossible so idk how you managed to break it.", Logger.Type.ERROR);
             } catch (InvalidClassException e) {
                 e.printStackTrace();
+                logger.log(e);
                 logger.log(
-                        "InvalidClass exception caught loading game. It's possible the game save is invalid, or for a previous version.", Logger.TYPE.ERROR);
+                        "InvalidClass exception caught loading game. It's possible the game save is invalid, or for a previous version.", Logger.Type.ERROR);
             } catch (IOException e) {
                 e.printStackTrace();
+                logger.log(e);
                 logger.log(
-                        "IO exception caught while loading game.", Logger.TYPE.ERROR);
+                        "IO exception caught while loading game.", Logger.Type.ERROR);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
+                logger.log(e);
                 logger.log(
-                        "ClassNotFoundException exception caught loading game.", Logger.TYPE.ERROR);
+                        "ClassNotFoundException exception caught loading game.", Logger.Type.ERROR);
             }
 
             setGameSave(saveFile);
@@ -406,22 +410,24 @@ public class MainApplication extends Application {
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                logger.log("FileNotFound exception caught saving game.", Logger.TYPE.ERROR);
+                logger.log(e);
+                logger.log("FileNotFound exception caught saving game.", Logger.Type.ERROR);
             } catch (IOException e) {
                 e.printStackTrace();
-                logger.log("IO exception caught saving game.", Logger.TYPE.ERROR);
+                logger.log(e);
+                logger.log("IO exception caught saving game.", Logger.Type.ERROR);
             }
         } else {
             boolean successful = saveFile.getParentFile().mkdirs();
             if (successful) {
                 if (!retry) {
-                    logger.log("The current game save file's parent directory did not exist, and was recreated at \"" + saveFile.getParentFile().getPath() + "\". Retrying...", Logger.TYPE.WARNING);
+                    logger.log("The current game save file's parent directory did not exist, and was recreated at \"" + saveFile.getParentFile().getPath() + "\". Retrying...", Logger.Type.WARNING);
                     saveGame(saveFile, true);
                 } else {
-                    logger.log("The current game save file's parent directory did not exist. The directory was recreated at \"" + saveFile.getParentFile().getPath() + "\" but was unable to save.", Logger.TYPE.ERROR);
+                    logger.log("The current game save file's parent directory did not exist. The directory was recreated at \"" + saveFile.getParentFile().getPath() + "\" but was unable to save.", Logger.Type.ERROR);
                 }
             } else {
-                logger.log("The current game save file's parent directory does not exist and could not be recreated.", Logger.TYPE.ERROR);
+                logger.log("The current game save file's parent directory does not exist and could not be recreated.", Logger.Type.ERROR);
             }
         }
     }
@@ -464,22 +470,27 @@ public class MainApplication extends Application {
 
         } catch (Exception e) {
             e.printStackTrace();
-            logger.log("Exception caught loading levels. Quitting...", Logger.TYPE.FATAL_ERROR);
-            System.exit(-1);
+            logger.log(e);
+            logger.log("Exception caught loading levels. Quitting...", Logger.Type.FATAL_ERROR);
+            exit(-1);
         }
     }
 
     /**
      * Exit Application
      */
-    static void exit() {
+    static void exit(int status) {
         // Save something or whatever.
-        if (autoSave) saveGame();
+        if (autoSave && status == 0) saveGame();
 
         stage.close();
-        logger.log("Quitting Application...", Logger.TYPE.INFO);
+        logger.log("Quitting Application...", Logger.Type.INFO);
         logger.close();
-        System.exit(0);
+        System.exit(status);
+    }
+
+    static void exit(){
+        exit(0);
     }
 
     public static void main(String[] args) {

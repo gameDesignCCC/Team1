@@ -276,7 +276,7 @@ public class Menu {
                         if (success) {
                             MainApplication.logger.log("(User Settings) Removed old log output file at \"" + f.getPath() + "\".");
                         } else {
-                            MainApplication.logger.log("(User Settings) Could not remove old log output at \"" + f.getPath() + "\".", Logger.TYPE.ERROR);
+                            MainApplication.logger.log("(User Settings) Could not remove old log output at \"" + f.getPath() + "\".", Logger.Type.ERROR);
                         }
                     }
                 }
