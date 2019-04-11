@@ -412,6 +412,7 @@ public class MainApplication extends Application {
                 e.printStackTrace();
                 logger.log(e);
                 logger.log("FileNotFound exception caught saving game.", Logger.Type.ERROR);
+
             } catch (IOException e) {
                 e.printStackTrace();
                 logger.log(e);

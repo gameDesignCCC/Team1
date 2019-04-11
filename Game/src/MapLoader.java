@@ -1,9 +1,3 @@
-/*
- * Author(s):
- * Date: 6/10/2018
- */
-
-
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;

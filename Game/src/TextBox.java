@@ -1,8 +1,3 @@
-/*
- * Author(s):
- * Date: 6/10/2018
- */
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

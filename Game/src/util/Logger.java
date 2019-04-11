@@ -40,7 +40,7 @@ public class Logger {
         } catch (IOException e) {
             e.printStackTrace();
             log(e);
-            log("Logger could not initialize, no log file will be created.", Type.ERROR, false);
+            log("Logger could not initialize, no log file will be created.", Type.ERROR);
         }
     }
 
@@ -110,6 +110,7 @@ public class Logger {
                 bw.close();
                 fw.close();
                 pw.close();
+                canWrite = false;
                 log("Logger closed, the output file can be found at \"" + outputFile.getPath() + "\".");
             } catch (IOException e) {
                 e.printStackTrace();

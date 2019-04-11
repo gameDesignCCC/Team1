@@ -1,8 +1,3 @@
-/*
- * Author(s): Jacob Dixon @jacobrdixon.com
- * Date: 24/10/2018
- */
-
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -168,7 +163,7 @@ public class Player extends ImageView implements GameObject {
             vX += SPEED;
 
         } else if (PlayerCollision.collidingRight(this) != null) {
-            onCollision(PlayerCollision.collidingRight(this), StaticObject.CollisionType.Right);
+            onCollision(PlayerCollision.collidingRight(this), StaticObject.Direction.Right);
         }
 
         // Move Right Controls
@@ -176,7 +171,7 @@ public class Player extends ImageView implements GameObject {
             vX += -SPEED;
 
         } else if (PlayerCollision.collidingLeft(this) != null) {
-            onCollision(PlayerCollision.collidingLeft(this), StaticObject.CollisionType.Left);
+            onCollision(PlayerCollision.collidingLeft(this), StaticObject.Direction.Left);
         }
 
         // Jumping Controls
@@ -229,21 +224,21 @@ public class Player extends ImageView implements GameObject {
                 inJumpAnimation = false;
                 vY = 0.0;
                 setY(collisionTop.getY() - collisionTop.getHeight());
-                onCollision(collisionBottom, StaticObject.CollisionType.Bottom);
+                onCollision(collisionBottom, StaticObject.Direction.Bottom);
 
             } else if (diffBottom > diffTop) {
 
                 vY = 0.0;
                 setY(collisionTop.getY() + collisionTop.getHeight());
 
-                onCollision(collisionTop, StaticObject.CollisionType.Top);
+                onCollision(collisionTop, StaticObject.Direction.Top);
             }
 
         } else if (collisionBottom != null) {
             inJumpAnimation = false;
             vY = 0.0;
             setY(collisionBottom.getY() - collisionBottom.getHeight());
-            onCollision(collisionBottom, StaticObject.CollisionType.Bottom);
+            onCollision(collisionBottom, StaticObject.Direction.Bottom);
 
         } else if (collisionTop != null) {
             vY = 0.0;
@@ -316,9 +311,9 @@ public class Player extends ImageView implements GameObject {
      * @param staticRect Any StaticRect.
      * @param type       Type of collision. (Left, Right, Top, Bottom)
      */
-    private void onCollision(StaticRect staticRect, StaticObject.CollisionType type) {
+    private void onCollision(StaticRect staticRect, StaticObject.Direction type) {
 
-        if (type == StaticObject.CollisionType.Bottom) {
+        if (type == StaticObject.Direction.Bottom) {
 
             if (staticRect.getType() == StaticObject.Type.SPIKE) {
                 damage(120);
@@ -328,7 +323,7 @@ public class Player extends ImageView implements GameObject {
                 damage(120);
             }
 
-        } else if (type == StaticObject.CollisionType.Left || type == StaticObject.CollisionType.Right) {
+        } else if (type == StaticObject.Direction.Left || type == StaticObject.Direction.Right) {
 
             if (staticRect.getType() == StaticObject.Type.LAVA) {
                 damage(120);
@@ -336,7 +331,7 @@ public class Player extends ImageView implements GameObject {
                 damage(5);
             }
 
-            if (type == StaticObject.CollisionType.Right) {
+            if (type == StaticObject.Direction.Right) {
 
                 if (staticRect.getType() == StaticObject.Type.LADDER) {
                     if (controlRightPressed() || controlUpPressed()) {

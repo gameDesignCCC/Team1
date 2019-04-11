@@ -1,7 +1,3 @@
-/*
- * Author(s):
- * Date: 6/10/2018
- */
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -77,11 +73,11 @@ public class Enemy extends ImageView implements GameObject {
                 isTriggered = false;
             }
             if(getX() < MainApplication.player.getX()){
-                if(EnemyCollision.collidingRight(this) == null) {
+                if(EnemyCollision.colliding(this, StaticObject.Direction.Right) == null) {
                     vX += SPEED;
                 }
             } else if (getX() > MainApplication.player.getX()){
-                if(EnemyCollision.collidingLeft(this) == null) {
+                if(EnemyCollision.colliding(this, StaticObject.Direction.Left) == null) {
                     vX -= SPEED;
                 }
             }
