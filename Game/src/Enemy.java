@@ -73,11 +73,11 @@ public class Enemy extends ImageView implements GameObject {
                 isTriggered = false;
             }
             if(getX() < MainApplication.player.getX()){
-                if(EnemyCollision.colliding(this, StaticObject.Direction.Right) == null) {
+                if(EnemyCollision.colliding(this, StaticObject.CollisionDirection.Right) == null) {
                     vX += SPEED;
                 }
             } else if (getX() > MainApplication.player.getX()){
-                if(EnemyCollision.colliding(this, StaticObject.Direction.Left) == null) {
+                if(EnemyCollision.colliding(this, StaticObject.CollisionDirection.Left) == null) {
                     vX -= SPEED;
                 }
             }

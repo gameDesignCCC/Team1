@@ -82,6 +82,14 @@ public class Logger {
         write(df.format(new Date()) + "EXCEPTION: -- BEGIN EXCEPTION OUTPUT --");
         write(sw.toString());
         write(df.format(new Date()) + "EXCEPTION: -- END EXCEPTION OUTPUT --");
+
+        try {
+            pw.close();
+            sw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
     }
 
     public void log(String msg, Type type) {
@@ -100,7 +108,6 @@ public class Logger {
         if (canWrite) {
             pw.println(s);
             pw.flush();
-
         }
     }
 

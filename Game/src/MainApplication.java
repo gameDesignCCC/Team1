@@ -351,6 +351,8 @@ public class MainApplication extends Application {
                 currentLevelIndex = savedGame.getCurrentLevelIndex();
                 completedLevels = savedGame.getCompletedLevels();
                 levels = savedGame.getLevels();
+                displayFPS = savedGame.getDisplayFPS();
+                autoSave = savedGame.getAutoSave();
 
                 oin.close();
                 fin.close();
@@ -400,7 +402,7 @@ public class MainApplication extends Application {
                 FileOutputStream fout = new FileOutputStream(saveFile.getPath());
                 ObjectOutputStream oout = new ObjectOutputStream(fout);
 
-                oout.writeObject(new SaveGame(currentLevelIndex, completedLevels, levels));
+                oout.writeObject(new SaveGame(currentLevelIndex, completedLevels, levels, displayFPS, autoSave));
 
                 oout.close();
                 fout.close();

@@ -17,7 +17,9 @@ import javafx.stage.FileChooser;
 import util.Format;
 import util.Logger;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 public class Menu {
 
@@ -283,7 +285,19 @@ public class Menu {
             }
         });
 
-        listRoot.getChildren().addAll(menuHeader("Settings"), btnLoadGame, btnToggleAutoSave, btnToggleDisplayFPS, btnClearLogs, btnBack(prevScene, true));
+        Button btnViewLogs = new Button("View Logs");
+        btnViewLogs.setId("button-wide-smallfont");
+        btnViewLogs.setOnAction(e ->{
+            try {
+                Desktop.getDesktop().open(MainApplication.LOG_OUTPUT_DIR);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                MainApplication.logger.log(ex);
+                MainApplication.logger.log("Could not open file explorer at log output directory.", Logger.Type.ERROR);
+            }
+        });
+
+        listRoot.getChildren().addAll(menuHeader("Settings"), btnLoadGame, btnToggleAutoSave, btnToggleDisplayFPS, btnClearLogs, btnViewLogs, btnBack(prevScene, true));
         listRoot.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 100);
         listRoot.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - listRoot.getChildren().size() * 40);
 

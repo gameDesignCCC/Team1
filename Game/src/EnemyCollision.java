@@ -1,6 +1,6 @@
 public class EnemyCollision {
 
-    public static StaticRect colliding(Enemy enemy, StaticObject.Direction direction){
+    public static StaticRect colliding(Enemy enemy, StaticObject.CollisionDirection direction){
 
         StaticRect s = null;
 

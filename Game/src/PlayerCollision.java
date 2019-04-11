@@ -14,7 +14,7 @@ public class PlayerCollision {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
-                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticObject.Direction.Right)) {
+                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticObject.CollisionDirection.Right)) {
                     s = staticRect;
                     break;
                 }
@@ -37,7 +37,7 @@ public class PlayerCollision {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
-                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticObject.Direction.Left)) {
+                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticObject.CollisionDirection.Left)) {
                     s = staticRect;
                     break;
                 }
@@ -60,7 +60,7 @@ public class PlayerCollision {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
-                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticObject.Direction.Top)) {
+                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticObject.CollisionDirection.Top)) {
                     s = staticRect;
                     break;
                 }
@@ -83,7 +83,7 @@ public class PlayerCollision {
             if (object instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) object;
 
-                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticObject.Direction.Bottom)) {
+                if (staticRect.getCollisionEnabled() && staticRect.checkCollision(player).contains(StaticObject.CollisionDirection.Bottom)) {
                     s = staticRect;
                     break;
                 }
@@ -100,10 +100,10 @@ public class PlayerCollision {
      * @return Player is colliding with staticRect.
      */
     public static boolean isColliding(StaticRect staticRect, Player player) {
-        return (staticRect.checkCollision(player).contains(StaticObject.Direction.Bottom) ||
-                staticRect.checkCollision(player).contains(StaticObject.Direction.Right) ||
-                staticRect.checkCollision(player).contains(StaticObject.Direction.Left) ||
-                staticRect.checkCollision(player).contains(StaticObject.Direction.Top));
+        return (staticRect.checkCollision(player).contains(StaticObject.CollisionDirection.Bottom) ||
+                staticRect.checkCollision(player).contains(StaticObject.CollisionDirection.Right) ||
+                staticRect.checkCollision(player).contains(StaticObject.CollisionDirection.Left) ||
+                staticRect.checkCollision(player).contains(StaticObject.CollisionDirection.Top));
     }
 
     /**

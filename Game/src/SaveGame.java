@@ -6,11 +6,15 @@ public class SaveGame implements Serializable {
     private int currentLevelIndex;
     private List<Level> completedLevels;
     private List<Level> levels;
+    private boolean showFPS;
+    private boolean autoSave;
 
-    public SaveGame(int currentLevelIndex, List<Level> completedLevels, List<Level> levels) {
+    public SaveGame(int currentLevelIndex, List<Level> completedLevels, List<Level> levels, boolean displayFPS, boolean autoSave) {
         this.currentLevelIndex = currentLevelIndex;
         this.completedLevels = completedLevels;
         this.levels = levels;
+        this.showFPS = displayFPS;
+        this.autoSave = autoSave;
     }
 
     public int getCurrentLevelIndex() {
@@ -23,5 +27,13 @@ public class SaveGame implements Serializable {
 
     public List<Level> getLevels() {
         return levels;
+    }
+
+    public boolean getDisplayFPS(){
+        return showFPS;
+    }
+
+    public boolean getAutoSave(){
+        return autoSave;
     }
 }
