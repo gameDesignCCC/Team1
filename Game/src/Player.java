@@ -300,7 +300,6 @@ public class Player extends ImageView implements GameObject {
 
         // Pause Music Player
         MainApplication.musicPlayer.pause();
-
         // Set scene to level completed menu.
         MainApplication.getStage().setScene(Menu.levelCompleted());
     }
@@ -380,6 +379,7 @@ public class Player extends ImageView implements GameObject {
         MainApplication.collectedParts.clear();
         MainApplication.stopTimer();
         MainApplication.getStage().setScene(Menu.deathMenu());
+        MainApplication.musicPlayer.stop();
     }
 
 

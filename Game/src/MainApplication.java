@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -226,7 +227,6 @@ public class MainApplication extends Application {
 
         currentRoot = root;
         MainApplication.timer.start();
-
         return gameScene;
     }
 
@@ -431,7 +431,6 @@ public class MainApplication extends Application {
             try {
                 FileOutputStream fout = new FileOutputStream(saveFile.getPath());
                 ObjectOutputStream oout = new ObjectOutputStream(fout);
-
                 oout.writeObject(new SaveGame(currentLevelIndex, completedLevels, levels, displayFPS, autoSave));
 
                 oout.close();
