@@ -295,11 +295,11 @@ public class Player extends ImageView implements GameObject {
         // Increase the current level position.
         MainApplication.currentLevelIndex++;
 
-        // Stop music player.
-        MainApplication.musicPlayer.stop();
-
         // Auto save if enabled.
         if (MainApplication.autoSave) MainApplication.saveGame(MainApplication.workingSaveFile, false);
+
+        // Pause Music Player
+        MainApplication.musicPlayer.pause();
 
         // Set scene to level completed menu.
         MainApplication.getStage().setScene(Menu.levelCompleted());
@@ -376,10 +376,10 @@ public class Player extends ImageView implements GameObject {
     private void die() {
         isDead = true;
         hp = 0;
+        MainApplication.musicPlayer.stop();
         MainApplication.collectedParts.clear();
         MainApplication.stopTimer();
         MainApplication.getStage().setScene(Menu.deathMenu());
-        MainApplication.musicPlayer.stop();
     }
 
 

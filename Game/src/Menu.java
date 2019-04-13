@@ -381,6 +381,7 @@ public class Menu {
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
                 MainApplication.getStage().setScene(prevScene);
+                MainApplication.musicPlayer.play();
                 MainApplication.startTimer();
             }
         });
@@ -504,6 +505,7 @@ public class Menu {
         Button btnResume = new Button("Resume");
         btnResume.setOnAction(e -> {
             MainApplication.getStage().setScene(prevScene);
+            MainApplication.musicPlayer.play();
             MainApplication.startTimer();
         });
         btnResume.setId("button-wide");
