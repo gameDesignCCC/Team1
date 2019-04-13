@@ -65,36 +65,36 @@ public class StaticRect extends StaticObject implements GameObject {
      * @return returns colliding on left, right, top, and bottom
      */
     @Override
-    public ArrayList<CollisionType> checkCollision(GameObject gameObject) {
-        ArrayList<CollisionType> collisions = new ArrayList<>();
+    public ArrayList<CollisionDirection> checkCollision(GameObject gameObject) {
+        ArrayList<CollisionDirection> collisions = new ArrayList<>();
 
         boolean collided = false;
 
         if (gameObject.getY() + gameObject.getHeight() >= y && gameObject.getY() < y + height
                 && gameObject.getX() + gameObject.getWidth() > x && gameObject.getX() < x + width) {
-            collisions.add(CollisionType.Bottom);
+            collisions.add(CollisionDirection.Bottom);
             collided = true;
 
         } else if (gameObject.getX() + gameObject.getWidth() >= x && gameObject.getX() < x + width
                 && gameObject.getY() + gameObject.getHeight() > y && gameObject.getY() < y + height) {
-            collisions.add(CollisionType.Right);
+            collisions.add(CollisionDirection.Right);
             collided = true;
 
         } else if (gameObject.getX() <= x + width && gameObject.getX() + gameObject.getWidth() > x
                 && gameObject.getY() + gameObject.getHeight() > y && gameObject.getY() < y + height) {
-            collisions.add(CollisionType.Left);
+            collisions.add(CollisionDirection.Left);
             collided = true;
 
         }
         // Yes, this needs to be separate from the other tests in order to stop the player from teleporting through blocks, it's not a mistake so please don't fix it, thank.
         if (gameObject.getY() <= y + height && gameObject.getY() + gameObject.getHeight() > y
                 && gameObject.getX() + gameObject.getWidth() > x && gameObject.getX() < x + width) {
-            collisions.add(CollisionType.Top);
+            collisions.add(CollisionDirection.Top);
             collided = true;
         }
 
         if (!collided) {
-            collisions.add(CollisionType.None);
+            collisions.add(CollisionDirection.None);
         }
         return collisions;
     }

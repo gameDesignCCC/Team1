@@ -1,8 +1,3 @@
-/*
- * Author(s): Jacob Dixon @jacobrdixon.com
- * Date: 24/10/2018
- */
-
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -71,12 +66,12 @@ public class Player extends ImageView implements GameObject {
 
     @Override
     public double getHeight() {
-        return this.getFitHeight();
+        return getFitHeight();
     }
 
     @Override
     public double getWidth() {
-        return this.getFitWidth();
+        return getFitWidth();
     }
 
     /**
@@ -85,7 +80,7 @@ public class Player extends ImageView implements GameObject {
      * @return Player colliding with stage top.
      */
     public boolean checkStageCollisionTop() {
-        return (this.getY() <= 0);
+        return (getY() <= 0);
     }
 
     /**
@@ -94,7 +89,7 @@ public class Player extends ImageView implements GameObject {
      * @return Player colliding with stage bottom.
      */
     public boolean checkStageCollisionBottom() {
-        return (this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y);
+        return (getY() + getFitHeight() >= MainApplication.WINDOW_SIZE_Y);
     }
 
     /**
@@ -103,7 +98,7 @@ public class Player extends ImageView implements GameObject {
      * @return Player colliding with stage left.
      */
     public boolean checkStageCollisionLeft() {
-        return (this.getX() <= 0);
+        return (getX() <= 0);
     }
 
     /**
@@ -112,7 +107,7 @@ public class Player extends ImageView implements GameObject {
      * @return Player colliding with stage right.
      */
     public boolean checkStageCollisionRight() {
-        return (this.getX() + this.getFitWidth() >= MainApplication.WINDOW_SIZE_X);
+        return (getX() + getFitWidth() >= MainApplication.WINDOW_SIZE_X);
     }
 
     /**
@@ -120,8 +115,8 @@ public class Player extends ImageView implements GameObject {
      * Moves the player every frame.
      */
     private void move() {
-        this.setX(this.getX() + vX);
-        this.setY(this.getY() + vY);
+        setX(getX() + vX);
+        setY(getY() + vY);
     }
 
     /**
@@ -168,7 +163,7 @@ public class Player extends ImageView implements GameObject {
             vX += SPEED;
 
         } else if (PlayerCollision.collidingRight(this) != null) {
-            onCollision(PlayerCollision.collidingRight(this), StaticObject.CollisionType.Right);
+            onCollision(PlayerCollision.collidingRight(this), StaticObject.CollisionDirection.Right);
         }
 
         // Move Right Controls
@@ -176,7 +171,7 @@ public class Player extends ImageView implements GameObject {
             vX += -SPEED;
 
         } else if (PlayerCollision.collidingLeft(this) != null) {
-            onCollision(PlayerCollision.collidingLeft(this), StaticObject.CollisionType.Left);
+            onCollision(PlayerCollision.collidingLeft(this), StaticObject.CollisionDirection.Left);
         }
 
         // Jumping Controls
@@ -188,16 +183,16 @@ public class Player extends ImageView implements GameObject {
         // Jump
         if (inJumpAnimation) {
 
-            if (!(this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y)) {
+            if (!(getY() + getFitHeight() >= MainApplication.WINDOW_SIZE_Y)) {
                 vY += G;
-            } else if (this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y) {
+            } else if (getY() + getFitHeight() >= MainApplication.WINDOW_SIZE_Y) {
                 vY = 0.0;
                 inJumpAnimation = false;
             }
         }
 
         // End jump animation when player collides with stage bottom
-        if (this.getY() + this.getFitHeight() >= MainApplication.WINDOW_SIZE_Y) {
+        if (checkStageCollisionBottom()) {
             inJumpAnimation = false;
             setY(MainApplication.WINDOW_SIZE_Y - this.getFitHeight());
             die();
@@ -229,21 +224,21 @@ public class Player extends ImageView implements GameObject {
                 inJumpAnimation = false;
                 vY = 0.0;
                 setY(collisionTop.getY() - collisionTop.getHeight());
-                onCollision(collisionBottom, StaticObject.CollisionType.Bottom);
+                onCollision(collisionBottom, StaticObject.CollisionDirection.Bottom);
 
             } else if (diffBottom > diffTop) {
 
                 vY = 0.0;
                 setY(collisionTop.getY() + collisionTop.getHeight());
 
-                onCollision(collisionTop, StaticObject.CollisionType.Top);
+                onCollision(collisionTop, StaticObject.CollisionDirection.Top);
             }
 
         } else if (collisionBottom != null) {
             inJumpAnimation = false;
             vY = 0.0;
             setY(collisionBottom.getY() - collisionBottom.getHeight());
-            onCollision(collisionBottom, StaticObject.CollisionType.Bottom);
+            onCollision(collisionBottom, StaticObject.CollisionDirection.Bottom);
 
         } else if (collisionTop != null) {
             vY = 0.0;
@@ -300,12 +295,11 @@ public class Player extends ImageView implements GameObject {
         // Increase the current level position.
         MainApplication.currentLevelIndex++;
 
-        // Stop music player.
-        MainApplication.musicPlayer.stop();
-
         // Auto save if enabled.
         if (MainApplication.autoSave) MainApplication.saveGame(MainApplication.workingSaveFile, false);
 
+        // Pause Music Player
+        MainApplication.musicPlayer.pause();
         // Set scene to level completed menu.
         MainApplication.getStage().setScene(Menu.levelCompleted());
     }
@@ -316,9 +310,9 @@ public class Player extends ImageView implements GameObject {
      * @param staticRect Any StaticRect.
      * @param type       Type of collision. (Left, Right, Top, Bottom)
      */
-    private void onCollision(StaticRect staticRect, StaticObject.CollisionType type) {
+    private void onCollision(StaticRect staticRect, StaticObject.CollisionDirection type) {
 
-        if (type == StaticObject.CollisionType.Bottom) {
+        if (type == StaticObject.CollisionDirection.Bottom) {
 
             if (staticRect.getType() == StaticObject.Type.SPIKE) {
                 damage(120);
@@ -328,7 +322,7 @@ public class Player extends ImageView implements GameObject {
                 damage(120);
             }
 
-        } else if (type == StaticObject.CollisionType.Left || type == StaticObject.CollisionType.Right) {
+        } else if (type == StaticObject.CollisionDirection.Left || type == StaticObject.CollisionDirection.Right) {
 
             if (staticRect.getType() == StaticObject.Type.LAVA) {
                 damage(120);
@@ -336,7 +330,7 @@ public class Player extends ImageView implements GameObject {
                 damage(5);
             }
 
-            if (type == StaticObject.CollisionType.Right) {
+            if (type == StaticObject.CollisionDirection.Right) {
 
                 if (staticRect.getType() == StaticObject.Type.LADDER) {
                     if (controlRightPressed() || controlUpPressed()) {
@@ -381,6 +375,7 @@ public class Player extends ImageView implements GameObject {
     private void die() {
         isDead = true;
         hp = 0;
+        MainApplication.musicPlayer.stop();
         MainApplication.collectedParts.clear();
         MainApplication.stopTimer();
         MainApplication.getStage().setScene(Menu.deathMenu());

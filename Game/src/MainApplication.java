@@ -14,6 +14,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -69,7 +72,7 @@ public class MainApplication extends Application {
     static Player player;
 
     // Distance Traveled From Level Start
-    static double distanceScrolled = 0.0;
+    static double[] distanceScrolled = {0.0, 0.0};
 
     // Placeholder Map Background
     private static ImageView levelBG = new ImageView("/assets/levels/backgrounds/alt_level_bg_extended.png");
@@ -99,7 +102,7 @@ public class MainApplication extends Application {
     static int currentLevelIndex = 0;
 
     // Music Player
-    static AudioClip musicPlayer = new AudioClip(MainApplication.class.getResource("/assets/audio/music.mp3").toExternalForm());
+    static MediaPlayer musicPlayer = new MediaPlayer(new Media(MainApplication.class.getResource("/assets/audio/music.mp3").toExternalForm()));
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -132,8 +135,8 @@ public class MainApplication extends Application {
     }
 
     public static Scene getGameScene(Level level) {
-        // Reset Scene
 
+        // Reset Scene
         Pane root = new Pane();
         Scene gameScene = new Scene(root, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
@@ -143,7 +146,7 @@ public class MainApplication extends Application {
         sceneObjects = new ArrayList<>();
         enemies = new ArrayList<>();
 
-        distanceScrolled = 0.0;
+        Arrays.fill(distanceScrolled, 0.0);
 
         // Timer for game loop. / Should stay at ~60 UPS
         MainApplication.timer = new AnimationTimer() {
@@ -199,8 +202,8 @@ public class MainApplication extends Application {
             if (e.getCode() == KeyCode.ESCAPE) {
                 stopTimer();
                 keys.clear();
+                musicPlayer.pause();
                 stage.setScene(Menu.pauseMenu(stage.getScene()));
-                musicPlayer.stop();
             }
         });
         gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
@@ -218,10 +221,12 @@ public class MainApplication extends Application {
             root.getChildren().add(fpsCounter);
         }
 
-        MainApplication.timer.start();
+        root.getChildren().add(new MediaView(musicPlayer));
+        musicPlayer.setVolume(0.1);
+        musicPlayer.play();
 
         currentRoot = root;
-        // musicPlayer.play();
+        MainApplication.timer.start();
         return gameScene;
     }
 
@@ -269,13 +274,21 @@ public class MainApplication extends Application {
                 }
             }
 
-            if (player.getX() < (WINDOW_SIZE_X / 2) - 100) {
-                scrollScene();
+            if (player.getX() < WINDOW_SIZE_X / 2 - 100) {
+                scrollSceneX();
                 player.setX(WINDOW_SIZE_X / 2 - 100);
 
-            } else if (player.getX() > (WINDOW_SIZE_X / 2) + 100) {
-                scrollScene();
+            } else if (player.getX() > WINDOW_SIZE_X / 2 + 100) {
+                scrollSceneX();
                 player.setX(WINDOW_SIZE_X / 2 + 100);
+            }
+
+            if(player.getY() < WINDOW_SIZE_Y / 2 - 100){
+                scrollSceneY();
+                player.setY(WINDOW_SIZE_Y / 2 - 100);
+            } else if (player.getY() > WINDOW_SIZE_Y / 2 + 100) {
+                scrollSceneY();
+                player.setY(WINDOW_SIZE_Y / 2 + 100);
             }
 
             for (Enemy enemy : enemies) {
@@ -291,7 +304,7 @@ public class MainApplication extends Application {
     /**
      * Scrolling
      */
-    private static void scrollScene() {
+    private static void scrollSceneX() {
         for (Object obj : sceneObjects) {
             if (obj instanceof StaticRect) {
                 StaticRect staticRect = (StaticRect) obj;
@@ -306,7 +319,24 @@ public class MainApplication extends Application {
         }
 
         levelBG.setX(levelBG.getX() + player.getVX() * 0.1 * -1);
-        distanceScrolled += player.getVX();
+        distanceScrolled[0] += player.getVX();
+    }
+
+    private static void scrollSceneY() {
+        for (Object obj : sceneObjects) {
+            if (obj instanceof StaticRect) {
+                StaticRect staticRect = (StaticRect) obj;
+                staticRect.setY(staticRect.getY() + player.getVY() * -1);
+            } else if (obj instanceof Rectangle) {
+                Rectangle rectangle = ((Rectangle) obj);
+                rectangle.setY(rectangle.getY() + player.getVY() * -1);
+            } else if (obj instanceof Enemy) {
+                Enemy enemies = ((Enemy) obj);
+                enemies.setY(enemies.getY() + player.getVY() * -1);
+            }
+        }
+
+        distanceScrolled[1] += player.getVY();
     }
 
     /**
@@ -351,6 +381,8 @@ public class MainApplication extends Application {
                 currentLevelIndex = savedGame.getCurrentLevelIndex();
                 completedLevels = savedGame.getCompletedLevels();
                 levels = savedGame.getLevels();
+                displayFPS = savedGame.getDisplayFPS();
+                autoSave = savedGame.getAutoSave();
 
                 oin.close();
                 fin.close();
@@ -399,8 +431,7 @@ public class MainApplication extends Application {
             try {
                 FileOutputStream fout = new FileOutputStream(saveFile.getPath());
                 ObjectOutputStream oout = new ObjectOutputStream(fout);
-
-                oout.writeObject(new SaveGame(currentLevelIndex, completedLevels, levels));
+                oout.writeObject(new SaveGame(currentLevelIndex, completedLevels, levels, displayFPS, autoSave));
 
                 oout.close();
                 fout.close();
@@ -412,6 +443,7 @@ public class MainApplication extends Application {
                 e.printStackTrace();
                 logger.log(e);
                 logger.log("FileNotFound exception caught saving game.", Logger.Type.ERROR);
+
             } catch (IOException e) {
                 e.printStackTrace();
                 logger.log(e);

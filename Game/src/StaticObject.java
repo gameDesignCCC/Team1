@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public abstract class StaticObject {
 
-    enum CollisionType {
+    enum CollisionDirection {
         None, Left, Right, Top, Bottom
     }
 
@@ -17,7 +17,7 @@ public abstract class StaticObject {
      * @param gameObject game object
      * @return returns collisions
      */
-    public abstract ArrayList<CollisionType> checkCollision(GameObject gameObject);
+    public abstract ArrayList<CollisionDirection> checkCollision(GameObject gameObject);
 
     /**
      * Get Sprite

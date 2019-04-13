@@ -40,7 +40,7 @@ public class Logger {
         } catch (IOException e) {
             e.printStackTrace();
             log(e);
-            log("Logger could not initialize, no log file will be created.", Type.ERROR, false);
+            log("Logger could not initialize, no log file will be created.", Type.ERROR);
         }
     }
 
@@ -82,6 +82,14 @@ public class Logger {
         write(df.format(new Date()) + "EXCEPTION: -- BEGIN EXCEPTION OUTPUT --");
         write(sw.toString());
         write(df.format(new Date()) + "EXCEPTION: -- END EXCEPTION OUTPUT --");
+
+        try {
+            pw.close();
+            sw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
     }
 
     public void log(String msg, Type type) {
@@ -100,7 +108,6 @@ public class Logger {
         if (canWrite) {
             pw.println(s);
             pw.flush();
-
         }
     }
 
@@ -110,6 +117,7 @@ public class Logger {
                 bw.close();
                 fw.close();
                 pw.close();
+                canWrite = false;
                 log("Logger closed, the output file can be found at \"" + outputFile.getPath() + "\".");
             } catch (IOException e) {
                 e.printStackTrace();
