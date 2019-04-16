@@ -135,8 +135,10 @@ public class Menu {
                     if (userSelected) btn.setId("button-selected");
                     btn.setOnAction(null);
                     btn.setOnMouseClicked(e -> {
-                        if (e.getClickCount() >= 2)
+                        if (e.getClickCount() >= 2) {
                             MainApplication.getStage().setScene(MainApplication.getGameScene(MainApplication.levels.get(lvl)));
+                            MainApplication.currentLevelIndex = lvl;
+                        }
                     });
                 }
                 levelListRoot.getChildren().add(btn);
@@ -287,21 +289,58 @@ public class Menu {
 
         Button btnViewLogs = new Button("View Logs");
         btnViewLogs.setId("button-wide-smallfont");
-        btnViewLogs.setOnAction(e ->{
-            try {
-                Desktop.getDesktop().open(MainApplication.LOG_OUTPUT_DIR);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                MainApplication.logger.log(ex);
-                MainApplication.logger.log("Could not open file explorer at log output directory.", Logger.Type.ERROR);
+        if (MainApplication.OS == MainApplication.OperatingSystem.WindowsNT) {
+            btnViewLogs.setOnAction(e -> {
+                try {
+                    Desktop.getDesktop().open(MainApplication.LOG_OUTPUT_DIR);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    MainApplication.logger.log(ex);
+                    MainApplication.logger.log("Could not open file explorer at log output directory.", Logger.Type.ERROR);
+                }
+            });
+        } else {
+            btnViewLogs.setId("button-wide-smallfont-disabled");
+        }
+
+        Label lblBtnViewLogsAlt = new Label("Log files can be found at: \"" + MainApplication.LOG_OUTPUT_DIR + "\"");
+        lblBtnViewLogsAlt.setStyle("-fx-font-size: 20px; -fx-text-fill: #FFF; -fx-font-family: \"Russo One\";");
+        lblBtnViewLogsAlt.setLayoutX(MainApplication.WINDOW_SIZE_X - 720);
+        lblBtnViewLogsAlt.setLayoutY(MainApplication.WINDOW_SIZE_Y - 40);
+
+        Rectangle sliderBar = new Rectangle(100, 100, 250, 30);
+        sliderBar.setOpacity(0.1);
+        sliderBar.setFill(Color.WHITE);
+
+        Rectangle sliderButton;
+        sliderButton = new Rectangle(sliderBar.getX(), sliderBar.getY(), sliderBar.getHeight(), sliderBar.getHeight());
+        sliderButton.setFill(Color.WHITE);
+        sliderButton.setOnMouseDragged(e -> {
+            if (e.getX() - sliderButton.getWidth() / 2 >= sliderBar.getX()
+                    && e.getX() - sliderButton.getWidth() / 2 + sliderButton.getWidth() <= sliderBar.getX() + sliderBar.getWidth()) {
+                sliderButton.setX(e.getX() - sliderButton.getWidth() / 2);
+                MainApplication.musicPlayer.setVolume(util.Format.round(sliderButton.getX() - sliderBar.getX()) / (sliderBar.getWidth() - sliderButton.getWidth()));
+                sliderButton.setFill(Color.valueOf("#d3d3d3"));
             }
         });
+
+        sliderButton.setOnMouseReleased(e -> {
+            MainApplication.logger.log("(User Settings) Set Music Volume " + (int) (util.Format.round(MainApplication.musicPlayer.getVolume() * 100)) + "%");
+            sliderButton.setFill(Color.WHITE);
+        });
+
+        Label sliderText = new Label("Volume");
+        sliderText.setTextFill(Color.WHITE);
+        sliderText.setOpacity(0.2);
+        sliderText.setStyle("-fx-font-size: " + sliderBar.getHeight() + "px; -fx-font-family: \"Russo One\";");
+        sliderText.setLayoutX(sliderBar.getX() + sliderBar.getHeight() / 5);
+        sliderText.setLayoutY(sliderBar.getY() - sliderBar.getHeight() / 5);
 
         listRoot.getChildren().addAll(menuHeader("Settings"), btnLoadGame, btnToggleAutoSave, btnToggleDisplayFPS, btnClearLogs, btnViewLogs, btnBack(prevScene, true));
         listRoot.setLayoutX(MainApplication.WINDOW_SIZE_X / 2 - 100);
         listRoot.setLayoutY(MainApplication.WINDOW_SIZE_Y / 2 - listRoot.getChildren().size() * 40);
 
-        root.getChildren().add(listRoot);
+        root.getChildren().addAll(listRoot, sliderBar, sliderText, sliderButton, lblBtnViewLogsAlt);
 
         return scene;
     }

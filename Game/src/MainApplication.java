@@ -17,7 +17,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -33,8 +32,9 @@ public class MainApplication extends Application {
     static final double WINDOW_SIZE_X = 1280.0;
     static final double WINDOW_SIZE_Y = 720.0;
 
-    // Installation Directory
-    private static final File INSTALL_DIR = new File(System.getProperty("user.dir").replace("\\", "/"));
+    // Runtime Environment Info
+    static final File INSTALL_DIR = new File(System.getProperty("user.dir").replace("\\", "/"));
+    static OperatingSystem OS;
 
     // Game Saving
     static final String SAVE_EXT = ".gs";
@@ -103,6 +103,10 @@ public class MainApplication extends Application {
 
     // Music Player
     static MediaPlayer musicPlayer = new MediaPlayer(new Media(MainApplication.class.getResource("/assets/audio/music.mp3").toExternalForm()));
+
+    enum OperatingSystem {
+        WindowsNT, GNULinux, MacOS, Other
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -283,7 +287,7 @@ public class MainApplication extends Application {
                 player.setX(WINDOW_SIZE_X / 2 + 100);
             }
 
-            if(player.getY() < WINDOW_SIZE_Y / 2 - 100){
+            if (player.getY() < WINDOW_SIZE_Y / 2 - 100) {
                 scrollSceneY();
                 player.setY(WINDOW_SIZE_Y / 2 - 100);
             } else if (player.getY() > WINDOW_SIZE_Y / 2 + 100) {
@@ -357,6 +361,20 @@ public class MainApplication extends Application {
      * Load Fonts and stuff and things
      */
     private static void loadResources() {
+        String osName = System.getProperty("os.name");
+        logger.log("Discovered Install Directory: \"" + INSTALL_DIR + "\"");
+        logger.log("Discovered Operating System: \"" + osName + "\"");
+
+        if (osName.contains("Windows")) {
+            OS = OperatingSystem.WindowsNT;
+        } else if (osName.contains("Linux")) {
+            OS = OperatingSystem.GNULinux;
+        } else if (osName.contains("Mac OS")) {
+            OS = OperatingSystem.MacOS;
+        } else {
+            OS = OperatingSystem.Other;
+        }
+
         if (!DEFAULT_SAVE_DIR.exists()) {
             boolean successful = DEFAULT_SAVE_DIR.mkdirs();
             if (successful) {
@@ -521,7 +539,7 @@ public class MainApplication extends Application {
         System.exit(status);
     }
 
-    static void exit(){
+    static void exit() {
         exit(0);
     }
 

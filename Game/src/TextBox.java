@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 public class TextBox extends Application {
 
+
     // Begin Nested BoxPreset Class
     private class BoxPreset {
         public String text;
@@ -26,18 +27,13 @@ public class TextBox extends Application {
     } // End Nested BoxPreset Class
 
 
-
-    public static void main ( String[] args ) {
-        launch(args);
-    }
-
-    private double [] screensize = {1280, 720};
+    private double[] screensize = {1280, 720};
     private ImageView img;
     private Text txt;
     private Button[] btns = new Button[2];
 
     /**
-     *  TODO Add descriptions
+     * TODO Add descriptions
      *
      * @param filename
      * @return
@@ -54,7 +50,7 @@ public class TextBox extends Application {
                 String line = in.nextLine();
 
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return dialogNodes;
@@ -111,11 +107,11 @@ public class TextBox extends Application {
      * @param root
      */
     public void createBox(String text,
-        String option1,
-        String option2,
-        EventHandler<ActionEvent> handler1,
-        EventHandler<ActionEvent> handler2,
-        Pane root) {
+                          String option1,
+                          String option2,
+                          EventHandler<ActionEvent> handler1,
+                          EventHandler<ActionEvent> handler2,
+                          Pane root) {
 
         double w = screensize[0] / 2;
         double h = screensize[1] / 5;
