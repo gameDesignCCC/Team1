@@ -9,5 +9,4 @@ public class Format {
     public static double round(double decimal) {
         return Math.round(decimal * 100) / 100;
     }
-
 }

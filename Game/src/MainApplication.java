@@ -399,8 +399,8 @@ public class MainApplication extends Application {
                 currentLevelIndex = savedGame.getCurrentLevelIndex();
                 completedLevels = savedGame.getCompletedLevels();
                 levels = savedGame.getLevels();
-                displayFPS = savedGame.getDisplayFPS();
                 autoSave = savedGame.getAutoSave();
+                displayFPS = savedGame.getDisplayFPS();
 
                 oin.close();
                 fin.close();
